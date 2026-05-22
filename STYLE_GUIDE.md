@@ -1,6 +1,6 @@
-# STYLE GUIDE: KSG Fuel Design System
+# STYLE GUIDE: Hire7 Fuel Design System
 
-This style guide documents the custom design tokens, typography scales, layout frameworks, and interactive rules used throughout the KSG Fuel website redesign.
+This style guide documents the custom design tokens, typography scales, layout frameworks, and interactive rules used throughout the Hire7 Fuel website redesign.
 
 ---
 

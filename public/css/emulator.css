@@ -1,5 +1,5 @@
 /* ============================================================================
-   KSG FUEL - INTERACTIVE EMULATOR & COMPLIANCE WIDGETS
+   HIRE7 FUEL - INTERACTIVE EMULATOR & COMPLIANCE WIDGETS
    ============================================================================ */
 
 /* 1. Fleet Savings Calculator */
@@ -650,13 +650,14 @@ input:checked + .switch-slider:before {
 }
 
 .card-number-glow {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-family: monospace;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: rgba(255,255,255,0.95);
   text-shadow: 0 0 10px rgba(255,255,255,0.3);
-  margin: 1rem 0;
+  margin: 0.75rem 0 0.5rem 0;
+  white-space: nowrap;
 }
 
 .card-bottom {

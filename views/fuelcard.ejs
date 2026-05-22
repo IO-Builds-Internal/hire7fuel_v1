@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- SEO METADATA -->
-  <title>Commercial Fuel Card Programs & Fleet Savings | KSG Fuel</title>
-  <meta name="description" content="Discover what the KSG Fuel Card can do for your business. Choose between Diesel, Cash, and Maintenance programs. Access 24/7 web management, geofencing, and massive truck stop savings.">
+  <title>Commercial Fuel Card Programs & Fleet Savings | Hire7 Fuel</title>
+  <meta name="description" content="Discover what the Hire7 Fuel Card can do for your business. Choose between Diesel, Cash, and Maintenance programs. Access 24/7 web management, geofencing, and massive truck stop savings.">
   
   <!-- Open Graph Protocol (OG) -->
-  <meta property="og:title" content="Commercial Fuel Card Programs & Fleet Savings | KSG Fuel">
+  <meta property="og:title" content="Commercial Fuel Card Programs & Fleet Savings | Hire7 Fuel">
   <meta property="og:description" content="Gain full control of your fleet expenses. Select from custom fuel and repair cards. View 3-step onboarding flow and FAQs.">
-  <meta property="og:url" content="https://ksgfuel.com/fuelcard">
+  <meta property="og:url" content="https://hire7fuel.com/fuelcard">
   <meta property="og:type" content="website">
   <meta property="og:image" content="/assets/logo.png">
 
@@ -20,7 +20,7 @@
   
   <style>
     /* ============================================================================
-       KSG FUEL - FUEL CARD PAGE REDESIGN MASTER STYLES
+       HIRE7 FUEL - FUEL CARD PAGE REDESIGN MASTER STYLES
        ============================================================================ */
     
     /* 1. Interactive Hero Grid */
@@ -142,10 +142,11 @@
     }
     .stacked-card-num {
       font-family: monospace;
-      font-size: 1.15rem;
-      letter-spacing: 2px;
-      margin: 1.5rem 0;
+      font-size: 1.1rem;
+      letter-spacing: 0.06em;
+      margin: 1rem 0 0.5rem 0;
       text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      white-space: nowrap;
     }
     .stacked-card-bottom {
       display: flex;
@@ -350,6 +351,138 @@
         gap: 2rem;
       }
     }
+
+    /* 5. Custom Redesigned IFTA Compliance Splits Section */
+    .form-split-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 4.5rem;
+      align-items: center;
+    }
+    @media (max-width: 992px) {
+      .form-split-layout {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+    }
+
+    /* Badge audit shield status indicator */
+    .badge-audit-shield {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(34, 201, 138, 0.08);
+      border: 1px solid rgba(34, 201, 138, 0.2);
+      color: var(--color-accent);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      box-shadow: 0 0 15px rgba(34, 201, 138, 0.05);
+      animation: floatIndicator 2s infinite ease-in-out;
+    }
+
+    /* Redesigned Floating State Cards */
+    .ifta-state-card {
+      background: rgba(255, 255, 255, 0.015) !important;
+      border: 1px solid rgba(255, 255, 255, 0.03) !important;
+      border-radius: 12px !important;
+      padding: 1.25rem !important;
+      margin-bottom: 1.25rem;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.02) !important;
+    }
+
+    .ifta-state-card:hover {
+      background: rgba(34, 201, 138, 0.03) !important;
+      border-color: rgba(34, 201, 138, 0.25) !important;
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* High-tech state badges */
+    .state-code-badge {
+      display: inline-block;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-on { background: rgba(34, 201, 138, 0.1); color: var(--color-accent); border: 1px solid rgba(34, 201, 138, 0.2); }
+    .badge-mi { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+    .badge-ny { background: rgba(245, 166, 35, 0.1); color: #f5a623; border: 1px solid rgba(245, 166, 35, 0.2); }
+    .badge-pa { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); }
+
+    /* Custom high-contrast layout header */
+    .state-name-text {
+      font-weight: 600;
+      color: #e2f0f0;
+      font-size: 0.95rem;
+      margin-left: 0.5rem;
+    }
+
+    /* Deep track channels for progress elements */
+    .state-bar-track {
+      height: 8px !important;
+      background: rgba(0, 0, 0, 0.3) !important;
+      border-radius: 10px !important;
+      border: 1px solid rgba(255, 255, 255, 0.03) !important;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    /* Luxurious custom state-specific gradients and glowing fills */
+    #ifta-on-bar {
+      background: linear-gradient(90deg, rgba(34, 201, 138, 0.3) 0%, var(--color-accent) 100%) !important;
+      box-shadow: 0 0 12px rgba(34, 201, 138, 0.5) !important;
+    }
+    #ifta-mi-bar {
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.3) 0%, #10b981 100%) !important;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.5) !important;
+    }
+    #ifta-ny-bar {
+      background: linear-gradient(90deg, rgba(245, 166, 35, 0.3) 0%, #f5a623 100%) !important;
+      box-shadow: 0 0 12px rgba(245, 166, 35, 0.5) !important;
+    }
+    #ifta-pa-bar {
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.3) 0%, #3b82f6 100%) !important;
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.5) !important;
+    }
+
+    /* Stylized bullet pill tags */
+    .bullet-pills-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0 2rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .bullet-pill-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.015);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.85);
+      transition: all 0.3s ease;
+    }
+    .bullet-pill-item:hover {
+      background: rgba(34, 201, 138, 0.02);
+      border-color: rgba(34, 201, 138, 0.15);
+      transform: translateX(5px);
+    }
+    .bullet-pill-item i {
+      color: var(--color-accent);
+      font-size: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -371,7 +504,7 @@
         <div style="position: relative; z-index: 2;">
           <div class="status-badge" style="display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1.25rem;">
             <span class="pulse-dot"></span>
-            <span class="status-text" style="letter-spacing: 0.5px;">KSG PREMIUM NETWORK CAPABILITIES</span>
+            <span class="status-text" style="letter-spacing: 0.5px;">Hire7 PREMIUM NETWORK CAPABILITIES</span>
           </div>
           <h1 class="hero-title" style="font-size: 3rem; line-height: 1.15; margin-bottom: 1.25rem;">
             Premium Fleet Cards. <br>
@@ -393,14 +526,25 @@
             <!-- Card 1: Diesel -->
             <div class="stacked-card sc-diesel" onclick="scrollToProgram('diesel-program')">
               <div class="stacked-card-top">
-                <span class="stacked-card-brand">KSG DIESEL PRO</span>
+                <span class="stacked-card-brand">Hire7 DIESEL PRO</span>
                 <div class="stacked-card-chip"></div>
               </div>
               <div class="stacked-card-num">5412 8903 0012 3456</div>
+              <!-- High-Fidelity Expiration Rows -->
+              <div class="stacked-card-mid" style="display: flex; gap: 1rem; align-items: center; margin: -0.25rem 0 0.5rem 0; font-size: 0.65rem; opacity: 0.9;">
+                <div style="display: flex; align-items: center; gap: 0.25rem;">
+                  <span style="font-size: 0.45rem; line-height: 1; letter-spacing: 0.05em; color: #a3c2c2; text-transform: uppercase;">GOOD<br>THRU</span>
+                  <strong style="font-size: 0.75rem; letter-spacing: 0.05em; color: #fff; font-family: monospace;">12/29</strong>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.25rem;">
+                  <span style="font-size: 0.45rem; line-height: 1; letter-spacing: 0.05em; color: #a3c2c2; text-transform: uppercase;">EXP</span>
+                  <strong style="font-size: 0.75rem; letter-spacing: 0.05em; color: #fff; font-family: monospace;">12/29</strong>
+                </div>
+              </div>
               <div class="stacked-card-bottom">
                 <div class="stacked-card-holder">
                   <span>WHOLESALE RACK RATE</span>
-                  <div class="stacked-card-name">KSG Fuel System</div>
+                  <div class="stacked-card-name">Hire7 Fuel System</div>
                 </div>
                 <span class="stacked-card-badge"><i class="fas fa-truck-fast"></i> ACTIVE</span>
               </div>
@@ -409,14 +553,25 @@
             <!-- Card 2: Cash -->
             <div class="stacked-card sc-cash" onclick="scrollToProgram('cash-program')">
               <div class="stacked-card-top">
-                <span class="stacked-card-brand">KSG CASH PLUS</span>
+                <span class="stacked-card-brand">Hire7 CASH PLUS</span>
                 <div class="stacked-card-chip"></div>
               </div>
               <div class="stacked-card-num">5412 8903 8876 5432</div>
+              <!-- High-Fidelity Expiration Rows -->
+              <div class="stacked-card-mid" style="display: flex; gap: 1rem; align-items: center; margin: -0.25rem 0 0.5rem 0; font-size: 0.65rem; opacity: 0.9;">
+                <div style="display: flex; align-items: center; gap: 0.25rem;">
+                  <span style="font-size: 0.45rem; line-height: 1; letter-spacing: 0.05em; color: #a3c2c2; text-transform: uppercase;">GOOD<br>THRU</span>
+                  <strong style="font-size: 0.75rem; letter-spacing: 0.05em; color: #fff; font-family: monospace;">12/29</strong>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.25rem;">
+                  <span style="font-size: 0.45rem; line-height: 1; letter-spacing: 0.05em; color: #a3c2c2; text-transform: uppercase;">EXP</span>
+                  <strong style="font-size: 0.75rem; letter-spacing: 0.05em; color: #fff; font-family: monospace;">12/29</strong>
+                </div>
+              </div>
               <div class="stacked-card-bottom">
                 <div class="stacked-card-holder">
                   <span>EXPENSE ALLOCATOR</span>
-                  <div class="stacked-card-name">KSG Fleet Wallet</div>
+                  <div class="stacked-card-name">Hire7 Fleet Wallet</div>
                 </div>
                 <span class="stacked-card-badge"><i class="fas fa-wallet"></i> ACTIVE</span>
               </div>
@@ -425,14 +580,25 @@
             <!-- Card 3: Maintenance -->
             <div class="stacked-card sc-maintenance" onclick="scrollToProgram('maintenance-program')">
               <div class="stacked-card-top">
-                <span class="stacked-card-brand">KSG SERVICE MAX</span>
+                <span class="stacked-card-brand">Hire7 SERVICE MAX</span>
                 <div class="stacked-card-chip"></div>
               </div>
               <div class="stacked-card-num">5412 8903 9901 2345</div>
+              <!-- High-Fidelity Expiration Rows -->
+              <div class="stacked-card-mid" style="display: flex; gap: 1rem; align-items: center; margin: -0.25rem 0 0.5rem 0; font-size: 0.65rem; opacity: 0.9;">
+                <div style="display: flex; align-items: center; gap: 0.25rem;">
+                  <span style="font-size: 0.45rem; line-height: 1; letter-spacing: 0.05em; color: #a3c2c2; text-transform: uppercase;">GOOD<br>THRU</span>
+                  <strong style="font-size: 0.75rem; letter-spacing: 0.05em; color: #fff; font-family: monospace;">12/29</strong>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.25rem;">
+                  <span style="font-size: 0.45rem; line-height: 1; letter-spacing: 0.05em; color: #a3c2c2; text-transform: uppercase;">EXP</span>
+                  <strong style="font-size: 0.75rem; letter-spacing: 0.05em; color: #fff; font-family: monospace;">12/29</strong>
+                </div>
+              </div>
               <div class="stacked-card-bottom">
                 <div class="stacked-card-holder">
                   <span>SERVICE CREDIT</span>
-                  <div class="stacked-card-name">KSG Mechanical</div>
+                  <div class="stacked-card-name">Hire7 Mechanical</div>
                 </div>
                 <span class="stacked-card-badge"><i class="fas fa-screwdriver-wrench"></i> ACTIVE</span>
               </div>
@@ -575,12 +741,12 @@
             </div>
             <div class="browser-address">
               <i class="fas fa-lock" style="font-size: 0.7rem; color: var(--color-accent);"></i>
-              <span>ksgfuel.com/admin-portal</span>
+              <span>hire7fuel.com/admin-portal</span>
             </div>
           </div>
           <div style="background-color: var(--color-bg-darker); position: relative; display: block; overflow: hidden; line-height: 0;">
             <div class="dashboard-shadow-glow" style="pointer-events: none;"></div>
-            <img src="/assets/dashboard_mockup.png" alt="KSG Fuel Portal Live Dashboard" class="dashboard-mockup-img" style="width: 100%; height: auto; display: block;">
+            <img src="/assets/dashboard_mockup.png" alt="Hire7 Fuel Portal Live Dashboard" class="dashboard-mockup-img" style="width: 100%; height: auto; display: block;">
           </div>
         </div>
 
@@ -615,30 +781,50 @@
   <!-- Interactive IFTA Tax splits visualizer -->
   <section class="section section-light-teal" id="interactive-ifta-compliance" style="border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
     <div class="container">
-      <div class="form-split-layout" style="align-items: center; gap: 4rem;">
+      <div class="form-split-layout">
+        <!-- Left Side: Copy Elements -->
         <div>
           <h2>Automated, Audit-Ready IFTA Compliance</h2>
-          <p style="color: var(--color-muted); font-size: 1.05rem; margin-bottom: 2rem;">No more manual matching of fuel invoices to trip sheets. As your trucks cross state boundaries, KSG Fuel maps gallon splits automatically. Export pre-formatted tax worksheets direct to QuickBooks or your TMS in one click.</p>
-          <ul class="bullet-features" style="margin-bottom: 2rem;">
-            <li><i class="fas fa-circle-check"></i> Clean mileage boundary mapping using electronic toll entries.</li>
-            <li><i class="fas fa-circle-check"></i> Standard 100% audit compliance ready formats.</li>
-            <li><i class="fas fa-circle-check"></i> Prevent double-taxation penalty risks from missed logs.</li>
+          <p style="color: var(--color-muted); font-size: 1.05rem; margin-bottom: 1.5rem;">No more manual matching of fuel invoices to trip sheets. As your trucks cross state boundaries, Hire7 Fuel maps gallon splits automatically. Export pre-formatted tax worksheets direct to QuickBooks or your TMS in one click.</p>
+          <ul class="bullet-pills-list">
+            <li class="bullet-pill-item">
+              <i class="fas fa-circle-check"></i>
+              <span>Clean mileage boundary mapping using electronic toll entries.</span>
+            </li>
+            <li class="bullet-pill-item">
+              <i class="fas fa-circle-check"></i>
+              <span>Standard 100% audit compliance ready formats.</span>
+            </li>
+            <li class="bullet-pill-item">
+              <i class="fas fa-circle-check"></i>
+              <span>Prevent double-taxation penalty risks from missed logs.</span>
+            </li>
           </ul>
           <button class="btn btn-outline-dark" id="recalculate-ifta-btn" style="border-color: rgba(34, 201, 138, 0.35); color: var(--color-accent); background-color: rgba(34, 201, 138, 0.03);"><i class="fas fa-arrows-rotate" style="margin-right: 0.5rem;"></i> Recalculate Live Splits</button>
         </div>
 
-        <div class="glass-panel" style="background: linear-gradient(135deg, rgba(13, 79, 79, 0.95) 0%, rgba(10, 28, 28, 0.95) 100%); box-shadow: var(--shadow-premium); border-color: rgba(34, 201, 138, 0.2); width: 100%;">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem; margin-bottom: 1.5rem;">
-            <span style="font-weight: 700; color: var(--color-white); font-size: 1.05rem; display: flex; align-items: center;"><i class="fas fa-file-invoice-dollar" style="color: var(--color-accent); margin-right: 0.5rem;"></i> IFTA State-by-State Splits</span>
-            <span style="font-size: 0.8rem; color: #a3c2c2; font-weight: 600;">Q2 ACTIVE COMPILATION</span>
+        <!-- Right Side: High-Fidelity Glassmorphic Splits Dashboard -->
+        <div class="glass-panel" style="background: linear-gradient(135deg, rgba(16, 37, 37, 0.75) 0%, rgba(6, 17, 17, 0.85) 100%); box-shadow: var(--shadow-premium); border-color: rgba(34, 201, 138, 0.22); width: 100%; border-radius: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1.25rem; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap;">
+            <span style="font-weight: 700; color: var(--color-white); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-file-invoice-dollar" style="color: var(--color-accent);"></i> IFTA State-by-State Splits
+            </span>
+            <div class="badge-audit-shield">
+              <i class="fas fa-shield-halved"></i> IFTA AUDIT SHIELD: ACTIVE
+            </div>
           </div>
 
-          <div class="ifta-split-preview" style="grid-template-columns: 1fr; gap: 1.5rem;">
+          <div class="ifta-split-preview" style="grid-template-columns: 1fr; gap: 1.25rem;">
             <!-- Ontario Split -->
-            <div class="ifta-state-card" style="background: rgba(255,255,255,0.03); padding: 1rem 1.25rem;">
-              <div class="state-header">
-                <span class="state-code">ON (Ontario)</span>
-                <span class="state-gallons"><span id="ifta-on-val">4,850</span> L</span>
+            <div class="ifta-state-card">
+              <div class="state-header" style="align-items: center; display: flex; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                  <span class="state-code-badge badge-on">ON</span>
+                  <span class="state-name-text">Ontario</span>
+                </div>
+                <span class="state-gallons" style="font-family: monospace; font-size: 1.1rem; font-weight: 700; color: var(--color-white); letter-spacing: 0.5px;">
+                  <span id="ifta-on-val">4,850</span> <span style="font-size: 0.75rem; color: var(--color-muted); font-weight: 600;">L</span>
+                </span>
               </div>
               <div class="state-bar-track">
                 <div class="state-bar-fill" id="ifta-on-bar" data-pct="85" style="width: 85%;"></div>
@@ -646,10 +832,15 @@
             </div>
 
             <!-- Michigan Split -->
-            <div class="ifta-state-card" style="background: rgba(255,255,255,0.03); padding: 1rem 1.25rem;">
-              <div class="state-header">
-                <span class="state-code">MI (Michigan)</span>
-                <span class="state-gallons"><span id="ifta-mi-val">2,120</span> Gal</span>
+            <div class="ifta-state-card">
+              <div class="state-header" style="align-items: center; display: flex; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                  <span class="state-code-badge badge-mi">MI</span>
+                  <span class="state-name-text">Michigan</span>
+                </div>
+                <span class="state-gallons" style="font-family: monospace; font-size: 1.1rem; font-weight: 700; color: var(--color-white); letter-spacing: 0.5px;">
+                  <span id="ifta-mi-val">2,120</span> <span style="font-size: 0.75rem; color: var(--color-muted); font-weight: 600;">Gal</span>
+                </span>
               </div>
               <div class="state-bar-track">
                 <div class="state-bar-fill" id="ifta-mi-bar" data-pct="65" style="width: 65%;"></div>
@@ -657,10 +848,15 @@
             </div>
 
             <!-- New York Split -->
-            <div class="ifta-state-card" style="background: rgba(255,255,255,0.03); padding: 1rem 1.25rem;">
-              <div class="state-header">
-                <span class="state-code">NY (New York)</span>
-                <span class="state-gallons"><span id="ifta-ny-val">1,840</span> Gal</span>
+            <div class="ifta-state-card">
+              <div class="state-header" style="align-items: center; display: flex; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                  <span class="state-code-badge badge-ny">NY</span>
+                  <span class="state-name-text">New York</span>
+                </div>
+                <span class="state-gallons" style="font-family: monospace; font-size: 1.1rem; font-weight: 700; color: var(--color-white); letter-spacing: 0.5px;">
+                  <span id="ifta-ny-val">1,840</span> <span style="font-size: 0.75rem; color: var(--color-muted); font-weight: 600;">Gal</span>
+                </span>
               </div>
               <div class="state-bar-track">
                 <div class="state-bar-fill" id="ifta-ny-bar" data-pct="45" style="width: 45%;"></div>
@@ -668,10 +864,15 @@
             </div>
 
             <!-- Pennsylvania Split -->
-            <div class="ifta-state-card" style="background: rgba(255,255,255,0.03); padding: 1rem 1.25rem;">
-              <div class="state-header">
-                <span class="state-code">PA (Pennsylvania)</span>
-                <span class="state-gallons"><span id="ifta-pa-val">1,290</span> Gal</span>
+            <div class="ifta-state-card">
+              <div class="state-header" style="align-items: center; display: flex; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                  <span class="state-code-badge badge-pa">PA</span>
+                  <span class="state-name-text">Pennsylvania</span>
+                </div>
+                <span class="state-gallons" style="font-family: monospace; font-size: 1.1rem; font-weight: 700; color: var(--color-white); letter-spacing: 0.5px;">
+                  <span id="ifta-pa-val">1,290</span> <span style="font-size: 0.75rem; color: var(--color-muted); font-weight: 600;">Gal</span>
+                </span>
               </div>
               <div class="state-bar-track">
                 <div class="state-bar-fill" id="ifta-pa-bar" data-pct="35" style="width: 35%;"></div>
@@ -679,8 +880,9 @@
             </div>
           </div>
 
-          <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
-            <span style="font-size: 0.75rem; color: var(--color-muted);"><i class="fas fa-circle-info" style="margin-right: 0.35rem;"></i> Auto-sync with QuickBooks & TMS enabled</span>
+          <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; align-items: center; gap: 0.5rem; color: var(--color-muted); font-size: 0.75rem;">
+            <i class="fas fa-circle-info" style="color: var(--color-accent);"></i>
+            <span>Auto-sync with QuickBooks & TMS enabled</span>
           </div>
         </div>
       </div>
@@ -699,7 +901,7 @@
         <!-- FAQ 1 -->
         <div class="faq-item">
           <button class="faq-trigger" aria-expanded="false">
-            <span>Where is the KSG Fuel Card accepted?</span>
+            <span>Where is the Hire7 Fuel Card accepted?</span>
             <span class="faq-icon">+</span>
           </button>
           <div class="faq-content">
@@ -748,7 +950,7 @@
     <div class="container">
       <div class="gradient-banner">
         <h2>Start Maximizing Your Fleet Revenue Today</h2>
-        <p>Join thousands of trucking owners who rely on KSG Fuel to reduce fuel costs, prevent driver card abuse, and automate administrative bookkeeping.</p>
+        <p>Join thousands of trucking owners who rely on Hire7 Fuel to reduce fuel costs, prevent driver card abuse, and automate administrative bookkeeping.</p>
         <a href="/apply" class="btn btn-primary btn-large">Apply for Fuel Card</a>
       </div>
     </div>

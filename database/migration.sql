@@ -1,5 +1,5 @@
 -- ============================================================================
--- KSG Fuel Database Migration Script
+-- Hire7 Fuel Database Migration Script
 -- Designed for Supabase / PostgreSQL
 -- ============================================================================
 
@@ -16,11 +16,11 @@ CREATE TABLE IF NOT EXISTS settings (
 
 -- Seed initial settings matching config.js
 INSERT INTO settings (key, value) VALUES
-('brand_name', 'KSG Fuel'),
+('brand_name', 'Hire7 Fuel'),
 ('brand_tagline', 'Powering Success with Every Drop'),
 ('logo_url', '/assets/logo.png'),
 ('contact_phone', '(905) 965-0308'),
-('contact_email', 'support@ksgfuel.com'),
+('contact_email', 'support@hire7fuel.com'),
 ('contact_address', '2575 Steeles Ave E, Unit 1, Brampton, ON'),
 ('social_linkedin', ''),
 ('social_facebook', ''),

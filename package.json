@@ -1,7 +1,7 @@
 {
-  "name": "ksg-fuel-redesign",
+  "name": "hire7-fuel-redesign",
   "version": "1.0.0",
-  "description": "Premium modern website redesign for KSG Fuel with built-in database support and administrative dashboard.",
+  "description": "Premium modern website redesign for Hire7 Fuel with built-in database support and administrative dashboard.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

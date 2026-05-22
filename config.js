@@ -1,12 +1,12 @@
 /**
- * KSG Fuel Central Configuration System
+ * Hire7 Fuel Central Configuration System
  * Single Source of Truth for Branding, Color Palette, and Contact Information.
  * These act as the baseline values. When dynamic administration changes are made in the
  * /admin panel, those settings will overwrite these values dynamically.
  */
 module.exports = {
   brand: {
-    name: 'KSG Fuel',
+    name: 'Hire7 Fuel',
     tagline: 'Powering Success with Every Drop',
     logo: '/assets/logo.png',
     favicon: '/assets/favicon.ico'
@@ -23,7 +23,7 @@ module.exports = {
   },
   contact: {
     phone: '(905) 965-0308',
-    email: 'support@ksgfuel.com',
+    email: 'support@hire7fuel.com',
     address: '2575 Steeles Ave E, Unit 1, Brampton, ON' // Single canonical address
   },
   social: {

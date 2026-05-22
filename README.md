@@ -1,6 +1,6 @@
-# KSG Fuel Website Redesign & Command Panel
+# Hire7 Fuel Website Redesign & Command Panel
 
-This is the complete, high-performance Node.js website redesign for **KSG Fuel (ksgfuel.com)**.
+This is the complete, high-performance Node.js website redesign for **Hire7 Fuel (hire7fuel.com)**.
 
 The platform is designed to be highly organized and modular. It features a modern, accessible interface with a premium color palette (deep teals, seafoams, mint accents, and high-visibility amber callouts) and smooth CSS3 interactive micro-animations. It comes built-in with a **secure Administrative Portal (`/admin`)** allowing real-time edits to branding, contact data (e.g. phone, address), job postings, and dynamic form submissions.
 
@@ -24,7 +24,7 @@ The platform is designed to be highly organized and modular. It features a moder
 ## Project Structure
 
 ```
-KSG-Fuel/
+Hire7-Fuel/
 ├── package.json            # Node.js project manifest & scripts
 ├── config.js               # Central brand baseline values (Single Source of Truth)
 ├── server.js               # Express application entry point & bootstrap configurations

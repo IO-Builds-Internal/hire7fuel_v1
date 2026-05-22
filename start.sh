@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================================================================
-# KSG FUEL - ONE-CLICK INSTALLER & LAUNCHER
+# HIRE7 FUEL - ONE-CLICK INSTALLER & LAUNCHER
 # Highly robust shell script to bootstrap, configure, and launch the platform.
 # ============================================================================
 
@@ -12,7 +12,7 @@ AMBER='\033[0;33m'
 RESET='\033[0m'
 
 echo -e "${TEAL}================================================================${RESET}"
-echo -e "${MINT}         KSG FUEL - PREMIUM WEBSITE REDESIGN LAUNCHER           ${RESET}"
+echo -e "${MINT}         HIRE7 FUEL - PREMIUM WEBSITE REDESIGN LAUNCHER           ${RESET}"
 echo -e "${TEAL}================================================================${RESET}"
 echo -e "Starting zero-configuration environment setup..."
 
@@ -34,7 +34,7 @@ if [ ! -f "$ENV_FILE" ]; then
     
     cat > "$ENV_FILE" << EOF
 # ============================================================================
-# KSG Fuel Environment Configurations
+# Hire7 Fuel Environment Configurations
 # ============================================================================
 
 # Server Execution Port

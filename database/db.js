@@ -26,7 +26,7 @@ if (isSupabaseConfigured) {
 }
 
 // Path to offline local SQLite database file
-const localDbFile = path.join(__dirname, 'ksg_fuel.sqlite');
+const localDbFile = path.join(__dirname, 'hire7_fuel.sqlite');
 let sqliteDb = null;
 
 if (!isSupabaseConfigured || dbClient === null) {
@@ -35,7 +35,7 @@ if (!isSupabaseConfigured || dbClient === null) {
     if (err) {
       console.error('Error connecting to SQLite database:', err.message);
     } else {
-      console.log('SQLite Client: Connected to local ksg_fuel.sqlite database.');
+      console.log('SQLite Client: Connected to local hire7_fuel.sqlite database.');
       initSqliteTables();
     }
   });
@@ -109,7 +109,7 @@ function initSqliteTables() {
           'Commercial Fleet Logistics Coordinator',
           'Dispatch Operations',
           'Brampton, ON - Hybrid',
-          'Oversee fuel purchase logs, coordinate active fleet routes across primary highway lanes, and assist commercial carriers in minimizing out-of-route refueling overhead using the KSG Shield AI™ tracking system.',
+          'Oversee fuel purchase logs, coordinate active fleet routes across primary highway lanes, and assist commercial carriers in minimizing out-of-route refueling overhead using the Hire7 Shield AI™ tracking system.',
           '2+ years experience dispatching long-haul commercial trucks or handling fleet fuel procurement.\nStrong familiarity with North American highway corridors and freight route planning.\nProficient communication skills and rapid multi-tasking abilities.',
           'Full-time'
         );
@@ -119,7 +119,7 @@ function initSqliteTables() {
           'Staff Software Engineer, Fleet Analytics',
           'Engineering & Security',
           'Brampton, ON - Hybrid',
-          'Help build and expand the KSG Shield AI™ real-time security tracking engine. Drive optimizations in telemetry geofencing databases, automated state IFTA compilation pipelines, and responsive glassmorphic dashboard management interfaces.',
+          'Help build and expand the Hire7 Shield AI™ real-time security tracking engine. Drive optimizations in telemetry geofencing databases, automated state IFTA compilation pipelines, and responsive glassmorphic dashboard management interfaces.',
           '4+ years of professional backend software development experience with Node.js and relational databases.\nDeep understanding of geospatial indexing, real-time streaming pipelines, and API architecture.\nStrong dedication to clean code, modular frameworks, and premium visual components.',
           'Full-time'
         );
@@ -129,7 +129,7 @@ function initSqliteTables() {
           'Enterprise Carrier Account Executive',
           'Sales & Fleet Growth',
           'Brampton, ON - Remote',
-          'Identify and partner with mid-to-large-size commercial truck fleets across Canada and the United States. Conduct custom lane savings assessments demonstrating the clear financial advantages of KSG Fuel\'s transparent wholesale cost-plus pricing structures.',
+          'Identify and partner with mid-to-large-size commercial truck fleets across Canada and the United States. Conduct custom lane savings assessments demonstrating the clear financial advantages of Hire7 Fuel\'s transparent wholesale cost-plus pricing structures.',
           'Proven track record of B2B sales inside the logistics, freight brokerage, or commercial transportation sectors.\nAbility to analyze financial reports and contrast legacy retail pricing with wholesale Cost-Plus structures.\nOutstanding relationship building skills with fleet owners and dispatch directors.',
           'Full-time'
         );

@@ -37,7 +37,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Configure session parameters for staff authentication
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'ksg_fuel_fleet_secret_key',
+  secret: process.env.SESSION_SECRET || 'hire7_fuel_fleet_secret_key',
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -80,7 +80,7 @@ app.use((err, req, res, next) => {
  */
 app.listen(PORT, () => {
   console.log(`================================================================`);
-  console.log(` KSG Fuel Website Redesign Server online at http://localhost:${PORT}`);
+  console.log(` Hire7 Fuel Website Redesign Server online at http://localhost:${PORT}`);
   console.log(` Session authentication initialized securely.`);
   console.log(` Running in Node.js ${process.version} LTS environment.`);
   console.log(`================================================================`);

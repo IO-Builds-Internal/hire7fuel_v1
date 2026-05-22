@@ -1,5 +1,5 @@
 /**
- * KSG Fuel - Core Frontend Scripts
+ * Hire7 Fuel - Core Frontend Scripts
  * Standard Vanilla JS - Zero External Dependencies
  */
 
@@ -342,7 +342,7 @@ function initDashboardEmulator() {
   };
 
   // Initial welcome message
-  addLog('KSG Shield AI™ Engine Online. Awaiting fleet refueling activity...', 'system');
+  addLog('Hire7 Shield AI™ Engine Online. Awaiting fleet refueling activity...', 'system');
 
   // 1. Instant Card Freeze Control
   if (lockSwitch && cardRender) {
@@ -353,12 +353,12 @@ function initDashboardEmulator() {
         cardRender.classList.add('frozen');
         statusPill.className = 'card-status-pill frozen';
         statusText.textContent = 'FROZEN';
-        addLog('ADMIN SECURITY ACTION: Card KSG-9981 frozen by dashboard operator.', 'system', '<span style="color: var(--color-error); font-weight:600;">ALL ATTEMPTS SUSPENDED</span>');
+        addLog('ADMIN SECURITY ACTION: Card Hire7-9981 frozen by dashboard operator.', 'system', '<span style="color: var(--color-error); font-weight:600;">ALL ATTEMPTS SUSPENDED</span>');
       } else {
         cardRender.classList.remove('frozen');
         statusPill.className = 'card-status-pill active';
         statusText.textContent = 'ACTIVE';
-        addLog('ADMIN SECURITY ACTION: Card KSG-9981 reactivated and enabled for transit.', 'system', '<span style="color: var(--color-accent); font-weight:600;">PORTAL ONLINE</span>');
+        addLog('ADMIN SECURITY ACTION: Card Hire7-9981 reactivated and enabled for transit.', 'system', '<span style="color: var(--color-accent); font-weight:600;">PORTAL ONLINE</span>');
       }
     });
   }
