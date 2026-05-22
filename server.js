@@ -11,6 +11,9 @@ dotenv.config();
 const baseConfig = require('./config');
 
 const app = express();
+
+// Trust reverse proxy headers (required for HTTPS sessions on hosted platforms)
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 // Ensure public upload directories exist out-of-the-box
@@ -36,13 +39,16 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Configure session parameters for staff authentication
+const isProduction = process.env.NODE_ENV === 'production';
 app.use(session({
   secret: process.env.SESSION_SECRET || 'hire7_fuel_fleet_secret_key',
   resave: false,
   saveUninitialized: false,
+  proxy: true, // Required when behind a reverse proxy (Nginx, Cloudflare)
   cookie: {
     maxAge: 1000 * 60 * 60 * 2, // 2-hour session duration
-    secure: false // Set to true if deploying over HTTPS
+    secure: isProduction,        // true on HTTPS hosted environments
+    sameSite: isProduction ? 'lax' : false
   }
 }));
 
