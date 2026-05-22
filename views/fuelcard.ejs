@@ -483,6 +483,148 @@
       color: var(--color-accent);
       font-size: 1rem;
     }
+
+    /* ============================================================================
+       HIRE7 FUEL - PREMIUM INTERACTIVE FAQ ACCORDION STYLES
+       ============================================================================ */
+    .faq-container {
+      max-width: 850px;
+      margin: 3rem auto 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .faq-item {
+      background: rgba(16, 46, 46, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Left colorful gradient accent bar visible on active */
+    .faq-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-seafoam) 100%);
+      transform: scaleY(0);
+      transform-origin: center;
+      transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      border-radius: 4px 0 0 4px;
+      z-index: 3;
+    }
+
+    .faq-item.active::before {
+      transform: scaleY(1);
+    }
+
+    /* Ultimate Button Styling Reset to clear Mac/Safari system borders */
+    .faq-trigger {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+      padding: 1.5rem 2rem;
+      background: transparent !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      color: var(--color-white);
+      font-size: 1.15rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      margin: 0;
+    }
+
+    .faq-item:hover {
+      background: rgba(16, 46, 46, 0.45);
+      border-color: rgba(34, 201, 138, 0.3);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(34, 201, 138, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .faq-item.active {
+      background: rgba(16, 46, 46, 0.65);
+      border-color: rgba(34, 201, 138, 0.5);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4), 0 0 25px rgba(34, 201, 138, 0.1);
+    }
+
+    .faq-item.active .faq-trigger {
+      color: var(--color-accent);
+    }
+
+    .faq-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--color-muted);
+      font-size: 1.3rem;
+      font-weight: 300;
+      line-height: 1;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      flex-shrink: 0;
+      margin-left: 1.5rem;
+    }
+
+    .faq-trigger:hover .faq-icon {
+      background: rgba(34, 201, 138, 0.1);
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      box-shadow: 0 0 10px rgba(34, 201, 138, 0.2);
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+      background: rgba(34, 201, 138, 0.15);
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      box-shadow: 0 0 12px rgba(34, 201, 138, 0.3);
+    }
+
+    .faq-content {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .faq-item.active .faq-content {
+      max-height: 300px;
+      opacity: 1;
+      padding-bottom: 1.75rem;
+    }
+
+    .faq-content p {
+      margin: 0;
+      color: var(--color-text-off);
+      font-size: 1rem;
+      line-height: 1.65;
+      font-weight: 400;
+    }
   </style>
 </head>
 <body>
