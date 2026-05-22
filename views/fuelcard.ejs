@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO METADATA -->
+  <title>Commercial Fuel Card Programs & Fleet Savings | KSG Fuel</title>
+  <meta name="description" content="Discover what the KSG Fuel Card can do for your business. Choose between Diesel, Cash, and Maintenance programs. Access 24/7 web management, geofencing, and massive truck stop savings.">
+  
+  <!-- Open Graph Protocol (OG) -->
+  <meta property="og:title" content="Commercial Fuel Card Programs & Fleet Savings | KSG Fuel">
+  <meta property="og:description" content="Gain full control of your fleet expenses. Select from custom fuel and repair cards. View 3-step onboarding flow and FAQs.">
+  <meta property="og:url" content="https://ksgfuel.com/fuelcard">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/logo.png">
+
+  <!-- Style links -->
+  <link rel="stylesheet" href="/css/styles.css">
+  
+  <%- include('partials/header') %>
+
+  <!-- Hero Banner -->
+  <section class="hero-mesh" style="padding: 6rem 0 5rem 0;">
+    <div class="container text-center">
+      <h1 class="hero-title" style="font-size: 3rem; margin-bottom: 1rem;">
+        What Can The <span class="text-accent">KSG Fuel Card</span> Do For You?
+      </h1>
+      <p class="hero-subtitle" style="margin: 0 auto 2rem auto; max-width: 700px;">
+        Empower your drivers with a dynamic, secure, and universally accepted card program. Track expenses, optimize taxes, and unlock massive savings at high-volume refueling terminals.
+      </p>
+      <a href="/apply" class="btn btn-primary btn-large">Get Started Now</a>
+    </div>
+  </section>
+
+  <!-- 3-Tab Program Switcher Section -->
+  <section class="section" id="program-switcher">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2>Choose The Perfect Fleet Program</h2>
+        <p class="max-w-md text-center" style="color: var(--color-muted);">Select the specialized card plan that matches your logistics operations and cash flow requirements.</p>
+      </div>
+
+      <div class="tabs-container">
+        <!-- Pure EJS & JS-assisted Tabs Controls -->
+        <div class="tabs-nav" role="tablist">
+          <button class="tab-btn active" data-tab="tab-diesel" role="tab" aria-selected="true" aria-controls="tab-diesel">
+            <i class="fas fa-truck-monochrome" style="margin-right: 0.5rem;"></i> Diesel Program
+          </button>
+          <button class="tab-btn" data-tab="tab-cash" role="tab" aria-selected="false" aria-controls="tab-cash">
+            <i class="fas fa-wallet" style="margin-right: 0.5rem;"></i> Cash Program
+          </button>
+          <button class="tab-btn" data-tab="tab-maintenance" role="tab" aria-selected="false" aria-controls="tab-maintenance">
+            <i class="fas fa-screwdriver-wrench" style="margin-right: 0.5rem;"></i> Maintenance Program
+          </button>
+        </div>
+
+        <!-- Tab 1: Diesel Program -->
+        <div class="tab-pane active" id="tab-diesel" role="tabpanel">
+          <div>
+            <h3 class="text-accent">Maximum Wholesale Cost Savings</h3>
+            <p style="font-size: 1.05rem; margin-bottom: 1.5rem;">The KSG Diesel Program is designed for high-volume, long-haul freight operations. It leverages major network agreements to offer dynamic volume rebates and wholesale rack-pricing at key logistics corridors.</p>
+            <ul class="bullet-features" style="margin-bottom: 2rem;">
+              <li><i class="fas fa-circle-check"></i> Save an average of 15¢-30¢ per gallon at major retail truck stops.</li>
+              <li><i class="fas fa-circle-check"></i> Eliminate card transaction fees on major bulk fill purchases.</li>
+              <li><i class="fas fa-circle-check"></i> Consolidated billing lines for easy tax filing and financial accounting.</li>
+            </ul>
+            <a href="/apply" class="btn btn-outline-dark">Apply for Diesel Card</a>
+          </div>
+          <div style="display: flex; justify-content: center;">
+            <!-- Program specific illustration mockup -->
+            <div class="payment-card" style="background: linear-gradient(135deg, #0d4f4f 0%, #1a6b6b 100%);">
+              <div class="card-top">
+                <div class="card-chip"></div>
+                <div class="card-brand">DIESEL MAX</div>
+              </div>
+              <div class="card-number">5038 DIESEL 0834 9911</div>
+              <div class="card-bottom">
+                <div>
+                  <div class="card-holder">Card Member</div>
+                  <div class="card-name">HIGH-VOLUME FLEET</div>
+                </div>
+                <div class="card-expiry">
+                  <div class="card-holder">Refuels</div>
+                  <div style="font-weight: 500;">DIESEL ONLY</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Cash Program -->
+        <div class="tab-pane" id="tab-cash" role="tabpanel">
+          <div>
+            <h3 class="text-accent">Flexible Fleet Spend Controls</h3>
+            <p style="font-size: 1.05rem; margin-bottom: 1.5rem;">The Cash Program combines standard refueling capabilities with instant driver expense funding. Dispense daily food allowances, toll fees, and lodging budgets directly to the driver's card without complex wire transfers.</p>
+            <ul class="bullet-features" style="margin-bottom: 2rem;">
+              <li><i class="fas fa-circle-check"></i> Instantly wire secure emergency cash to cards on the road.</li>
+              <li><i class="fas fa-circle-check"></i> Lock down non-fuel spending options in the online dashboard.</li>
+              <li><i class="fas fa-circle-check"></i> Zero transaction fees on standard ATM cash withdrawals.</li>
+            </ul>
+            <a href="/apply" class="btn btn-outline-dark">Apply for Cash Card</a>
+          </div>
+          <div style="display: flex; justify-content: center;">
+            <div class="payment-card" style="background: linear-gradient(135deg, #3abfa0 0%, #1a6b6b 100%);">
+              <div class="card-top">
+                <div class="card-chip"></div>
+                <div class="card-brand">CASH PLUS</div>
+              </div>
+              <div class="card-number">5038 CASH 4892 2271</div>
+              <div class="card-bottom">
+                <div>
+                  <div class="card-holder">Card Member</div>
+                  <div class="card-name">FLEXIBLE SPEND</div>
+                </div>
+                <div class="card-expiry">
+                  <div class="card-holder">Type</div>
+                  <div style="font-weight: 500;">HYBRID CARD</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Maintenance Program -->
+        <div class="tab-pane" id="tab-maintenance" role="tabpanel">
+          <div>
+            <h3 class="text-accent">Minimize Downtime on Critical Repairs</h3>
+            <p style="font-size: 1.05rem; margin-bottom: 1.5rem;">Keep your assets rolling. The Maintenance Program provides pre-approved credit limits and immediate payment clearance at over 15,000 commercial repair centers, tire facilities, and towing operators across Canada and the US.</p>
+            <ul class="bullet-features" style="margin-bottom: 2rem;">
+              <li><i class="fas fa-circle-check"></i> National corporate repair pricing on brand-name truck tires.</li>
+              <li><i class="fas fa-circle-check"></i> Pre-approved credit lines to prevent sudden roadside payment delays.</li>
+              <li><i class="fas fa-circle-check"></i> Centralized mechanical service history logs directly in the cloud.</li>
+            </ul>
+            <a href="/apply" class="btn btn-outline-dark">Apply for Maintenance Card</a>
+          </div>
+          <div style="display: flex; justify-content: center;">
+            <div class="payment-card" style="background: linear-gradient(135deg, #f5a623 0%, #0d4f4f 100%);">
+              <div class="card-top">
+                <div class="card-chip"></div>
+                <div class="card-brand">FLEET CARE</div>
+              </div>
+              <div class="card-number">5038 REPAIR 7712 0451</div>
+              <div class="card-bottom">
+                <div>
+                  <div class="card-holder">Card Member</div>
+                  <div class="card-name">ASSET PROTECTION</div>
+                </div>
+                <div class="card-expiry">
+                  <div class="card-holder">Scope</div>
+                  <div style="font-weight: 500;">SERVICE ONLY</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="section section-light-teal" id="how-it-works">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2>Uncomplicated Onboarding Setup</h2>
+        <p class="max-w-md text-center" style="color: var(--color-muted);">We have designed a rapid integration path to get your trucks active and saving without standard corporate delays.</p>
+      </div>
+
+      <div class="flow-layout">
+        <!-- Step 1 -->
+        <div class="flow-step">
+          <div class="flow-circle">1</div>
+          <h3 style="font-size: 1.25rem;">Apply Online</h3>
+          <p style="color: var(--color-muted); font-size: 0.95rem; padding: 0 1rem;">Complete our simplified 2-minute application. Our credit underwriters process submissions within 24 business hours.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flow-step">
+          <div class="flow-circle">2</div>
+          <h3 style="font-size: 1.25rem;">Set Control Rules</h3>
+          <p style="color: var(--color-muted); font-size: 0.95rem; padding: 0 1rem;">Log into our central dashboard. Designate individual limits, approved fuel stations, and secure driver PIN codes.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flow-step">
+          <div class="flow-circle">3</div>
+          <h3 style="font-size: 1.25rem;">Ship & Refuel</h3>
+          <p style="color: var(--color-muted); font-size: 0.95rem; padding: 0 1rem;">We ship physical cards next-day. Distribute them to your drivers, and monitor savings instantly via online reports.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- High-Fidelity Interactive Dashboard Mockup & Management Features -->
+  <section class="section" id="management-features">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2>Total Command from One Screen</h2>
+        <p class="max-w-md text-center" style="color: var(--color-muted);">No more tracking paperwork or receipts. Our advanced portal consolidates everything into a single, high-fidelity experience.</p>
+      </div>
+
+      <div class="card-presentation" id="dashboard-mockup">
+        <!-- Left Column: Premium Web Dashboard Mockup constructed entirely in HTML/CSS -->
+        <div style="background-color: var(--color-near-black); border-radius: 12px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08); overflow: hidden;">
+          <!-- Top bar -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem; margin-bottom: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <div style="width: 10px; height: 10px; border-radius: 50%; background-color: var(--color-accent);"></div>
+              <span style="font-size: 0.8rem; font-weight: 600; color: var(--color-white);">KSG Fleet Portal</span>
+            </div>
+            <span style="font-size: 0.75rem; color: #a3c2c2; background-color: rgba(34,201,138,0.1); padding: 0.15rem 0.5rem; border-radius: 4px;">Live Connection</span>
+          </div>
+          <!-- Stats Row -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+            <div style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px;">
+              <span style="display: block; font-size: 0.65rem; color: #a3c2c2; text-transform: uppercase;">Active Cards</span>
+              <strong style="font-size: 1.2rem; color: var(--color-white);">38 / 40</strong>
+            </div>
+            <div style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px;">
+              <span style="display: block; font-size: 0.65rem; color: #a3c2c2; text-transform: uppercase;">Month Savings</span>
+              <strong style="font-size: 1.2rem; color: var(--color-accent);">$3,489.12</strong>
+            </div>
+          </div>
+          <!-- Recent Transactions -->
+          <div>
+            <span style="font-size: 0.7rem; font-weight: 700; color: #a3c2c2; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Real-Time Activity</span>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; background-color: rgba(255,255,255,0.02); padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.75rem;">
+                <div>
+                  <strong style="display: block; color: var(--color-white);">Truck #12 - Brampton Shell</strong>
+                  <span style="color: #a3c2c2;">120L Diesel Refuel</span>
+                </div>
+                <strong style="color: var(--color-accent);">$228.40</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; background-color: rgba(255,255,255,0.02); padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.75rem;">
+                <div>
+                  <strong style="display: block; color: var(--color-white);">Truck #04 - Windsor TA Stop</strong>
+                  <span style="color: #a3c2c2;">180L Diesel Refuel</span>
+                </div>
+                <strong style="color: var(--color-accent);">$342.60</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Text copy of key management features -->
+        <div>
+          <h2>Cloud Operations Dashboard</h2>
+          <p style="color: rgba(255,255,255,0.85); margin-bottom: 2rem; font-size: 1.05rem;">Our proprietary administrative software puts full oversight of refueling variables in your hand. Instantly monitor fleet behaviors, adjust cards, and pull compliance logs.</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-size: 0.95rem;">
+            <div>
+              <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-lock"></i> Instant Lock</h4>
+              <p style="color: rgba(255,255,255,0.75);">Freeze cards in one tap if a driver reports a loss, shielding you from any fraud risk.</p>
+            </div>
+            <div>
+              <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-gears"></i> Limit Toggles</h4>
+              <p style="color: rgba(255,255,255,0.75);">Toggle cash, diesel, and maintenance limits dynamically from any desktop or mobile device.</p>
+            </div>
+            <div>
+              <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-receipt"></i> Receipts Upload</h4>
+              <p style="color: rgba(255,255,255,0.75);">Automate accounting operations. Drivers photograph receipts, and our system links them to card logs.</p>
+            </div>
+            <div>
+              <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-chart-line"></i> Analytics Dashboard</h4>
+              <p style="color: rgba(255,255,255,0.75);">Generate automated reports identifying low-cost lanes, underperforming units, and driver anomalies.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Accordion Section -->
+  <section class="section section-light-teal" id="faqs">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2>Frequently Asked Questions</h2>
+        <p class="max-w-md text-center" style="color: var(--color-muted);">Find answers to common onboarding, limit control, and network compatibility questions.</p>
+      </div>
+
+      <div class="faq-container">
+        <!-- FAQ 1 -->
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span>Where is the KSG Fuel Card accepted?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-content">
+            <p>Our fleet cards are accepted at over 15,000 truck terminals, commercial travel plazas, and service facilities across Canada and the United States, including all major networks like Shell, TA, Love's, Petro, and Flying J.</p>
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span>How fast can I obtain credit approval?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-content">
+            <p>We pride ourselves on offering rapid onboarding. Once you submit our online application with basic company details, our specialized credit team performs underwriters' checks within 24 business hours to establish credit limits.</p>
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span>Can I lock cards down to diesel fuel purchases only?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-content">
+            <p>Yes. You possess complete granular control. Through the management dashboard, you can restrict cards to allow only "Diesel Fuel Only" or "Fuel + DEF," blocking any driver shop or snack-store transactions instantly.</p>
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false">
+            <span>Are there any hidden monthly administration fees?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-content">
+            <p>Absolutely not. We believe in 100% price transparency. There are no annual contract charges, dynamic account upkeep fees, or surprise data reporting levies. Our custom program cost details are laid out beforehand.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Apply CTA Banner Section -->
+  <section class="section" id="apply-banner" style="padding: 4rem 0;">
+    <div class="container">
+      <div class="gradient-banner">
+        <h2>Start Maximizing Your Fleet Revenue Today</h2>
+        <p>Join thousands of trucking owners who rely on KSG Fuel to reduce fuel costs, prevent driver card abuse, and automate administrative bookkeeping.</p>
+        <a href="/apply" class="btn btn-primary btn-large">Apply for Fuel Card</a>
+      </div>
+    </div>
+  </section>
+
+  <%- include('partials/footer') %>

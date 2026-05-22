@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO METADATA -->
+  <title>Contact Us & Office Location | KSG Fuel</title>
+  <meta name="description" content="Get in touch with KSG Fuel in Brampton, ON. Access our direct phone number, email coordinate, business hours, and request a personalized fleet fuel card savings proposal.">
+  
+  <!-- Open Graph Protocol (OG) -->
+  <meta property="og:title" content="Contact Us & Office Location | KSG Fuel">
+  <meta property="og:description" content="Reach our fleet advisory desk. Find directions to our Brampton headquarters, view operational hours, or send an inquiry.">
+  <meta property="og:url" content="https://ksgfuel.com/contact">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/logo.png">
+
+  <!-- Style links -->
+  <link rel="stylesheet" href="/css/styles.css">
+  
+  <%- include('partials/header') %>
+
+  <!-- Page Header -->
+  <section class="hero-mesh" style="padding: 5rem 0 4rem 0;">
+    <div class="container text-center">
+      <h1 class="hero-title" style="font-size: 2.75rem; margin-bottom: 1rem;">Get In Touch With Us</h1>
+      <p class="hero-subtitle" style="margin: 0 auto; max-width: 650px;">
+        Have a question about network acceptance, credit underwriting, or transaction limit controls? Connect with our Brampton dispatchers. We are here to keep your fleet running smoothly.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Split Section -->
+  <section class="section" id="contact-split-section">
+    <div class="container contact-split">
+      <!-- Left Column: Info panel with maps integration -->
+      <div class="contact-info-panel" id="contactInfoPanel">
+        <div>
+          <h2>Contact Coordinates</h2>
+          <p style="color: rgba(255,255,255,0.75); margin-bottom: 2.5rem; font-size: 1.05rem;">Connect directly with our fleet dispatch teams. We respond rapidly to secure your commercial logistics operations.</p>
+          
+          <ul class="info-items">
+            <!-- Address info -->
+            <li class="info-item">
+              <div class="info-icon"><i class="fas fa-map-location-dot"></i></div>
+              <div class="info-text">
+                <h4>Headquarters Office</h4>
+                <p id="infoAddress"><%= config.contact.address %></p>
+              </div>
+            </li>
+
+            <!-- Phone info -->
+            <li class="info-item">
+              <div class="info-icon"><i class="fas fa-phone-volume"></i></div>
+              <div class="info-text">
+                <h4>Phone Support Line</h4>
+                <p><a href="tel:<%= config.contact.phone.replace(/[^0-9]/g, '') %>" id="infoPhone"><%= config.contact.phone %></a></p>
+              </div>
+            </li>
+
+            <!-- Email info -->
+            <li class="info-item">
+              <div class="info-icon"><i class="fas fa-envelope-open-text"></i></div>
+              <div class="info-text">
+                <h4>General Inbox</h4>
+                <p><a href="mailto:<%= config.contact.email %>" id="infoEmail"><%= config.contact.email %></a></p>
+              </div>
+            </li>
+
+            <!-- Business Hours info -->
+            <li class="info-item">
+              <div class="info-icon"><i class="fas fa-business-time"></i></div>
+              <div class="info-text">
+                <h4>Operating Hours</h4>
+                <p>Monday - Friday: 9:00 AM - 5:00 PM EST<br>Roadside Dispatch support: 24/7/365</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Google Maps Search Link button -->
+        <div class="maps-btn-wrapper">
+          <a href="https://www.google.com/maps/search/?api=1&query=<%= encodeURIComponent(config.contact.address) %>" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-full" id="mapsBtn">
+            <i class="fas fa-map-location" style="margin-right: 0.5rem;"></i> Get Directions on Google Maps
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive contact form -->
+      <div class="form-card" id="contact-form">
+        <h3 style="font-size: 1.35rem; margin-bottom: 1.5rem; color: var(--color-primary); border-bottom: 1px solid var(--color-border); padding-bottom: 0.75rem;">Send Online Inquiry</h3>
+        
+        <% if (success) { %>
+          <div class="alert alert-success" role="alert">
+            <i class="fas fa-circle-check" style="margin-right: 0.5rem;"></i>
+            <strong>Message Dispatched!</strong> Thank you for your inquiry. A fleet representative has received your ticket and is preparing a response.
+          </div>
+        <% } %>
+
+        <form action="/submit-inquiry" method="POST" needs-validation novalidate>
+          <div class="form-group">
+            <label for="name">Contact Person Full Name <span style="color: var(--color-error);">*</span></label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Markus Vance" required minlength="2">
+          </div>
+
+          <div class="form-group">
+            <label for="company">Registered Company Name</label>
+            <input type="text" id="company" name="company" class="form-control" placeholder="Vance Logistics Corp.">
+          </div>
+
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="phone">Phone Number <span style="color: var(--color-error);">*</span></label>
+              <input type="tel" id="phone" name="phone" class="form-control" placeholder="(905) 555-0155" required pattern="^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$">
+            </div>
+            <div class="form-group">
+              <label for="email">Business Email Address <span style="color: var(--color-error);">*</span></label>
+              <input type="email" id="email" name="email" class="form-control" placeholder="mvance@vancecorp.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message Details <span style="color: var(--color-error);">*</span></label>
+            <textarea id="message" name="message" class="form-control" placeholder="Write your specific questions about fleet onboarding or card limits..." required minlength="10"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-large">Dispatch Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <%- include('partials/footer') %>

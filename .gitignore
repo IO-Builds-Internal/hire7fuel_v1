@@ -1,0 +1,15 @@
+# Dependency directories
+node_modules/
+
+# Local configurations and secret keys
+.env
+
+# Local database file fallback
+database/local_db.json
+
+# Administrative custom media uploads
+public/uploads/
+
+# Operating system configurations
+.DS_Store
+Thumbs.db

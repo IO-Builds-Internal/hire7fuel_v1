@@ -1,0 +1,38 @@
+</head>
+<body>
+  <!-- KSG Fuel Premium Navigation Header -->
+  <header class="header-wrapper">
+    <div class="container header-container">
+      <!-- Dynamic Brand Logo and Home Link -->
+      <a href="/" class="logo-link" title="KSG Fuel Homepage">
+        <img src="<%= config.brand.logo %>" alt="<%= config.brand.name %> Logo" class="logo-image" id="navLogo">
+        <span id="navBrandName"><%= config.brand.name %></span>
+      </a>
+
+      <!-- Desktop & Tablet Navigation Menu -->
+      <ul class="nav-menu" role="navigation" aria-label="Main Navigation">
+        <li>
+          <a href="/" class="nav-link <%= page === 'home' ? 'active' : '' %>" id="navHome">Home</a>
+        </li>
+        <li>
+          <a href="/fuelcard" class="nav-link <%= page === 'fuelcard' ? 'active' : '' %>" id="navFuelcard">Fuel Card</a>
+        </li>
+        <li>
+          <a href="/careers" class="nav-link <%= page === 'careers' ? 'active' : '' %>" id="navCareers">Careers</a>
+        </li>
+        <li>
+          <a href="/contact" class="nav-link <%= page === 'contact' ? 'active' : '' %>" id="navContact">Contact</a>
+        </li>
+        <li>
+          <a href="/apply" class="btn btn-primary nav-btn" id="navApply">Apply Now</a>
+        </li>
+      </ul>
+
+      <!-- Mobile Menu Hamburger Button -->
+      <button class="mobile-toggle" aria-label="Toggle Menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>

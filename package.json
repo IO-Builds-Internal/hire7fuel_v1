@@ -1,0 +1,23 @@
+{
+  "name": "ksg-fuel-redesign",
+  "version": "1.0.0",
+  "description": "Premium modern website redesign for KSG Fuel with built-in database support and administrative dashboard.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.43.4",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "Antigravity Code Assistant",
+  "license": "ISC"
+}

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Website Settings | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="admin-body">
+
+  <!-- Admin Navigation -->
+  <nav class="admin-nav">
+    <div class="admin-nav-container">
+      <a href="/admin" class="logo-link" style="font-size: 1.35rem;">
+        <i class="fas fa-screwdriver-wrench text-accent"></i>
+        <span><%= config.brand.name %> Admin</span>
+      </a>
+
+      <ul class="admin-nav-links">
+        <li><a href="/admin" class="admin-nav-link">Dashboard Hub</a></li>
+        <li><a href="/admin/settings" class="admin-nav-link active">Site Settings</a></li>
+        <li><a href="/admin/jobs" class="admin-nav-link">Careers Admin</a></li>
+        <li><a href="/" class="admin-nav-link" target="_blank">View Site <i class="fas fa-up-right-from-square" style="font-size: 0.75rem; margin-left: 0.25rem;"></i></a></li>
+      </ul>
+
+      <a href="/admin/logout" class="admin-logout">
+        <i class="fas fa-power-off"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <!-- Control panel settings layout -->
+  <main class="admin-container" style="max-width: 1000px;">
+    
+    <div class="admin-header-wrap">
+      <div>
+        <h1>Website Brand Customizer</h1>
+        <p style="color: #a3c2c2; margin-top: 0.25rem;">Dynamically update contact coordinates, brand titles, logos, and social coordinates across the entire live site.</p>
+      </div>
+    </div>
+
+    <!-- Alert systems -->
+    <% if (success) { %>
+      <div class="alert alert-success" style="background-color: rgba(16, 185, 129, 0.15); border: 1px solid var(--color-success); color: #a7f3d0; margin-bottom: 2rem;">
+        <i class="fas fa-circle-check" style="margin-right: 0.5rem; color: var(--color-success);"></i> 
+        <strong>Success!</strong> Core configurations updated successfully and propagated instantly to all pages.
+      </div>
+    <% } %>
+
+    <% if (error) { %>
+      <div class="alert" style="background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--color-error); color: #fca5a5; margin-bottom: 2rem;">
+        <i class="fas fa-triangle-exclamation" style="margin-right: 0.5rem; color: var(--color-error);"></i> 
+        <strong>Error:</strong> <%= error %>
+      </div>
+    <% } %>
+
+    <div class="admin-card">
+      <form action="/admin/settings" method="POST" enctype="multipart/form-data">
+        
+        <!-- Branding Parameters -->
+        <h3 style="color: var(--color-white); font-size: 1.15rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-gem text-accent"></i> Company & Identity
+        </h3>
+        
+        <!-- Logo block -->
+        <div style="display: flex; gap: 2rem; align-items: center; background-color: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.04); margin-bottom: 2rem;">
+          <div style="text-align: center;">
+            <span style="display: block; font-size: 0.8rem; color: #a3c2c2; text-transform: uppercase; margin-bottom: 0.5rem;">Active Logo</span>
+            <div style="background-color: var(--color-primary); padding: 0.75rem 1.5rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1); display: inline-block;">
+              <img src="<%= config.brand.logo %>" alt="Active Logo" style="height: 50px; width: auto; object-fit: contain;">
+            </div>
+          </div>
+          <div style="flex-grow: 1;">
+            <div class="admin-form-group">
+              <label for="logo_file" style="color: #a3c2c2;">Upload Custom Logo Image</label>
+              <input type="file" id="logo_file" name="logo_file" class="form-control admin-input" accept="image/*">
+              <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.25rem;">Supported formats: PNG, JPG, JPEG, SVG, ICO. Replaces the default site logo instantly.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+          <div class="form-group admin-form-group">
+            <label for="brand_name">Brand Name <span style="color: var(--color-error);">*</span></label>
+            <input type="text" id="brand_name" name="brand_name" class="form-control admin-input" value="<%= config.brand.name %>" required>
+          </div>
+          <div class="form-group admin-form-group">
+            <label for="brand_tagline">Brand Tagline <span style="color: var(--color-error);">*</span></label>
+            <input type="text" id="brand_tagline" name="brand_tagline" class="form-control admin-input" value="<%= config.brand.tagline %>" required>
+          </div>
+        </div>
+
+        <!-- Contact Coordinates -->
+        <h3 style="color: var(--color-white); font-size: 1.15rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-envelope-open-text text-accent"></i> Contact Parameters
+        </h3>
+
+        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+          <div class="form-group admin-form-group">
+            <label for="contact_phone">Canonical Phone Support <span style="color: var(--color-error);">*</span></label>
+            <input type="text" id="contact_phone" name="contact_phone" class="form-control admin-input" value="<%= config.contact.phone %>" required>
+          </div>
+          <div class="form-group admin-form-group">
+            <label for="contact_email">Canonical Support Email <span style="color: var(--color-error);">*</span></label>
+            <input type="email" id="contact_email" name="contact_email" class="form-control admin-input" value="<%= config.contact.email %>" required>
+          </div>
+        </div>
+
+        <div class="form-group admin-form-group" style="margin-bottom: 2rem;">
+          <label for="contact_address">Office Headquarters Address <span style="color: var(--color-error);">*</span></label>
+          <input type="text" id="contact_address" name="contact_address" class="form-control admin-input" value="<%= config.contact.address %>" required>
+          <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.25rem;">Must be the complete canonical address. Controls footers, contact displays, and maps searches.</span>
+        </div>
+
+        <!-- Social Media Coordinates -->
+        <h3 style="color: var(--color-white); font-size: 1.15rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-share-nodes text-accent"></i> Social Media Handles
+        </h3>
+
+        <div class="form-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem;">
+          <div class="form-group admin-form-group">
+            <label for="social_linkedin">LinkedIn URL</label>
+            <input type="url" id="social_linkedin" name="social_linkedin" class="form-control admin-input" value="<%= config.social.linkedin %>" placeholder="https://linkedin.com/company/...">
+          </div>
+          <div class="form-group admin-form-group">
+            <label for="social_facebook">Facebook URL</label>
+            <input type="url" id="social_facebook" name="social_facebook" class="form-control admin-input" value="<%= config.social.facebook %>" placeholder="https://facebook.com/...">
+          </div>
+          <div class="form-group admin-form-group">
+            <label for="social_instagram">Instagram URL</label>
+            <input type="url" id="social_instagram" name="social_instagram" class="form-control admin-input" value="<%= config.social.instagram %>" placeholder="https://instagram.com/...">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-large" style="min-width: 200px;">Save Customizations</button>
+      </form>
+    </div>
+
+  </main>
+
+  <!-- FontAwesome for standard icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</body>
+</html>

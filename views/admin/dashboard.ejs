@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard Command Center | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="admin-body">
+
+  <!-- Admin Navigation -->
+  <nav class="admin-nav">
+    <div class="admin-nav-container">
+      <a href="/admin" class="logo-link" style="font-size: 1.35rem;">
+        <i class="fas fa-screwdriver-wrench text-accent"></i>
+        <span><%= config.brand.name %> Admin</span>
+      </a>
+
+      <ul class="admin-nav-links">
+        <li><a href="/admin" class="admin-nav-link active">Dashboard Hub</a></li>
+        <li><a href="/admin/settings" class="admin-nav-link">Site Settings</a></li>
+        <li><a href="/admin/jobs" class="admin-nav-link">Careers Admin</a></li>
+        <li><a href="/" class="admin-nav-link" target="_blank">View Site <i class="fas fa-up-right-from-square" style="font-size: 0.75rem; margin-left: 0.25rem;"></i></a></li>
+      </ul>
+
+      <a href="/admin/logout" class="admin-logout">
+        <i class="fas fa-power-off"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <!-- Dashboard Content Container -->
+  <main class="admin-container">
+    
+    <div class="admin-header-wrap">
+      <div>
+        <h1>Dashboard Control Hub</h1>
+        <p style="color: #a3c2c2; margin-top: 0.25rem;">Monitor inbound fleet requests, contact inquiries, and statistics in real-time.</p>
+      </div>
+      <div>
+        <span style="font-size: 0.9rem; color: var(--color-accent); font-weight: 600; background-color: rgba(34,201,138,0.08); padding: 0.5rem 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(34,201,138,0.2);">
+          <i class="fas fa-signal" style="margin-right: 0.5rem;"></i> Live System Online
+        </span>
+      </div>
+    </div>
+
+    <!-- Aggregated Stat Cards Row -->
+    <div class="admin-stats-row">
+      <!-- Total Submissions -->
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon"><i class="fas fa-inbox"></i></div>
+        <div class="admin-stat-info">
+          <h3>Total Inbox</h3>
+          <div class="admin-stat-val"><%= stats.totalSubmissions %></div>
+        </div>
+      </div>
+      <!-- Fuel Card Applications -->
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon" style="color: var(--color-accent); background-color: rgba(34, 201, 138, 0.1);"><i class="fas fa-id-card"></i></div>
+        <div class="admin-stat-info">
+          <h3>Fuel Card Apps</h3>
+          <div class="admin-stat-val"><%= stats.fuelcardCount %></div>
+        </div>
+      </div>
+      <!-- Contact Inquiries -->
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon" style="color: var(--color-seafoam); background-color: rgba(58, 191, 160, 0.1);"><i class="fas fa-envelope-open-text"></i></div>
+        <div class="admin-stat-info">
+          <h3>Contact Inquiries</h3>
+          <div class="admin-stat-val"><%= stats.contactCount %></div>
+        </div>
+      </div>
+      <!-- Dynamic Job Positions -->
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon" style="color: var(--color-highlight); background-color: rgba(245, 166, 35, 0.1);"><i class="fas fa-briefcase"></i></div>
+        <div class="admin-stat-info">
+          <h3>Active Job Board</h3>
+          <div class="admin-stat-val"><%= stats.activeJobs %></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submissions Table Card -->
+    <div class="admin-card">
+      <h2>Recent Inbox Submissions</h2>
+      
+      <% if (submissions && submissions.length > 0) { %>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="submissionsTable">
+            <thead>
+              <tr>
+                <th>Submitted On</th>
+                <th>Type</th>
+                <th>Sender Name</th>
+                <th>Contact Coordinates</th>
+                <th>Company Name</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% submissions.forEach((sub) => { %>
+                <tr>
+                  <td><%= new Date(sub.created_at).toLocaleString() %></td>
+                  <td>
+                    <% if (sub.type === 'contact') { %>
+                      <span class="badge-pill badge-contact">Inquiry</span>
+                    <% } else if (sub.type === 'fuelcard') { %>
+                      <span class="badge-pill badge-fuelcard">Fuel Card App</span>
+                    <% } else if (sub.type === 'career') { %>
+                      <span class="badge-pill badge-career">Talent Pool</span>
+                    <% } else { %>
+                      <span class="badge-pill"><%= sub.type %></span>
+                    <% } %>
+                  </td>
+                  <td style="font-weight: 600; color: var(--color-white);"><%= sub.payload.name %></td>
+                  <td>
+                    <div style="font-size: 0.9rem;"><%= sub.payload.email %></div>
+                    <div style="font-size: 0.8rem; color: #a3c2c2;"><%= sub.payload.phone %></div>
+                  </td>
+                  <td><%= sub.payload.company || 'Not Specified' %></td>
+                  <td style="text-align: right;">
+                    <button class="admin-action-btn admin-view-details" data-submission='<%= JSON.stringify(sub) %>'>
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div style="text-align: center; padding: 4rem 2rem; color: #a3c2c2;">
+          <i class="fas fa-folder-open" style="font-size: 3rem; color: rgba(255,255,255,0.05); margin-bottom: 1.5rem;"></i>
+          <h3>Zero Submissions Found</h3>
+          <p style="color: #6B7280; font-size: 0.95rem; max-width: 400px; margin: 0.5rem auto 0 auto;">Submissions from contact forms, talent applications, and card requests will list here dynamically once submitted.</p>
+        </div>
+      <% } %>
+    </div>
+
+  </main>
+
+  <!-- Interactive Detail Modal Overlay -->
+  <div class="details-modal" id="submissionsModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <button class="modal-close" aria-label="Close Modal">&times;</button>
+      <h2 id="modalTitle" style="color: var(--color-white); font-size: 1.35rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-file-invoice text-accent"></i> Submission Parameters
+      </h2>
+      
+      <div class="modal-fields" id="modalFields">
+        <!-- Dynamically injected via main.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- FontAwesome for standard icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Interactive javascript components -->
+  <script src="/js/main.js"></script>
+</body>
+</html>

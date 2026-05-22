@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO METADATA -->
+  <title>Careers & Join Our Logistics Team | KSG Fuel</title>
+  <meta name="description" content="Explore career opportunities at KSG Fuel. Learn about our client-centric values, professional logistics training, and apply online to join our talent pool.">
+  
+  <!-- Open Graph Protocol (OG) -->
+  <meta property="og:title" content="Careers & Join Our Logistics Team | KSG Fuel">
+  <meta property="og:description" content="Build your career in commercial fuel logistics. View open positions or submit a general expression of interest today.">
+  <meta property="og:url" content="https://ksgfuel.com/careers">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/logo.png">
+
+  <!-- Style links -->
+  <link rel="stylesheet" href="/css/styles.css">
+  
+  <%- include('partials/header') %>
+
+  <!-- Page Header -->
+  <section class="hero-mesh" style="padding: 5rem 0 4rem 0;">
+    <div class="container text-center">
+      <h1 class="hero-title" style="font-size: 2.75rem; margin-bottom: 1rem;">Join the KSG Fuel Family</h1>
+      <p class="hero-subtitle" style="margin: 0 auto; max-width: 650px;">
+        Build a meaningful career at the intersection of energy logistics and transaction technology. Work in a culture that rewards initiative, transparency, and operational excellence.
+      </p>
+    </div>
+  </section>
+
+  <!-- Company Culture Section -->
+  <section class="section" id="culture">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2>Our Operating Core Values</h2>
+        <p class="max-w-md text-center" style="color: var(--color-muted);">We don't believe in generic slogans. Our day-to-day operations are guided by clear, active standards of conduct.</p>
+      </div>
+
+      <div class="culture-grid">
+        <!-- Value 1: Extreme Ownership -->
+        <div class="culture-card" id="valueOwnership">
+          <h3>Extreme Ownership</h3>
+          <p>We own outcomes, not tasks. Every team member is fully empowered to troubleshoot driver difficulties, propose system upgrades, and protect client interests without waiting for red tape.</p>
+        </div>
+
+        <!-- Value 2: Complete Clarity -->
+        <div class="culture-card" id="valueClarity">
+          <h3>Complete Clarity</h3>
+          <p>We speak plainly. We eliminate industry jargon and hidden charges in our pricing models. Within our walls, we practice constructive feedback to continuously improve performance.</p>
+        </div>
+
+        <!-- Value 3: Relentless Support -->
+        <div class="culture-card" id="valueSupport">
+          <h3>Relentless Support</h3>
+          <p>We are a logistics lifeline. Trucking operates around the clock, in every storm, across all terrains. We deliver swift assistance and absolute reliability to our fleet operators 24/7/365.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Jobs Board Section -->
+  <section class="section section-light-teal" id="open-roles">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2>Active Open Positions</h2>
+        <p class="max-w-md text-center" style="color: var(--color-muted);">Explore our current career pathways. Apply directly online to take the next step in your professional development.</p>
+      </div>
+
+      <% if (jobs && jobs.length > 0) { %>
+        <!-- Render Active Job Postings -->
+        <div class="jobs-board">
+          <% jobs.forEach((job, idx) => { %>
+            <div class="job-board-card" id="job-card-<%= idx %>">
+              <div class="job-info-left">
+                <h3 style="color: var(--color-primary); margin-bottom: 0.25rem;"><%= job.title %></h3>
+                <div class="job-meta-tags">
+                  <span class="meta-tag"><i class="fas fa-building" style="margin-right: 0.25rem;"></i> <%= job.department %></span>
+                  <span class="meta-tag"><i class="fas fa-location-dot" style="margin-right: 0.25rem;"></i> <%= job.location %></span>
+                  <span class="meta-tag"><i class="fas fa-briefcase" style="margin-right: 0.25rem;"></i> <%= job.type %></span>
+                </div>
+                <p style="margin-top: 1rem; color: var(--color-body-text); font-size: 0.95rem;"><%= job.description %></p>
+                
+                <% if (job.requirements) { %>
+                  <div style="margin-top: 1rem;">
+                    <strong style="font-size: 0.85rem; text-transform: uppercase; color: var(--color-primary); display: block; margin-bottom: 0.5rem;">Requirements:</strong>
+                    <ul class="bullet-features" style="font-size: 0.9rem;">
+                      <% job.requirements.split('\n').forEach(reqLine => { %>
+                        <% if (reqLine.trim()) { %>
+                          <li><i class="fas fa-caret-right"></i> <%= reqLine.trim() %></li>
+                        <% } %>
+                      <% }) %>
+                    </ul>
+                  </div>
+                <% } %>
+              </div>
+              <div style="align-self: center;">
+                <a href="#career-form" class="btn btn-primary" onclick="document.getElementById('message').value = 'Applying for: <%= job.title %> - '">Apply For Role</a>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <!-- Fallback: "No Current Openings" Styled Callout Box -->
+        <div class="no-openings-box" id="noOpeningsBox">
+          <i class="fas fa-briefcase-blank"></i>
+          <h3>No Current Openings</h3>
+          <p>We are currently fully staffed across our core departments. However, we are always eager to meet driven individuals. Submit your resume to our general talent pool below, and we will contact you when a slot opens up!</p>
+          <a href="#career-form" class="btn btn-primary">Join General Talent Pool</a>
+        </div>
+      <% } %>
+
+    </div>
+  </section>
+
+  <!-- Dynamic Application Form Section -->
+  <section class="section" id="career-form-section">
+    <div class="container" style="max-w: 800px;">
+      
+      <div class="form-card" id="career-form">
+        <div class="text-center" style="margin-bottom: 2rem;">
+          <h2 style="font-size: 1.75rem; color: var(--color-primary); margin-bottom: 0.5rem;">Submit General Expression of Interest</h2>
+          <p style="color: var(--color-muted);">Enter your professional credentials. Our talent acquisition specialist will review your background and link it to future vacancies.</p>
+        </div>
+
+        <% if (success) { %>
+          <div class="alert alert-success" role="alert">
+            <i class="fas fa-circle-check" style="margin-right: 0.5rem;"></i>
+            <strong>Submission Received!</strong> Thank you for expressing interest in KSG Fuel. Our HR team has cataloged your file in our active talent pool.
+          </div>
+        <% } %>
+
+        <form action="/submit-career" method="POST" needs-validation novalidate>
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="name">Your Full Name <span style="color: var(--color-error);">*</span></label>
+              <input type="text" id="name" name="name" class="form-control" placeholder="Mark Miller" required minlength="2">
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address <span style="color: var(--color-error);">*</span></label>
+              <input type="email" id="email" name="email" class="form-control" placeholder="mark.m@gmail.com" required>
+            </div>
+          </div>
+
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="phone">Phone Number <span style="color: var(--color-error);">*</span></label>
+              <input type="tel" id="phone" name="phone" class="form-control" placeholder="(905) 555-0182" required pattern="^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$">
+            </div>
+            <div class="form-group">
+              <label for="referral">How did you hear about us? <span style="color: var(--color-error);">*</span></label>
+              <select id="referral" name="referral" class="form-control" required>
+                <option value="" disabled selected>Please select an option...</option>
+                <option value="Google">Google Search</option>
+                <option value="LinkedIn">LinkedIn Job Portal</option>
+                <option value="Referral">Employee Referral</option>
+                <option value="Other">Other Channel</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Cover Letter & Experience Summary <span style="color: var(--color-error);">*</span></label>
+            <textarea id="message" name="message" class="form-control" placeholder="Briefly summarize your logistics, sales, or technical background, and paste a link to your LinkedIn profile or digital resume..." required minlength="15"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-large">Submit Career Profile</button>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <%- include('partials/footer') %>

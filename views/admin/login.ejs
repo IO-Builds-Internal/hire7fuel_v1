@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Control Panel Login | KSG Fuel</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="admin-body" style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem;">
+
+  <!-- Glassmorphism Auth Container -->
+  <div style="background-color: var(--color-near-black); border: 1px solid rgba(34, 201, 138, 0.2); border-radius: var(--radius-lg); padding: 3.5rem 3rem; width: 100%; max-width: 440px; box-shadow: var(--shadow-premium); text-align: center;">
+    
+    <!-- Branding Header -->
+    <div style="margin-bottom: 2.5rem;">
+      <a href="/" style="display: inline-flex; align-items: center; gap: 0.75rem; color: var(--color-white); font-weight: 700; font-size: 1.75rem; text-decoration: none; margin-bottom: 0.75rem;">
+        <span style="color: var(--color-accent); font-style: italic;"><i class="fas fa-gas-pump"></i></span> KSG Fuel
+      </a>
+      <p style="color: #a3c2c2; font-size: 0.9rem; margin-bottom: 0;">Staff Administration Control Center</p>
+    </div>
+
+    <% if (error) { %>
+      <div class="alert" style="background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--color-error); color: #fca5a5; text-align: left; padding: 0.75rem 1rem; margin-bottom: 1.5rem; font-size: 0.85rem;" role="alert">
+        <i class="fas fa-triangle-exclamation" style="margin-right: 0.5rem; color: var(--color-error);"></i> <%= error %>
+      </div>
+    <% } %>
+
+    <form action="/admin/login" method="POST">
+      <div class="form-group" style="text-align: left;">
+        <label for="password" style="color: #a3c2c2;">Enter Staff Access Password</label>
+        <input type="password" id="password" name="password" class="form-control admin-input" placeholder="••••••••••••" required autofocus style="letter-spacing: 2px;">
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full btn-large" style="margin-top: 1.5rem;">Authenticate Session</button>
+    </form>
+
+    <div style="margin-top: 2rem;">
+      <a href="/" style="color: #a3c2c2; font-size: 0.85rem; text-decoration: underline;">Return to Public Website</a>
+    </div>
+
+  </div>
+
+  <!-- FontAwesome for standard icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</body>
+</html>

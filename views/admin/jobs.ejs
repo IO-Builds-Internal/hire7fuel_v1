@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Job Board Admin | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="admin-body">
+
+  <!-- Admin Navigation -->
+  <nav class="admin-nav">
+    <div class="admin-nav-container">
+      <a href="/admin" class="logo-link" style="font-size: 1.35rem;">
+        <i class="fas fa-screwdriver-wrench text-accent"></i>
+        <span><%= config.brand.name %> Admin</span>
+      </a>
+
+      <ul class="admin-nav-links">
+        <li><a href="/admin" class="admin-nav-link">Dashboard Hub</a></li>
+        <li><a href="/admin/settings" class="admin-nav-link">Site Settings</a></li>
+        <li><a href="/admin/jobs" class="admin-nav-link active">Careers Admin</a></li>
+        <li><a href="/" class="admin-nav-link" target="_blank">View Site <i class="fas fa-up-right-from-square" style="font-size: 0.75rem; margin-left: 0.25rem;"></i></a></li>
+      </ul>
+
+      <a href="/admin/logout" class="admin-logout">
+        <i class="fas fa-power-off"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <!-- Careers Administration Grid Container -->
+  <main class="admin-container">
+    
+    <div class="admin-header-wrap">
+      <div>
+        <h1>Careers & Jobs Administrator</h1>
+        <p style="color: #a3c2c2; margin-top: 0.25rem;">Create, toggle, or delete dynamic job postings. Changes propagate instantly to the public Careers page.</p>
+      </div>
+    </div>
+
+    <!-- Alert notifications -->
+    <% if (success) { %>
+      <div class="alert alert-success" style="background-color: rgba(16, 185, 129, 0.15); border: 1px solid var(--color-success); color: #a7f3d0; margin-bottom: 2rem;">
+        <i class="fas fa-circle-check" style="margin-right: 0.5rem; color: var(--color-success);"></i> 
+        <strong>Success!</strong> Job board database transaction completed successfully.
+      </div>
+    <% } %>
+
+    <% if (error) { %>
+      <div class="alert" style="background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--color-error); color: #fca5a5; margin-bottom: 2rem;">
+        <i class="fas fa-triangle-exclamation" style="margin-right: 0.5rem; color: var(--color-error);"></i> 
+        <strong>Transaction Error:</strong> <%= error %>
+      </div>
+    <% } %>
+
+    <div class="admin-jobs-grid">
+      
+      <!-- Left Column: Existing Job Listings -->
+      <div class="admin-card">
+        <h2 style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Existing Job Openings</h2>
+        
+        <% if (jobs && jobs.length > 0) { %>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <% jobs.forEach((job) => { %>
+              <div class="job-admin-card" id="admin-job-<%= job.id %>">
+                <div class="job-admin-info">
+                  <h4><%= job.title %></h4>
+                  <div style="font-size: 0.85rem; color: #a3c2c2; margin-top: 0.25rem;">
+                    <span style="margin-right: 0.75rem;"><i class="fas fa-building" style="margin-right: 0.25rem;"></i> <%= job.department %></span>
+                    <span style="margin-right: 0.75rem;"><i class="fas fa-location-dot" style="margin-right: 0.25rem;"></i> <%= job.location %></span>
+                    <span><i class="fas fa-briefcase" style="margin-right: 0.25rem;"></i> <%= job.type %></span>
+                  </div>
+                </div>
+
+                <div class="job-admin-actions">
+                  <!-- Active status switch toggle (EJS -> Client Fetch) -->
+                  <div style="display: flex; align-items: center; gap: 0.5rem; margin-right: 1.5rem;">
+                    <span style="font-size: 0.8rem; color: #a3c2c2; font-weight: 500;">Active</span>
+                    <label class="toggle-switch">
+                      <input type="checkbox" <%= job.active ? 'checked' : '' %> onchange="handleJobToggle('<%= job.id %>', this.checked)">
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+
+                  <!-- Delete button form -->
+                  <form action="/admin/jobs/delete/<%= job.id %>" method="POST" onsubmit="return confirm('Are you absolutely sure you want to permanently delete this job listing?');">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                      <i class="fas fa-trash-can"></i> Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% else { %>
+          <div style="text-align: center; padding: 4rem 2rem; color: #a3c2c2;">
+            <i class="fas fa-briefcase" style="font-size: 2.5rem; color: rgba(255,255,255,0.05); margin-bottom: 1.5rem;"></i>
+            <h3>No Careers Created Yet</h3>
+            <p style="color: #6B7280; font-size: 0.9rem; max-width: 300px; margin: 0.5rem auto 0 auto;">Enter job parameters in the right panel to dynamically populate your Careers page.</p>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Right Column: Add New Job Posting Form -->
+      <div class="admin-card">
+        <h2 style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Add New Career Posting</h2>
+        
+        <form action="/admin/jobs/add" method="POST">
+          <div class="form-group admin-form-group">
+            <label for="title">Job Title <span style="color: var(--color-error);">*</span></label>
+            <input type="text" id="title" name="title" class="form-control admin-input" placeholder="e.g. Senior Logistics Coordinator" required>
+          </div>
+
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div class="form-group admin-form-group">
+              <label for="department">Department <span style="color: var(--color-error);">*</span></label>
+              <input type="text" id="department" name="department" class="form-control admin-input" placeholder="e.g. Dispatch Operations" required>
+            </div>
+            <div class="form-group admin-form-group">
+              <label for="location">Location <span style="color: var(--color-error);">*</span></label>
+              <input type="text" id="location" name="location" class="form-control admin-input" value="Brampton, ON" placeholder="e.g. Brampton, ON - Hybrid" required>
+            </div>
+          </div>
+
+          <div class="form-group admin-form-group">
+            <label for="type">Job Type <span style="color: var(--color-error);">*</span></label>
+            <select id="type" name="type" class="form-control admin-input" required>
+              <option value="Full-time" selected>Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Internship">Internship</option>
+            </select>
+          </div>
+
+          <div class="form-group admin-form-group">
+            <label for="description">Job Summary / Description <span style="color: var(--color-error);">*</span></label>
+            <textarea id="description" name="description" class="form-control admin-input" placeholder="Briefly summarize key operational goals, team structures, and daily work tasks..." required style="min-height: 100px;"></textarea>
+          </div>
+
+          <div class="form-group admin-form-group" style="margin-bottom: 2rem;">
+            <label for="requirements">Core Job Requirements <span style="color: var(--color-error);">*</span></label>
+            <textarea id="requirements" name="requirements" class="form-control admin-input" placeholder="Enter each requirement on a new line:&#10;- e.g. 3+ years experience dispatching long-haul commercial fleets&#10;- e.g. Excellent communication skills and familiar with IFTA" required style="min-height: 120px;"></textarea>
+            <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.25rem;">Enter each requirement bullet-point on a separate line. The template translates them automatically.</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-large">Create Dynamic Post</button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Client-side script handling active toggles with dynamic server endpoints -->
+  <script>
+    async function handleJobToggle(jobId, isChecked) {
+      try {
+        const response = await fetch(`/admin/jobs/toggle/${jobId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ active: isChecked })
+        });
+        
+        const resData = await response.json();
+        if (!response.ok || !resData.success) {
+          alert('Error: Failed to update job status.');
+          // Revert checkbox state
+          window.location.reload();
+        }
+      } catch (err) {
+        console.error('Error toggling job status:', err);
+        alert('Server connection error. Failed to toggle status.');
+        window.location.reload();
+      }
+    }
+  </script>
+
+  <!-- FontAwesome for standard icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</body>
+</html>
