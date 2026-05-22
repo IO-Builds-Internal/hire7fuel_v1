@@ -4,8 +4,8 @@ const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv');
 
-// Load environment configurations from .env
-dotenv.config();
+// Load environment configurations from .env (override: true ensures .env always wins over system env vars)
+dotenv.config({ override: true });
 
 // Load central config fallback
 const baseConfig = require('./config');
