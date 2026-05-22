@@ -1444,4 +1444,160 @@
   margin: 0;
 }
 
+/* ============================================================================
+   15. Responsive Mobile & Tablet Adjustments
+   ============================================================================ */
+
+@media (max-width: 992px) {
+  /* Layout Adjustments */
+  .hero-layout, 
+  .tab-pane, 
+  .form-split-layout,
+  .apply-layout,
+  .contact-split,
+  .guarantee-layout {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  
+  .hero-mesh {
+    padding: 3rem 0;
+  }
+  
+  .hero-title {
+    font-size: 2.75rem;
+  }
+  
+  /* Grids to 2 Columns */
+  .pillars-grid, 
+  .features-grid, 
+  .testimonials-grid, 
+  .culture-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .badges-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  
+  .hero-truck-image {
+    max-width: 80%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile Navigation */
+  .mobile-toggle {
+    display: flex;
+    z-index: 1001;
+  }
+  
+  .nav-menu {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background-color: rgba(6, 15, 15, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 0;
+    gap: 1.5rem;
+    transform: translateY(-150%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-normal);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5);
+  }
+  
+  .nav-menu.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .mobile-toggle.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .mobile-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .mobile-toggle.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+  
+  .nav-link {
+    font-size: 1.25rem;
+  }
+  
+  /* Grids to 1 Column */
+  .pillars-grid, 
+  .features-grid, 
+  .testimonials-grid, 
+  .culture-grid,
+  .badges-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    text-align: center;
+  }
+  
+  .footer-logo-wrap, .footer-social-row {
+    justify-content: center;
+  }
+  
+  .footer-tagline {
+    margin: 0 auto;
+  }
+  
+  /* Components Sizing */
+  .glass-panel, .form-card, .contact-info-panel, .job-board-card {
+    padding: 1.5rem;
+  }
+  
+  .guarantee-layout {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .hero-title {
+    font-size: 2.25rem;
+    text-align: center;
+  }
+  
+  .hero-subtitle {
+    text-align: center;
+  }
+  
+  .hero-layout .button-group {
+    justify-content: center;
+  }
+  
+  .tabs-nav {
+    flex-direction: column;
+  }
+  
+  .floating-card-wrapper {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    bottom: auto;
+    left: auto;
+    margin-top: -2rem;
+  }
+}
+
+
 

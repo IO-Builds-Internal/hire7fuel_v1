@@ -212,3 +212,17 @@ form.was-validated .form-control:valid {
   margin-bottom: 0;
   word-break: break-word;
 }
+
+/* ============================================================================
+   Responsive Forms Adjustments
+   ============================================================================ */
+@media (max-width: 768px) {
+  .form-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .modal-content {
+    padding: 2rem 1.5rem;
+    width: 95%;
+  }
+}
