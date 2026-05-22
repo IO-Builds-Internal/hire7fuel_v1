@@ -1,76 +1,130 @@
-  <!-- KSG Fuel Premium Footer Section -->
+  <!-- KSG Fuel Premium Glassmorphic Footer -->
   <footer class="footer-wrapper">
+    <div class="footer-glow-overlay"></div>
     <div class="container footer-grid">
       
-      <!-- Column 1: Brand Info -->
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <a href="/" class="logo-link" title="KSG Fuel Homepage">
-            <img src="<%= config.brand.logo %>" alt="<%= config.brand.name %> Logo" class="logo-image">
-            <span><%= config.brand.name %></span>
+      <!-- Column 1: High-Tech Brand Profile -->
+      <div class="footer-brand-column">
+        <div class="footer-logo-wrap">
+          <a href="/" class="footer-logo-link" title="KSG Fuel Homepage">
+            <div class="logo-glow-ring"></div>
+            <img src="<%= config.brand.logo %>" alt="<%= config.brand.name %> Logo" class="footer-logo-img">
+            <span class="footer-brand-title"><%= config.brand.name %></span>
           </a>
         </div>
-        <p><%= config.brand.tagline %></p>
+        <p class="footer-tagline"><%= config.brand.tagline %></p>
         
-        <!-- Conditional Social Media Links (Zero Broken Icons Rule) -->
+        <!-- Premium Neon Social Touchpoints -->
         <div class="footer-social-row">
           <% if (config.social.linkedin) { %>
-            <a href="<%= config.social.linkedin %>" class="social-circle" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="Follow us on LinkedIn">
+            <a href="<%= config.social.linkedin %>" class="social-glass-btn" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="Follow us on LinkedIn">
               <i class="fab fa-linkedin-in"></i>
             </a>
           <% } %>
           <% if (config.social.facebook) { %>
-            <a href="<%= config.social.facebook %>" class="social-circle" target="_blank" rel="noopener noreferrer" title="Facebook" aria-label="Follow us on Facebook">
+            <a href="<%= config.social.facebook %>" class="social-glass-btn" target="_blank" rel="noopener noreferrer" title="Facebook" aria-label="Follow us on Facebook">
               <i class="fab fa-facebook-f"></i>
             </a>
           <% } %>
           <% if (config.social.instagram) { %>
-            <a href="<%= config.social.instagram %>" class="social-circle" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Follow us on Instagram">
+            <a href="<%= config.social.instagram %>" class="social-glass-btn" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Follow us on Instagram">
               <i class="fab fa-instagram"></i>
             </a>
           <% } %>
         </div>
       </div>
 
-      <!-- Column 2: Quick Links -->
-      <div class="footer-links">
-        <h3>Quick Navigation</h3>
-        <ul class="footer-nav">
-          <li><a href="/">Home</a></li>
-          <li><a href="/fuelcard">Fuel Card Program</a></li>
-          <li><a href="/careers">Careers Board</a></li>
-          <li><a href="/contact">Contact Coordinates</a></li>
-          <li><a href="/apply">Apply for Card</a></li>
+      <!-- Column 2: Quick Links with Interactive Indicators -->
+      <div class="footer-links-column">
+        <h3 class="footer-widget-title">Quick Navigation</h3>
+        <ul class="footer-nav-list">
+          <li>
+            <a href="/">
+              <i class="fas fa-chevron-right nav-arrow-icon"></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="/fuelcard">
+              <i class="fas fa-chevron-right nav-arrow-icon"></i>
+              <span>Fuel Card Program</span>
+            </a>
+          </li>
+          <li>
+            <a href="/careers">
+              <i class="fas fa-chevron-right nav-arrow-icon"></i>
+              <span>Careers Board</span>
+            </a>
+          </li>
+          <li>
+            <a href="/contact">
+              <i class="fas fa-chevron-right nav-arrow-icon"></i>
+              <span>Contact Coordinates</span>
+            </a>
+          </li>
+          <li>
+            <a href="/apply">
+              <i class="fas fa-chevron-right nav-arrow-icon"></i>
+              <span>Apply for Card</span>
+            </a>
+          </li>
         </ul>
       </div>
 
-      <!-- Column 3: Contact Coordinates -->
-      <div class="footer-contact">
-        <h3>Contact Us</h3>
-        <ul class="footer-contact-list">
-          <li>
-            <i class="fas fa-map-marker-alt"></i>
-            <span><%= config.contact.address %></span>
-          </li>
-          <li>
-            <i class="fas fa-phone-alt"></i>
-            <a href="tel:<%= config.contact.phone.replace(/[^0-9]/g, '') %>" style="color: inherit;"><%= config.contact.phone %></a>
-          </li>
-          <li>
-            <i class="fas fa-envelope"></i>
-            <a href="mailto:<%= config.contact.email %>" style="color: inherit;"><%= config.contact.email %></a>
-          </li>
-        </ul>
+      <!-- Column 3: High-Fidelity Contact Badges -->
+      <div class="footer-contact-column">
+        <h3 class="footer-widget-title">Contact Us</h3>
+        <div class="footer-contact-badges">
+          <!-- Address Badge -->
+          <div class="contact-glass-badge">
+            <div class="badge-icon-glowing"><i class="fas fa-map-location-dot"></i></div>
+            <div class="badge-info-text">
+              <span>OPERATIONAL HEADQUARTERS</span>
+              <strong><%= config.contact.address %></strong>
+            </div>
+          </div>
+          
+          <!-- Phone Badge -->
+          <a href="tel:<%= config.contact.phone.replace(/[^0-9]/g, '') %>" class="contact-glass-badge interactive-badge">
+            <div class="badge-icon-glowing"><i class="fas fa-phone-alt"></i></div>
+            <div class="badge-info-text">
+              <span>TOLL-FREE CARRIER LINE</span>
+              <strong><%= config.contact.phone %></strong>
+            </div>
+          </a>
+          
+          <!-- Email Badge -->
+          <a href="mailto:<%= config.contact.email %>" class="contact-glass-badge interactive-badge">
+            <div class="badge-icon-glowing"><i class="fas fa-envelope"></i></div>
+            <div class="badge-info-text">
+              <span>SUPPORT NETWORK INBOX</span>
+              <strong><%= config.contact.email %></strong>
+            </div>
+          </a>
+        </div>
       </div>
 
     </div>
 
-    <!-- Bottom copyrights row -->
-    <div class="container footer-bottom">
-      <p>&copy; <%= new Date().getFullYear() %> <%= config.brand.name %>. All Rights Reserved.</p>
-      <p>
-        <a href="/admin/login" style="color: rgba(255, 255, 255, 0.4); text-decoration: underline;" id="adminLink">Staff Admin Login</a>
-      </p>
+    <!-- Bottom Copyright & Utility Command Access -->
+    <div class="container footer-bottom-wrap">
+      <div class="footer-copyright-box">
+        <p>&copy; <%= new Date().getFullYear() %> <%= config.brand.name %>. Powering Fleet Operations Worldwide.</p>
+      </div>
+      
+      <!-- Shield AI Security gateway indicator -->
+      <div class="footer-security-badge">
+        <span class="shield-indicator-dot"></span>
+        <i class="fas fa-shield-halved security-shield-icon"></i>
+        <span>SHIELD AI™ SECURED</span>
+      </div>
+
+      <div class="footer-admin-box">
+        <a href="/admin/login" class="admin-login-glass-btn" id="adminLink">
+          <i class="fas fa-lock-open admin-lock-icon"></i>
+          <span>Staff Admin Login</span>
+        </a>
+      </div>
     </div>
   </footer>
 

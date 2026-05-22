@@ -16,7 +16,7 @@
   <meta property="og:image" content="/assets/logo.png">
 
   <!-- Style links -->
-  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
   
   <%- include('partials/header') %>
 
@@ -37,28 +37,13 @@
       <div class="apply-layout">
         <!-- Left Column: Visual representation of card + trust badges -->
         <div style="position: sticky; top: 110px;">
-          <h2 style="font-size: 1.75rem; margin-bottom: 1.5rem; color: var(--color-primary);">Join the KSG Fuel Network</h2>
+          <h2 style="font-size: 1.75rem; margin-bottom: 1.5rem; color: var(--color-white);">Join the KSG Fuel Network</h2>
           <p style="color: var(--color-muted); margin-bottom: 2.5rem; font-size: 1.05rem;">By enrolling in our fuel program, your fleet gains access to pre-negotiated wholesale fuel prices, real-time geofence alerts, and comprehensive tax compliance bookkeeping tools.</p>
           
           <!-- Premium visual card display -->
-          <div style="display: flex; justify-content: center; margin-bottom: 3.5rem;">
-            <div class="payment-card">
-              <div class="card-top">
-                <div class="card-chip"></div>
-                <div class="card-brand">KSG Fuel</div>
-              </div>
-              <div class="card-number">5038 9625 0834 1172</div>
-              <div class="card-bottom">
-                <div>
-                  <div class="card-holder">Card Member</div>
-                  <div class="card-name">COMMERCIAL FLEET</div>
-                </div>
-                <div class="card-expiry">
-                  <div class="card-holder">Expires</div>
-                  <div style="font-weight: 500;">12/28</div>
-                </div>
-              </div>
-            </div>
+          <div class="apply-card-preview-wrapper">
+            <div class="glow-ring highlight-glow"></div>
+            <img src="/assets/physical_card.png" alt="Premium KSG Fuel Physical Card" class="apply-premium-card">
           </div>
 
           <!-- Trust badges rows -->
@@ -94,7 +79,7 @@
           <% } %>
 
           <form action="/submit-application" method="POST" needs-validation novalidate>
-            <h3 style="font-size: 1.35rem; margin-bottom: 1.5rem; color: var(--color-primary); border-bottom: 1px solid var(--color-border); padding-bottom: 0.75rem;">Company & Contact Details</h3>
+            <h3 style="font-size: 1.35rem; margin-bottom: 1.5rem; color: var(--color-white); border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem;">Company & Contact Details</h3>
 
             <div class="form-group">
               <label for="name">Contact Person Full Name <span style="color: var(--color-error);">*</span></label>

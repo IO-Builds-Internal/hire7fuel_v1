@@ -1,0 +1,374 @@
+/* ============================================================================
+   KSG FUEL - STAFF PANEL CONTROL CENTER STYLES
+   ============================================================================ */
+
+.admin-body {
+  background-color: #0f1d1d;
+  color: #e5ebeb;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-nav {
+  background-color: var(--color-near-black);
+  border-bottom: 1px solid rgba(34, 201, 138, 0.15);
+  padding: 1rem 2rem;
+}
+
+.admin-nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.admin-nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.admin-nav-link {
+  color: #a3c2c2;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.admin-nav-link:hover, .admin-nav-link.active {
+  color: var(--color-accent);
+  background-color: rgba(34, 201, 138, 0.08);
+}
+
+.admin-logout {
+  color: #f87171;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-logout:hover {
+  color: #ef4444;
+}
+
+/* Admin layout structures */
+.admin-container {
+  flex-grow: 1;
+  width: 100%;
+  max-width: 1400px;
+  margin: 3rem auto;
+  padding: 0 2rem;
+}
+
+.admin-header-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 1.5rem;
+}
+
+.admin-header-wrap h1 {
+  color: var(--color-white);
+  font-size: 2.25rem;
+}
+
+.admin-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.admin-stat-card {
+  background-color: var(--color-near-black);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.admin-stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background-color: rgba(34, 201, 138, 0.1);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.admin-stat-info h3 {
+  font-size: 0.9rem;
+  color: #a3c2c2;
+  margin-bottom: 0.25rem;
+}
+
+.admin-stat-val {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+/* Custom Table in Admin Panel */
+.admin-card {
+  background-color: var(--color-near-black);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: var(--radius-md);
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.admin-card h2 {
+  color: var(--color-white);
+  margin-bottom: 1.5rem;
+  font-size: 1.35rem;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-table th, .admin-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.95rem;
+}
+
+.admin-table th {
+  color: #a3c2c2;
+  font-weight: 600;
+  background-color: rgba(255,255,255,0.02);
+}
+
+.admin-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.01);
+}
+
+.badge-pill {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+}
+
+.badge-contact { background-color: rgba(58, 191, 160, 0.15); color: var(--color-seafoam); }
+.badge-fuelcard { background-color: rgba(34, 201, 138, 0.15); color: var(--color-accent); }
+.badge-career { background-color: rgba(245, 166, 35, 0.15); color: var(--color-highlight); }
+
+.admin-action-btn {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.admin-action-btn:hover {
+  color: var(--color-white);
+}
+
+/* Modal details overlay for submissions */
+.details-modal {
+  display: none; /* Controlled via JS */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.85);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+}
+
+.details-modal.active {
+  display: flex;
+}
+
+.modal-card {
+  background-color: #0f2424;
+  border: 1px solid rgba(34, 201, 138, 0.2);
+  border-radius: var(--radius-md);
+  padding: 3rem;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: var(--shadow-premium);
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #a3c2c2;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: var(--color-accent);
+}
+
+.modal-fields {
+  margin-top: 1.5rem;
+}
+
+.modal-field {
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: 0.5rem;
+}
+
+.modal-field label {
+  display: block;
+  font-size: 0.8rem;
+  color: #a3c2c2;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.modal-field p {
+  font-size: 1.05rem;
+  color: var(--color-white);
+  margin-bottom: 0;
+}
+
+/* Admin dynamic forms overrides */
+.admin-input {
+  background-color: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--color-white);
+}
+
+.admin-input:focus {
+  background-color: rgba(255,255,255,0.05);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(34, 201, 138, 0.2);
+}
+
+.admin-form-group label {
+  color: #a3c2c2;
+}
+
+/* Career Admin specifics */
+.admin-jobs-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 3rem;
+}
+
+.job-admin-card {
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 1.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.job-admin-card:last-child {
+  border-bottom: none;
+}
+
+.job-admin-info h4 {
+  font-size: 1.15rem;
+  color: var(--color-white);
+}
+
+.job-admin-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-sm {
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  color: var(--color-white);
+}
+.btn-danger:hover {
+  background-color: #dc2626;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #374151;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px; width: 18px;
+  left: 4px; bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--color-accent);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+}
+
+/* Responsive Overrides */
+@media (max-width: 768px) {
+  .admin-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .admin-jobs-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-stats-row {
+    grid-template-columns: 1fr;
+  }
+}

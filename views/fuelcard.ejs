@@ -16,7 +16,7 @@
   <meta property="og:image" content="/assets/logo.png">
 
   <!-- Style links -->
-  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
   
   <%- include('partials/header') %>
 
@@ -67,25 +67,9 @@
             </ul>
             <a href="/apply" class="btn btn-outline-dark">Apply for Diesel Card</a>
           </div>
-          <div style="display: flex; justify-content: center;">
-            <!-- Program specific illustration mockup -->
-            <div class="payment-card" style="background: linear-gradient(135deg, #0d4f4f 0%, #1a6b6b 100%);">
-              <div class="card-top">
-                <div class="card-chip"></div>
-                <div class="card-brand">DIESEL MAX</div>
-              </div>
-              <div class="card-number">5038 DIESEL 0834 9911</div>
-              <div class="card-bottom">
-                <div>
-                  <div class="card-holder">Card Member</div>
-                  <div class="card-name">HIGH-VOLUME FLEET</div>
-                </div>
-                <div class="card-expiry">
-                  <div class="card-holder">Refuels</div>
-                  <div style="font-weight: 500;">DIESEL ONLY</div>
-                </div>
-              </div>
-            </div>
+          <div class="tab-card-preview-wrapper diesel-glow">
+            <div class="glow-ring"></div>
+            <img src="/assets/physical_card.png" alt="KSG Fuel Diesel Card" class="tab-card-render">
           </div>
         </div>
 
@@ -101,24 +85,9 @@
             </ul>
             <a href="/apply" class="btn btn-outline-dark">Apply for Cash Card</a>
           </div>
-          <div style="display: flex; justify-content: center;">
-            <div class="payment-card" style="background: linear-gradient(135deg, #3abfa0 0%, #1a6b6b 100%);">
-              <div class="card-top">
-                <div class="card-chip"></div>
-                <div class="card-brand">CASH PLUS</div>
-              </div>
-              <div class="card-number">5038 CASH 4892 2271</div>
-              <div class="card-bottom">
-                <div>
-                  <div class="card-holder">Card Member</div>
-                  <div class="card-name">FLEXIBLE SPEND</div>
-                </div>
-                <div class="card-expiry">
-                  <div class="card-holder">Type</div>
-                  <div style="font-weight: 500;">HYBRID CARD</div>
-                </div>
-              </div>
-            </div>
+          <div class="tab-card-preview-wrapper cash-glow">
+            <div class="glow-ring"></div>
+            <img src="/assets/physical_card.png" alt="KSG Fuel Cash Card" class="tab-card-render">
           </div>
         </div>
 
@@ -134,24 +103,9 @@
             </ul>
             <a href="/apply" class="btn btn-outline-dark">Apply for Maintenance Card</a>
           </div>
-          <div style="display: flex; justify-content: center;">
-            <div class="payment-card" style="background: linear-gradient(135deg, #f5a623 0%, #0d4f4f 100%);">
-              <div class="card-top">
-                <div class="card-chip"></div>
-                <div class="card-brand">FLEET CARE</div>
-              </div>
-              <div class="card-number">5038 REPAIR 7712 0451</div>
-              <div class="card-bottom">
-                <div>
-                  <div class="card-holder">Card Member</div>
-                  <div class="card-name">ASSET PROTECTION</div>
-                </div>
-                <div class="card-expiry">
-                  <div class="card-holder">Scope</div>
-                  <div style="font-weight: 500;">SERVICE ONLY</div>
-                </div>
-              </div>
-            </div>
+          <div class="tab-card-preview-wrapper maintenance-glow">
+            <div class="glow-ring"></div>
+            <img src="/assets/physical_card.png" alt="KSG Fuel Maintenance Card" class="tab-card-render">
           </div>
         </div>
 
@@ -201,47 +155,9 @@
       </div>
 
       <div class="card-presentation" id="dashboard-mockup">
-        <!-- Left Column: Premium Web Dashboard Mockup constructed entirely in HTML/CSS -->
-        <div style="background-color: var(--color-near-black); border-radius: 12px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08); overflow: hidden;">
-          <!-- Top bar -->
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem; margin-bottom: 1rem;">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <div style="width: 10px; height: 10px; border-radius: 50%; background-color: var(--color-accent);"></div>
-              <span style="font-size: 0.8rem; font-weight: 600; color: var(--color-white);">KSG Fleet Portal</span>
-            </div>
-            <span style="font-size: 0.75rem; color: #a3c2c2; background-color: rgba(34,201,138,0.1); padding: 0.15rem 0.5rem; border-radius: 4px;">Live Connection</span>
-          </div>
-          <!-- Stats Row -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
-            <div style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px;">
-              <span style="display: block; font-size: 0.65rem; color: #a3c2c2; text-transform: uppercase;">Active Cards</span>
-              <strong style="font-size: 1.2rem; color: var(--color-white);">38 / 40</strong>
-            </div>
-            <div style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px;">
-              <span style="display: block; font-size: 0.65rem; color: #a3c2c2; text-transform: uppercase;">Month Savings</span>
-              <strong style="font-size: 1.2rem; color: var(--color-accent);">$3,489.12</strong>
-            </div>
-          </div>
-          <!-- Recent Transactions -->
-          <div>
-            <span style="font-size: 0.7rem; font-weight: 700; color: #a3c2c2; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Real-Time Activity</span>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; background-color: rgba(255,255,255,0.02); padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.75rem;">
-                <div>
-                  <strong style="display: block; color: var(--color-white);">Truck #12 - Brampton Shell</strong>
-                  <span style="color: #a3c2c2;">120L Diesel Refuel</span>
-                </div>
-                <strong style="color: var(--color-accent);">$228.40</strong>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; background-color: rgba(255,255,255,0.02); padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.75rem;">
-                <div>
-                  <strong style="display: block; color: var(--color-white);">Truck #04 - Windsor TA Stop</strong>
-                  <span style="color: #a3c2c2;">180L Diesel Refuel</span>
-                </div>
-                <strong style="color: var(--color-accent);">$342.60</strong>
-              </div>
-            </div>
-          </div>
+        <div class="dashboard-preview-container">
+          <div class="dashboard-shadow-glow"></div>
+          <img src="/assets/dashboard_mockup.png" alt="KSG Fuel Portal Live Dashboard" class="dashboard-mockup-img">
         </div>
 
         <!-- Right Column: Text copy of key management features -->
@@ -265,6 +181,81 @@
               <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-chart-line"></i> Analytics Dashboard</h4>
               <p style="color: rgba(255,255,255,0.75);">Generate automated reports identifying low-cost lanes, underperforming units, and driver anomalies.</p>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive IFTA Tax splits visualizer (Surpassing Nomad.io) -->
+  <section class="section section-light-teal" id="interactive-ifta-compliance" style="border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+    <div class="container">
+      <div class="form-split-layout" style="align-items: center; gap: 4rem;">
+        <div>
+          <h2>Automated, Audit-Ready IFTA Compliance</h2>
+          <p style="color: var(--color-muted); font-size: 1.05rem; margin-bottom: 2rem;">No more manual matching of fuel invoices to trip sheets. As your trucks cross state boundaries, KSG Fuel maps gallon splits automatically. Export pre-formatted tax worksheets direct to QuickBooks or your TMS in one click.</p>
+          <ul class="bullet-features" style="margin-bottom: 2rem;">
+            <li><i class="fas fa-circle-check"></i> Clean mileage boundary mapping using electronic toll entries.</li>
+            <li><i class="fas fa-circle-check"></i> Standard 100% audit compliance ready formats.</li>
+            <li><i class="fas fa-circle-check"></i> Prevent double-taxation penalty risks from missed logs.</li>
+          </ul>
+          <button class="btn btn-outline-dark" id="recalculate-ifta-btn"><i class="fas fa-arrows-rotate" style="margin-right: 0.5rem;"></i> Recalculate Live Splits</button>
+        </div>
+
+        <div class="glass-panel" style="background: linear-gradient(135deg, rgba(13, 79, 79, 0.95) 0%, rgba(10, 28, 28, 0.95) 100%); box-shadow: var(--shadow-premium); border-color: rgba(34, 201, 138, 0.2); width: 100%;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+            <span style="font-weight: 700; color: var(--color-white); font-size: 1.05rem; display: flex; align-items: center;"><i class="fas fa-file-invoice-dollar" style="color: var(--color-accent); margin-right: 0.5rem;"></i> IFTA State-by-State Splits</span>
+            <span style="font-size: 0.8rem; color: #a3c2c2; font-weight: 600;">Q2 ACTIVE COMPILATION</span>
+          </div>
+
+          <div class="ifta-split-preview" style="grid-template-columns: 1fr; gap: 1.5rem;">
+            <!-- Ontario Split -->
+            <div class="ifta-state-card" style="background: rgba(255,255,255,0.03); padding: 1rem 1.25rem;">
+              <div class="state-header">
+                <span class="state-code">ON (Ontario)</span>
+                <span class="state-gallons">4,850 L</span>
+              </div>
+              <div class="state-bar-track">
+                <div class="state-bar-fill" data-pct="85" style="width: 85%;"></div>
+              </div>
+            </div>
+
+            <!-- Michigan Split -->
+            <div class="ifta-state-card" style="background: rgba(255,255,255,0.03); padding: 1rem 1.25rem;">
+              <div class="state-header">
+                <span class="state-code">MI (Michigan)</span>
+                <span class="state-gallons">2,120 Gal</span>
+              </div>
+              <div class="state-bar-track">
+                <div class="state-bar-fill" data-pct="65" style="width: 65%;"></div>
+              </div>
+            </div>
+
+            <!-- New York Split -->
+            <div class="ifta-state-card" style="background: rgba(255,255,255,0.03); padding: 1rem 1.25rem;">
+              <div class="state-header">
+                <span class="state-code">NY (New York)</span>
+                <span class="state-gallons">1,840 Gal</span>
+              </div>
+              <div class="state-bar-track">
+                <div class="state-bar-fill" data-pct="45" style="width: 45%;"></div>
+              </div>
+            </div>
+
+            <!-- Pennsylvania Split -->
+            <div class="ifta-state-card" style="background: rgba(255,255,255,0.03); padding: 1rem 1.25rem;">
+              <div class="state-header">
+                <span class="state-code">PA (Pennsylvania)</span>
+                <span class="state-gallons">1,290 Gal</span>
+              </div>
+              <div class="state-bar-track">
+                <div class="state-bar-fill" data-pct="35" style="width: 35%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
+            <span style="font-size: 0.75rem; color: var(--color-muted);"><i class="fas fa-circle-info" style="margin-right: 0.35rem;"></i> Auto-sync with QuickBooks & TMS enabled</span>
           </div>
         </div>
       </div>

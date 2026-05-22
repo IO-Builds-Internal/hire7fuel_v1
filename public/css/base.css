@@ -1,0 +1,194 @@
+/* ============================================================================
+   KSG FUEL - PREMIUM DESIGN SYSTEM (BASE & VARIABLES)
+   ============================================================================ */
+
+/* 1. Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* 2. Core Custom Property Tokens */
+:root {
+  /* Ultra-Premium Dark Theme Color Palette */
+  --color-primary: #060f0f;         /* Deep canvas black-teal */
+  --color-primary-rgb: 6, 15, 15;
+  --color-bg-darker: #040909;        /* Pure void black */
+  --color-mid-teal: #102e2e;        /* Deep panel teal background */
+  --color-mid-teal-rgb: 16, 46, 46;
+  --color-accent: #22C98A;          /* Vibrant neon mint for CTAs & active borders */
+  --color-accent-rgb: 34, 201, 138;
+  --color-highlight: #F5A623;       /* Warm secure alert amber */
+  --color-seafoam: #3ABFA0;         /* Neon cyan-teal decorative accents */
+  --color-white: #FFFFFF;           /* High-contrast crisp text */
+  --color-text-off: #e5e7eb;        /* Highly readable off-white body text */
+  --color-muted: #a3c2c2;           /* Soft muted teal for captions & labels */
+  --color-muted-dark: #4d7a7a;      /* Darker grey-teal borders */
+  
+  --color-error: #EF4444;           /* Threat alerts */
+  --color-success: #10B981;         /* Pass success logs */
+
+  /* Glow Shadows & Layering */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.6);
+  --shadow-premium: 0 20px 50px rgba(4, 9, 9, 0.9);
+  --shadow-neon-accent: 0 0 15px rgba(34, 201, 138, 0.25);
+  --shadow-neon-highlight: 0 0 15px rgba(245, 166, 35, 0.25);
+  
+  /* Borders & Radius */
+  --border-glass: 1px solid rgba(255, 255, 255, 0.08);
+  --border-glass-glow: 1px solid rgba(34, 201, 138, 0.2);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Fluid Hardware-Accelerated Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 3. CSS Reset & Base Elements */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-primary);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(34, 201, 138, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(58, 191, 160, 0.04) 0%, transparent 40%),
+    linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.005) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  color: var(--color-text-off);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Custom High-Tech Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-mid-teal);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* 4. Typography Rules */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-white);
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: 3.5rem; /* 56px */
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 2.25rem; /* 36px */
+  letter-spacing: -0.015em;
+  margin-bottom: 1.5rem;
+}
+
+h3 {
+  font-size: 1.5rem; /* 24px */
+  margin-bottom: 1rem;
+}
+
+p {
+  color: var(--color-muted);
+  margin-bottom: 1rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 5. Utility Layout Classes */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section {
+  padding: 8rem 0;
+  position: relative;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.max-w-md {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.text-accent {
+  color: var(--color-accent);
+  text-shadow: 0 0 15px rgba(34, 201, 138, 0.2);
+}
+
+.text-highlight {
+  color: var(--color-highlight);
+  text-shadow: 0 0 15px rgba(245, 166, 35, 0.2);
+}
+
+/* 6. Hardware-Accelerated Animations */
+@keyframes floatAnimation {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes pulseGlow {
+  0% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.25; transform: scale(1.05); }
+  100% { opacity: 0.15; transform: scale(1); }
+}
+
+@keyframes floatIndicator {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+/* Redefine section-light-teal as alternating sleek dark panels */
+.section-light-teal {
+  background-color: var(--color-bg-darker);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+

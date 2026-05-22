@@ -16,15 +16,22 @@
   <meta property="og:image" content="/assets/logo.png">
 
   <!-- Style links -->
-  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
   
   <%- include('partials/header') %>
 
   <!-- Hero Section -->
   <section class="hero-mesh">
+    <!-- Animated background glow blobs -->
+    <div class="glow-blob-container">
+      <div class="glow-blob glow-blob-1"></div>
+      <div class="glow-blob glow-blob-2"></div>
+      <div class="glow-blob glow-blob-3"></div>
+    </div>
+    
     <div class="hero-glow"></div>
     <div class="container hero-layout">
-      <div>
+      <div style="position: relative; z-index: 2;">
         <h1 class="hero-title" id="heroTitle">
           Drive Fleet Efficiency <br>
           <span class="text-accent">With Every Single Drop</span>
@@ -37,23 +44,68 @@
           <a href="/fuelcard" class="btn btn-outline btn-large" id="heroLearnBtn">Learn More</a>
         </div>
       </div>
-      <div class="fuelcard-visual">
-        <!-- credit card visual layout -->
-        <div class="payment-card">
-          <div class="card-top">
-            <div class="card-chip"></div>
-            <div class="card-brand">KSG Fuel</div>
+      <div class="hero-calculator-card glass-plate" id="hero-simulator">
+        <div class="simulator-glow"></div>
+        
+        <!-- Premium Holographic Card -->
+        <div class="hologram-card-container">
+          <div class="hologram-card" id="hero-holo-card">
+            <div class="hologram-card-reflection"></div>
+            <div class="card-glow-pulse"></div>
+            <div class="hologram-card-inner">
+              <div class="card-top">
+                <span class="card-brand">KSG FUEL</span>
+                <div class="card-chip-gold"></div>
+              </div>
+              <div class="card-number-glow">5412 8903 5678 1234</div>
+              <div class="card-bottom">
+                <div class="card-holder">
+                  <span>PREMIUM ACCOUNT</span>
+                  <strong>KSG TRANSIT PLUS</strong>
+                </div>
+                <div class="card-network-badge">
+                  <span class="neon-status-dot"></span>
+                  <span class="neon-status-text">SHIELD ENABLED</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="card-number">5038 9625 0834 1172</div>
-          <div class="card-bottom">
-            <div>
-              <div class="card-holder">Card Member</div>
-              <div class="card-name">COMMERCIAL FLEET</div>
+        </div>
+        
+        <!-- Dynamic Savings Readout -->
+        <div class="sim-readout">
+          <span class="sim-readout-label">ESTIMATED ANNUAL FLEET SAVINGS</span>
+          <div class="sim-savings-counter" id="hero-savings-counter">$11,250</div>
+        </div>
+        
+        <!-- Interactive Adjusters (Sliders) -->
+        <div class="sim-adjusters">
+          <div class="sim-slider-group">
+            <div class="sim-slider-header">
+              <span>Active Fleet Size</span>
+              <strong id="hero-fleet-val">15 Trucks</strong>
             </div>
-            <div class="card-expiry">
-              <div class="card-holder">Expires</div>
-              <div style="font-weight: 500;">12/28</div>
+            <input type="range" id="hero-fleet-slider" class="range-slider sim-slider" min="1" max="150" value="15">
+          </div>
+          
+          <div class="sim-slider-group">
+            <div class="sim-slider-header">
+              <span>Monthly Fuel / Truck</span>
+              <strong id="hero-fuel-val">3,000 L</strong>
             </div>
+            <input type="range" id="hero-fuel-slider" class="range-slider sim-slider" min="500" max="8000" step="100" value="3000">
+          </div>
+        </div>
+        
+        <!-- Mini Stats Grid -->
+        <div class="sim-stats-grid">
+          <div class="sim-stat-box">
+            <span class="sim-stat-label">Net Fuel Rebate</span>
+            <strong class="sim-stat-val text-accent" id="hero-rebate-val">$10,125</strong>
+          </div>
+          <div class="sim-stat-box">
+            <span class="sim-stat-label">IFTA & Admin Saved</span>
+            <strong class="sim-stat-val text-highlight" id="hero-hours-val">$1,125</strong>
           </div>
         </div>
       </div>
@@ -95,6 +147,242 @@
           <h3>Security</h3>
           <p>Lock down spending parameters immediately. Prevent employee card abuse by assigning distinct product classifications and daily transaction limits on every card.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Fleet Savings Calculator Section -->
+  <section class="section section-dark-interactive" id="savings-calculator">
+    <div class="glow-blob-container">
+      <div class="glow-blob glow-blob-2" style="opacity: 0.12;"></div>
+    </div>
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2 style="color: var(--color-white);">Project Your Annual Fleet Savings</h2>
+        <p class="max-w-md text-center" style="color: rgba(255, 255, 255, 0.7); margin: 1rem auto 0 auto;">See how much overhead your carrier operations can eliminate by shifting from legacy, high-fee fuel card platforms to KSG Fuel.</p>
+      </div>
+
+      <div class="calculator-grid">
+        <!-- Sliders Column -->
+        <div class="calculator-inputs">
+          <div class="input-card-glass">
+            <div class="slider-header">
+              <span class="slider-label">Fleet Size (Active Trucks)</span>
+              <span class="slider-value" id="fleet-size-val">25</span>
+            </div>
+            <input type="range" id="fleet-size-slider" class="range-slider" min="1" max="250" value="25">
+            <div class="slider-ticks">
+              <span>1 Truck</span>
+              <span>125 Trucks</span>
+              <span>250+ Trucks</span>
+            </div>
+          </div>
+
+          <div class="input-card-glass">
+            <div class="slider-header">
+              <span class="slider-label">Average Monthly Fuel per Truck (Liters)</span>
+              <span class="slider-value" id="fuel-volume-val">3,500 L</span>
+            </div>
+            <input type="range" id="fuel-volume-slider" class="range-slider" min="500" max="8000" step="100" value="3500">
+            <div class="slider-ticks">
+              <span>500 L</span>
+              <span>4,250 L</span>
+              <span>8,000 L</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Savings Readout Column -->
+        <div class="calculator-output-card">
+          <div class="saving-card-inner">
+            <span class="output-label">ESTIMATED TOTAL ANNUAL SAVINGS</span>
+            <div class="huge-glowing-number" id="annual-savings-readout">$26,250</div>
+            
+            <div class="savings-breakdown">
+              <div class="breakdown-row">
+                <span class="breakdown-label"><i class="fas fa-gas-pump" style="color: var(--color-accent); margin-right: 0.5rem;"></i> Fuel Rebate Value (25¢ / L)</span>
+                <strong class="breakdown-value" id="breakdown-fuel">$21,875</strong>
+              </div>
+              <div class="breakdown-row">
+                <span class="breakdown-label"><i class="fas fa-clock" style="color: var(--color-accent); margin-right: 0.5rem;"></i> Admin & IFTA Hours Saved</span>
+                <strong class="breakdown-value" id="breakdown-admin">$4,375</strong>
+              </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+              <a href="/apply" class="btn btn-primary btn-large btn-full">Start Saving Today</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Interactive Dashboard Emulator Section (Surpassing Nomad.io) -->
+  <section class="section section-dark-interactive" id="live-portal-emulator" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 4rem;">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2 style="color: var(--color-white);">Experience Absolute Fleet Control Live</h2>
+        <p class="max-w-md text-center" style="color: rgba(255, 255, 255, 0.7); margin: 1rem auto 0 auto;">Don't just take our word for it. Test drive the core controls of our administrative dashboard below and watch our AI defenses intercept threat variables in real-time.</p>
+      </div>
+
+      <div class="emulator-grid">
+        <!-- Left Side: Interactive Dashboard Controls -->
+        <div class="emulator-stage">
+          <!-- Card Render -->
+          <div class="emulator-card-container">
+            <div class="highlight-glow"></div>
+            <div class="emulator-card-render" id="emulator-card">
+              <div class="card-top">
+                <span class="card-brand"><%= config.brand.name %></span>
+                <div class="card-chip"></div>
+              </div>
+              <div class="card-number">•••• •••• •••• 9981</div>
+              <div class="card-bottom">
+                <div class="card-holder">
+                  <span>FLEET UNIT</span>
+                  <strong>UNIT #285</strong>
+                </div>
+                <div class="card-status-pill active" id="card-status-pill">
+                  <span class="status-dot"></span>
+                  <span id="card-status-text">ACTIVE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Switches and Settings -->
+          <div class="emulator-controls">
+            <!-- Card Lock switch -->
+            <div class="control-card-glass">
+              <div class="control-row">
+                <div class="control-title-box">
+                  <i class="fas fa-snowflake" style="color: var(--color-accent);"></i>
+                  <span>Instant Security Freeze</span>
+                </div>
+                 <label class="switch-wrap">
+                  <input type="checkbox" id="card-lock-toggle">
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+              <p style="font-size: 0.85rem; color: rgba(255,255,255,0.65); margin: 0;">Freeze card instantly to prevent transaction clearance (e.g. driver lost card, emergency lockout).</p>
+            </div>
+
+            <!-- Daily Spend limit slider -->
+            <div class="control-card-glass">
+              <div class="slider-header" style="margin-bottom: 0.5rem;">
+                <div class="control-title-box">
+                  <i class="fas fa-sliders" style="color: var(--color-accent);"></i>
+                  <span>Daily Fuel Volume Limit</span>
+                </div>
+                <span class="slider-value" id="card-spend-val" style="font-size: 1.15rem;">150 Gal</span>
+              </div>
+              <input type="range" id="card-spend-slider" class="range-slider" min="50" max="300" step="10" value="150">
+              <p style="font-size: 0.85rem; color: rgba(255,255,255,0.65); margin-top: 0.5rem; margin-bottom: 0;">Restricts gallons per day on the road. Updates are propagated immediately to the card.</p>
+            </div>
+
+            <!-- Geofence Grid checklist -->
+            <div class="control-card-glass">
+              <div class="control-title-box" style="margin-bottom: 0.25rem;">
+                <i class="fas fa-map-location-dot" style="color: var(--color-accent);"></i>
+                <span>Approved Corridor Geofences</span>
+              </div>
+              <p style="font-size: 0.85rem; color: rgba(255,255,255,0.65); margin-bottom: 0.75rem;">Limit refueling purchases exclusively to pre-checked highway lanes. Off-route fills block instantly.</p>
+              <div class="geofence-list">
+                <label class="geofence-checkbox">
+                  <input type="checkbox" value="on" checked>
+                  <span>Ontario ON</span>
+                </label>
+                <label class="geofence-checkbox">
+                  <input type="checkbox" value="midwest" checked>
+                  <span>US Mid-West</span>
+                </label>
+                <label class="geofence-checkbox">
+                  <input type="checkbox" value="i95" checked>
+                  <span>US I-95 Grid</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Scrolling Live Activity stream -->
+        <div class="activity-feed-panel">
+          <div class="feed-header">
+            <div class="feed-title">
+              <i class="fas fa-terminal"></i>
+              <span>Real-Time Security Log Stream</span>
+            </div>
+            <div class="feed-badge-pulse">
+              <span class="pulse-dot-red"></span>
+              <span>LIVE TELEMETRY</span>
+            </div>
+          </div>
+          
+          <!-- Activity lists container -->
+          <div class="activity-list" id="activity-list">
+            <!-- Dynamically injected items go here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Side-by-Side Pricing Comparison Table -->
+  <section class="section section-light-teal" id="pricing-matrix">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2>Wholesale Pricing Without Hidden Surcharges</h2>
+        <p class="max-w-md text-center" style="color: var(--color-muted);">Compare side-by-side: KSG Fuel eliminates the predatory margins and hidden setup fees common to legacy programs, matching the sleekest tech upstarts while providing premium truck support.</p>
+      </div>
+
+      <div class="pricing-matrix-wrap">
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>Platform Parameters</th>
+              <th class="highlight-col">KSG Fuel Card</th>
+              <th>Legacy Cards (WEX/Comdata)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Monthly Card Fee</strong></td>
+              <td class="highlight-col"><span class="check-icon"><i class="fas fa-circle-check"></i> $0.00 (Free)</span></td>
+              <td><span class="cross-icon"><i class="fas fa-circle-xmark"></i> $5.00 – $10.00 / card</span></td>
+            </tr>
+            <tr>
+              <td><strong>Standard Swipe / Network Charge</strong></td>
+              <td class="highlight-col"><span class="check-icon"><i class="fas fa-circle-check"></i> $0.00 (Zero)</span></td>
+              <td><span class="cross-icon"><i class="fas fa-circle-xmark"></i> $2.00 – $3.50 per swipe</span></td>
+            </tr>
+            <tr>
+              <td><strong>Credit Setup & Deposits</strong></td>
+              <td class="highlight-col"><span class="check-icon"><i class="fas fa-circle-check"></i> $0.00 (None Required)</span></td>
+              <td><span class="cross-icon"><i class="fas fa-circle-xmark"></i> Upfront security deposits required</span></td>
+            </tr>
+            <tr>
+              <td><strong>Fuel Pricing Basis</strong></td>
+              <td class="highlight-col">Wholesale Cost-Plus (Rack Basis)</td>
+              <td>Retail Price + hidden markups</td>
+            </tr>
+            <tr>
+              <td><strong>Security Suite</strong></td>
+              <td class="highlight-col"><span class="check-icon"><i class="fas fa-circle-check"></i> Shield AI™ (Instant)</span></td>
+              <td>Retroactive statements only</td>
+            </tr>
+            <tr>
+              <td><strong>Automated IFTA Tax Export</strong></td>
+              <td class="highlight-col"><span class="check-icon"><i class="fas fa-circle-check"></i> Included (Free)</span></td>
+              <td><span class="cross-icon"><i class="fas fa-circle-xmark"></i> $15/month extra addon</span></td>
+            </tr>
+            <tr>
+              <td><strong>Support Dispatcher access</strong></td>
+              <td class="highlight-col">24/7 dedicated dispatch support</td>
+               <td>Long call queues, automated IVR</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>

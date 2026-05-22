@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const sqlite3 = require('sqlite3').verbose();
 const { createClient } = require('@supabase/supabase-js');
 const baseConfig = require('../config');
 
@@ -17,60 +18,154 @@ if (isSupabaseConfigured) {
     dbClient = createClient(supabaseUrl, supabaseKey);
     console.log('Database Client: Supabase layer successfully initialized.');
   } catch (error) {
-    console.error('Database Client: Error initializing Supabase client. Falling back to local JSON.', error);
+    console.error('Database Client: Error initializing Supabase client. Falling back to SQLite.', error);
     dbClient = null;
   }
 } else {
-  console.log('Database Client: Supabase credentials not found in env. Initializing offline Local JSON database fallback.');
+  console.log('Database Client: Supabase credentials not found in env. Initializing offline SQLite local database fallback.');
 }
 
-// Path to offline local database file
-const localDbPath = path.join(__dirname, 'local_db.json');
+// Path to offline local SQLite database file
+const localDbFile = path.join(__dirname, 'ksg_fuel.sqlite');
+let sqliteDb = null;
 
-// Initialize local JSON file if missing
-function initLocalDb() {
-  if (!fs.existsSync(localDbPath)) {
-    const defaultData = {
-      settings: {
-        brand_name: baseConfig.brand.name,
-        brand_tagline: baseConfig.brand.tagline,
-        logo_url: baseConfig.brand.logo,
-        contact_phone: baseConfig.contact.phone,
-        contact_email: baseConfig.contact.email,
-        contact_address: baseConfig.contact.address,
-        social_linkedin: baseConfig.social.linkedin,
-        social_facebook: baseConfig.social.facebook,
-        social_instagram: baseConfig.social.instagram
-      },
-      jobs: [],
-      submissions: []
-    };
-    fs.writeFileSync(localDbPath, JSON.stringify(defaultData, null, 2), 'utf-8');
-  }
+if (!isSupabaseConfigured || dbClient === null) {
+  // Initialize SQLite Connection
+  sqliteDb = new sqlite3.Database(localDbFile, (err) => {
+    if (err) {
+      console.error('Error connecting to SQLite database:', err.message);
+    } else {
+      console.log('SQLite Client: Connected to local ksg_fuel.sqlite database.');
+      initSqliteTables();
+    }
+  });
 }
 
-// Read from local JSON
-function readLocalDb() {
-  initLocalDb();
-  try {
-    const rawData = fs.readFileSync(localDbPath, 'utf-8');
-    return JSON.parse(rawData);
-  } catch (error) {
-    console.error('Error reading local JSON db:', error);
-    return { settings: {}, jobs: [], submissions: [] };
-  }
+/**
+ * Bootstraps SQLite tables and initial settings seed if database is new.
+ */
+function initSqliteTables() {
+  sqliteDb.serialize(() => {
+    // 1. Settings Table
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // 2. Jobs Table
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS jobs (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        department TEXT NOT NULL,
+        location TEXT NOT NULL,
+        description TEXT NOT NULL,
+        requirements TEXT NOT NULL,
+        type TEXT DEFAULT 'Full-time',
+        active INTEGER DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // 3. Submissions Table
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS submissions (
+        id TEXT PRIMARY KEY,
+        type TEXT NOT NULL,
+        payload TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Seed settings if empty
+    sqliteDb.get("SELECT COUNT(*) as count FROM settings", (err, row) => {
+      if (!err && row && row.count === 0) {
+        console.log('SQLite Client: Seeding baseline brand settings database rows...');
+        const stmt = sqliteDb.prepare("INSERT INTO settings (key, value) VALUES (?, ?)");
+        stmt.run('brand_name', baseConfig.brand.name);
+        stmt.run('brand_tagline', baseConfig.brand.tagline);
+        stmt.run('logo_url', baseConfig.brand.logo);
+        stmt.run('contact_phone', baseConfig.contact.phone);
+        stmt.run('contact_email', baseConfig.contact.email);
+        stmt.run('contact_address', baseConfig.contact.address);
+        stmt.run('social_linkedin', baseConfig.social.linkedin);
+        stmt.run('social_facebook', baseConfig.social.facebook);
+        stmt.run('social_instagram', baseConfig.social.instagram);
+        stmt.finalize();
+      }
+    });
+
+    // Seed default jobs if empty
+    sqliteDb.get("SELECT COUNT(*) as count FROM jobs", (err, row) => {
+      if (!err && row && row.count === 0) {
+        console.log('SQLite Client: Seeding baseline carrier logistics and technical jobs...');
+        const stmt = sqliteDb.prepare("INSERT INTO jobs (id, title, department, location, description, requirements, type, active) VALUES (?, ?, ?, ?, ?, ?, ?, 1)");
+        
+        stmt.run(
+          'job-1',
+          'Commercial Fleet Logistics Coordinator',
+          'Dispatch Operations',
+          'Brampton, ON - Hybrid',
+          'Oversee fuel purchase logs, coordinate active fleet routes across primary highway lanes, and assist commercial carriers in minimizing out-of-route refueling overhead using the KSG Shield AI™ tracking system.',
+          '2+ years experience dispatching long-haul commercial trucks or handling fleet fuel procurement.\nStrong familiarity with North American highway corridors and freight route planning.\nProficient communication skills and rapid multi-tasking abilities.',
+          'Full-time'
+        );
+
+        stmt.run(
+          'job-2',
+          'Staff Software Engineer, Fleet Analytics',
+          'Engineering & Security',
+          'Brampton, ON - Hybrid',
+          'Help build and expand the KSG Shield AI™ real-time security tracking engine. Drive optimizations in telemetry geofencing databases, automated state IFTA compilation pipelines, and responsive glassmorphic dashboard management interfaces.',
+          '4+ years of professional backend software development experience with Node.js and relational databases.\nDeep understanding of geospatial indexing, real-time streaming pipelines, and API architecture.\nStrong dedication to clean code, modular frameworks, and premium visual components.',
+          'Full-time'
+        );
+
+        stmt.run(
+          'job-3',
+          'Enterprise Carrier Account Executive',
+          'Sales & Fleet Growth',
+          'Brampton, ON - Remote',
+          'Identify and partner with mid-to-large-size commercial truck fleets across Canada and the United States. Conduct custom lane savings assessments demonstrating the clear financial advantages of KSG Fuel\'s transparent wholesale cost-plus pricing structures.',
+          'Proven track record of B2B sales inside the logistics, freight brokerage, or commercial transportation sectors.\nAbility to analyze financial reports and contrast legacy retail pricing with wholesale Cost-Plus structures.\nOutstanding relationship building skills with fleet owners and dispatch directors.',
+          'Full-time'
+        );
+
+        stmt.finalize();
+      }
+    });
+  });
 }
 
-// Write to local JSON
-function writeLocalDb(data) {
-  try {
-    fs.writeFileSync(localDbPath, JSON.stringify(data, null, 2), 'utf-8');
-    return true;
-  } catch (error) {
-    console.error('Error writing to local JSON db:', error);
-    return false;
-  }
-}
+/**
+ * Async Promisified helpers for SQLite transactions
+ */
+const dbRun = (sql, params = []) => new Promise((resolve, reject) => {
+  if (!sqliteDb) return reject(new Error('SQLite is not initialized.'));
+  sqliteDb.run(sql, params, function(err) {
+    if (err) reject(err);
+    else resolve(this);
+  });
+});
+
+const dbGet = (sql, params = []) => new Promise((resolve, reject) => {
+  if (!sqliteDb) return reject(new Error('SQLite is not initialized.'));
+  sqliteDb.get(sql, params, (err, row) => {
+    if (err) reject(err);
+    else resolve(row);
+  });
+});
+
+const dbAll = (sql, params = []) => new Promise((resolve, reject) => {
+  if (!sqliteDb) return reject(new Error('SQLite is not initialized.'));
+  sqliteDb.all(sql, params, (err, rows) => {
+    if (err) reject(err);
+    else resolve(rows);
+  });
+});
 
 // Helper to generate UUID-like string for local jobs/submissions
 const generateId = () => Math.random().toString(36).substring(2, 9) + '-' + Date.now().toString(36);
@@ -115,17 +210,24 @@ module.exports = {
         console.error('Supabase getSettings failed, using config defaults:', err.message);
       }
     } else {
-      const db = readLocalDb();
-      const s = db.settings || {};
-      if (s.brand_name) settingsObj.brand.name = s.brand_name;
-      if (s.brand_tagline) settingsObj.brand.tagline = s.brand_tagline;
-      if (s.logo_url) settingsObj.brand.logo = s.logo_url;
-      if (s.contact_phone) settingsObj.contact.phone = s.contact_phone;
-      if (s.contact_email) settingsObj.contact.email = s.contact_email;
-      if (s.contact_address) settingsObj.contact.address = s.contact_address;
-      if (s.social_linkedin) settingsObj.social.linkedin = s.social_linkedin;
-      if (s.social_facebook) settingsObj.social.facebook = s.social_facebook;
-      if (s.social_instagram) settingsObj.social.instagram = s.social_instagram;
+      try {
+        const rows = await dbAll("SELECT key, value FROM settings");
+        if (rows && rows.length > 0) {
+          rows.forEach(row => {
+            if (row.key === 'brand_name') settingsObj.brand.name = row.value;
+            if (row.key === 'brand_tagline') settingsObj.brand.tagline = row.value;
+            if (row.key === 'logo_url') settingsObj.brand.logo = row.value;
+            if (row.key === 'contact_phone') settingsObj.contact.phone = row.value;
+            if (row.key === 'contact_email') settingsObj.contact.email = row.value;
+            if (row.key === 'contact_address') settingsObj.contact.address = row.value;
+            if (row.key === 'social_linkedin') settingsObj.social.linkedin = row.value;
+            if (row.key === 'social_facebook') settingsObj.social.facebook = row.value;
+            if (row.key === 'social_instagram') settingsObj.social.instagram = row.value;
+          });
+        }
+      } catch (err) {
+        console.error('SQLite getSettings failed, using config defaults:', err.message);
+      }
     }
 
     return settingsObj;
@@ -148,10 +250,16 @@ module.exports = {
         return false;
       }
     } else {
-      const db = readLocalDb();
-      if (!db.settings) db.settings = {};
-      db.settings[key] = value;
-      return writeLocalDb(db);
+      try {
+        await dbRun(
+          "INSERT INTO settings (key, value, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP) ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated_at=excluded.updated_at",
+          [key, value]
+        );
+        return true;
+      } catch (err) {
+        console.error('SQLite updateSetting failed:', err.message);
+        return false;
+      }
     }
   },
 
@@ -186,13 +294,22 @@ module.exports = {
         return [];
       }
     } else {
-      const db = readLocalDb();
-      const list = db.jobs || [];
-      const sorted = list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-      if (onlyActive) {
-        return sorted.filter(j => j.active);
+      try {
+        let sql = "SELECT * FROM jobs ORDER BY created_at DESC";
+        let params = [];
+        if (onlyActive) {
+          sql = "SELECT * FROM jobs WHERE active = 1 ORDER BY created_at DESC";
+        }
+        const rows = await dbAll(sql, params);
+        // SQLite stores boolean active as 0 or 1, map it to boolean true/false for template parity
+        return rows.map(r => ({
+          ...r,
+          active: !!r.active
+        }));
+      } catch (err) {
+        console.error('SQLite getJobs failed:', err.message);
+        return [];
       }
-      return sorted;
     }
   },
 
@@ -225,11 +342,17 @@ module.exports = {
         return false;
       }
     } else {
-      const db = readLocalDb();
-      newJob.id = generateId();
-      db.jobs.push(newJob);
-      const ok = writeLocalDb(db);
-      return ok ? newJob : false;
+      try {
+        newJob.id = generateId();
+        await dbRun(
+          "INSERT INTO jobs (id, title, department, location, description, requirements, type, active, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)",
+          [newJob.id, newJob.title, newJob.department, newJob.location, newJob.description, newJob.requirements, newJob.type]
+        );
+        return newJob;
+      } catch (err) {
+        console.error('SQLite addJob failed:', err.message);
+        return false;
+      }
     }
   },
 
@@ -251,13 +374,14 @@ module.exports = {
         return false;
       }
     } else {
-      const db = readLocalDb();
-      const idx = db.jobs.findIndex(j => j.id === id);
-      if (idx !== -1) {
-        db.jobs[idx].active = active;
-        return writeLocalDb(db);
+      try {
+        const activeInt = active ? 1 : 0;
+        await dbRun("UPDATE jobs SET active = ? WHERE id = ?", [activeInt, id]);
+        return true;
+      } catch (err) {
+        console.error('SQLite toggleJobStatus failed:', err.message);
+        return false;
       }
-      return false;
     }
   },
 
@@ -279,13 +403,13 @@ module.exports = {
         return false;
       }
     } else {
-      const db = readLocalDb();
-      const filtered = db.jobs.filter(j => j.id !== id);
-      if (filtered.length !== db.jobs.length) {
-        db.jobs = filtered;
-        return writeLocalDb(db);
+      try {
+        await dbRun("DELETE FROM jobs WHERE id = ?", [id]);
+        return true;
+      } catch (err) {
+        console.error('SQLite deleteJob failed:', err.message);
+        return false;
       }
-      return false;
     }
   },
 
@@ -312,11 +436,18 @@ module.exports = {
         return false;
       }
     } else {
-      const db = readLocalDb();
-      submission.id = generateId();
-      if (!db.submissions) db.submissions = [];
-      db.submissions.push(submission);
-      return writeLocalDb(db);
+      try {
+        submission.id = generateId();
+        const payloadStr = JSON.stringify(submission.payload);
+        await dbRun(
+          "INSERT INTO submissions (id, type, payload, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)",
+          [submission.id, submission.type, payloadStr]
+        );
+        return true;
+      } catch (err) {
+        console.error('SQLite saveSubmission failed:', err.message);
+        return false;
+      }
     }
   },
 
@@ -338,13 +469,22 @@ module.exports = {
         return [];
       }
     } else {
-      const db = readLocalDb();
-      const list = db.submissions || [];
-      const sorted = list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-      if (type) {
-        return sorted.filter(s => s.type === type);
+      try {
+        let sql = "SELECT * FROM submissions ORDER BY created_at DESC";
+        let params = [];
+        if (type) {
+          sql = "SELECT * FROM submissions WHERE type = ? ORDER BY created_at DESC";
+          params = [type];
+        }
+        const rows = await dbAll(sql, params);
+        return rows.map(r => ({
+          ...r,
+          payload: JSON.parse(r.payload)
+        }));
+      } catch (err) {
+        console.error('SQLite getSubmissions failed:', err.message);
+        return [];
       }
-      return sorted;
     }
   }
 };

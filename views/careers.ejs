@@ -16,7 +16,7 @@
   <meta property="og:image" content="/assets/logo.png">
 
   <!-- Style links -->
-  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
   
   <%- include('partials/header') %>
 
@@ -74,17 +74,17 @@
           <% jobs.forEach((job, idx) => { %>
             <div class="job-board-card" id="job-card-<%= idx %>">
               <div class="job-info-left">
-                <h3 style="color: var(--color-primary); margin-bottom: 0.25rem;"><%= job.title %></h3>
+                <h3 style="color: var(--color-white); margin-bottom: 0.25rem;"><%= job.title %></h3>
                 <div class="job-meta-tags">
                   <span class="meta-tag"><i class="fas fa-building" style="margin-right: 0.25rem;"></i> <%= job.department %></span>
                   <span class="meta-tag"><i class="fas fa-location-dot" style="margin-right: 0.25rem;"></i> <%= job.location %></span>
                   <span class="meta-tag"><i class="fas fa-briefcase" style="margin-right: 0.25rem;"></i> <%= job.type %></span>
                 </div>
-                <p style="margin-top: 1rem; color: var(--color-body-text); font-size: 0.95rem;"><%= job.description %></p>
+                <p style="margin-top: 1rem; color: var(--color-text-off); font-size: 0.95rem;"><%= job.description %></p>
                 
                 <% if (job.requirements) { %>
                   <div style="margin-top: 1rem;">
-                    <strong style="font-size: 0.85rem; text-transform: uppercase; color: var(--color-primary); display: block; margin-bottom: 0.5rem;">Requirements:</strong>
+                    <strong style="font-size: 0.85rem; text-transform: uppercase; color: var(--color-accent); display: block; margin-bottom: 0.5rem;">Requirements:</strong>
                     <ul class="bullet-features" style="font-size: 0.9rem;">
                       <% job.requirements.split('\n').forEach(reqLine => { %>
                         <% if (reqLine.trim()) { %>
@@ -104,7 +104,7 @@
       <% } else { %>
         <!-- Fallback: "No Current Openings" Styled Callout Box -->
         <div class="no-openings-box" id="noOpeningsBox">
-          <i class="fas fa-briefcase-blank"></i>
+          <i class="fas fa-briefcase" style="font-size: 3rem; color: rgba(255,255,255,0.08); margin-bottom: 1.5rem; display: block;"></i>
           <h3>No Current Openings</h3>
           <p>We are currently fully staffed across our core departments. However, we are always eager to meet driven individuals. Submit your resume to our general talent pool below, and we will contact you when a slot opens up!</p>
           <a href="#career-form" class="btn btn-primary">Join General Talent Pool</a>
@@ -120,7 +120,7 @@
       
       <div class="form-card" id="career-form">
         <div class="text-center" style="margin-bottom: 2rem;">
-          <h2 style="font-size: 1.75rem; color: var(--color-primary); margin-bottom: 0.5rem;">Submit General Expression of Interest</h2>
+          <h2 style="font-size: 1.75rem; color: var(--color-white); margin-bottom: 0.5rem;">Submit General Expression of Interest</h2>
           <p style="color: var(--color-muted);">Enter your professional credentials. Our talent acquisition specialist will review your background and link it to future vacancies.</p>
         </div>
 
