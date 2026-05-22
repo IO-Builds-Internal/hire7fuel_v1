@@ -414,6 +414,70 @@ module.exports = {
   },
 
   /**
+   * Fetch a single job.
+   */
+  async getJob(id) {
+    if (this.isSupabase) {
+      try {
+        const { data, error } = await dbClient
+          .from('jobs')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (error) throw error;
+        return data;
+      } catch (err) {
+        console.error('Supabase getJob failed:', err.message);
+        return null;
+      }
+    } else {
+      try {
+        const row = await dbGet("SELECT * FROM jobs WHERE id = ?", [id]);
+        if (!row) return null;
+        return {
+          ...row,
+          active: !!row.active
+        };
+      } catch (err) {
+        console.error('SQLite getJob failed:', err.message);
+        return null;
+      }
+    }
+  },
+
+  /**
+   * Update an existing job.
+   */
+  async updateJob(id, { title, department, location, description, requirements, type }) {
+    if (this.isSupabase) {
+      try {
+        const { error } = await dbClient
+          .from('jobs')
+          .update({ title, department, location, description, requirements, type })
+          .eq('id', id);
+
+        if (error) throw error;
+        return true;
+      } catch (err) {
+        console.error('Supabase updateJob failed:', err.message);
+        return false;
+      }
+    } else {
+      try {
+        await dbRun(
+          "UPDATE jobs SET title = ?, department = ?, location = ?, description = ?, requirements = ?, type = ? WHERE id = ?",
+          [title, department, location, description, requirements, type, id]
+        );
+        return true;
+      } catch (err) {
+        console.error('SQLite updateJob failed:', err.message);
+        return false;
+      }
+    }
+  },
+
+  /**
    * Save a form submission (contact, fuelcard application, careers general)
    */
   async saveSubmission(type, payload) {

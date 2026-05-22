@@ -18,102 +18,511 @@
   <!-- Style links -->
   <link rel="stylesheet" href="/css/styles.css?v=2.0">
   
+  <style>
+    /* ============================================================================
+       KSG FUEL - FUEL CARD PAGE REDESIGN MASTER STYLES
+       ============================================================================ */
+    
+    /* 1. Interactive Hero Grid */
+    .fc-hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 4rem;
+      align-items: center;
+      text-align: left;
+    }
+
+    /* 3D Interactive Card Stack */
+    .card-stack-viewport {
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      perspective: 1200px;
+    }
+
+    .card-stack-wrapper {
+      width: 340px;
+      height: 215px;
+      position: relative;
+      transform-style: preserve-3d;
+    }
+
+    .stacked-card {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      border-radius: 14px;
+      padding: 1.5rem;
+      color: var(--color-white);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Diesel Card Styling */
+    .sc-diesel {
+      background: linear-gradient(135deg, #0d3b3b 0%, #061515 100%);
+      box-shadow: 0 10px 30px rgba(34, 201, 138, 0.15), 0 15px 40px rgba(0,0,0,0.4);
+      border-color: rgba(34, 201, 138, 0.25);
+      transform: translate3d(0, 0, 0) rotateX(5deg) rotateY(-10deg);
+      z-index: 3;
+    }
+
+    /* Cash Card Styling */
+    .sc-cash {
+      background: linear-gradient(135deg, #093c2b 0%, #03140e 100%);
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15), 0 15px 40px rgba(0,0,0,0.4);
+      border-color: rgba(16, 185, 129, 0.25);
+      transform: translate3d(30px, 20px, -40px) rotateX(5deg) rotateY(-10deg);
+      z-index: 2;
+      opacity: 0.85;
+    }
+
+    /* Maintenance Card Styling */
+    .sc-maintenance {
+      background: linear-gradient(135deg, #442a0b 0%, #170d02 100%);
+      box-shadow: 0 10px 30px rgba(245, 166, 35, 0.15), 0 15px 40px rgba(0,0,0,0.4);
+      border-color: rgba(245, 166, 35, 0.25);
+      transform: translate3d(60px, 40px, -80px) rotateX(5deg) rotateY(-10deg);
+      z-index: 1;
+      opacity: 0.7;
+    }
+
+    /* Stack Hover Effects */
+    .card-stack-wrapper:hover .sc-diesel {
+      transform: translate3d(-10px, -20px, 20px) rotateX(0deg) rotateY(0deg) scale(1.02);
+    }
+    .card-stack-wrapper:hover .sc-cash {
+      transform: translate3d(15px, 0px, 0px) rotateX(0deg) rotateY(0deg) scale(0.98);
+      opacity: 0.95;
+    }
+    .card-stack-wrapper:hover .sc-maintenance {
+      transform: translate3d(40px, 20px, -20px) rotateX(0deg) rotateY(0deg) scale(0.94);
+      opacity: 0.85;
+    }
+
+    /* Single Card Interactive focus state */
+    .stacked-card:hover {
+      z-index: 10 !important;
+      opacity: 1 !important;
+      transform: translate3d(15px, -15px, 50px) rotateX(0deg) rotateY(0deg) scale(1.08) !important;
+      box-shadow: 0 25px 55px rgba(0,0,0,0.6), 0 0 30px rgba(255,255,255,0.15) !important;
+      border-color: rgba(255,255,255,0.4) !important;
+    }
+
+    /* Inner card visuals */
+    .stacked-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stacked-card-brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+    .sc-diesel .stacked-card-brand { color: var(--color-accent); }
+    .sc-cash .stacked-card-brand { color: #10b981; }
+    .sc-maintenance .stacked-card-brand { color: #f5a623; }
+
+    .stacked-card-chip {
+      width: 38px;
+      height: 28px;
+      background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+      border-radius: 4px;
+      box-shadow: inset 0 1px 3px rgba(255,255,255,0.4);
+    }
+    .stacked-card-num {
+      font-family: monospace;
+      font-size: 1.15rem;
+      letter-spacing: 2px;
+      margin: 1.5rem 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .stacked-card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 0.75rem;
+    }
+    .stacked-card-name {
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .stacked-card-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.65rem;
+    }
+    .sc-diesel .stacked-card-badge { background-color: rgba(34, 201, 138, 0.15); color: var(--color-accent); }
+    .sc-cash .stacked-card-badge { background-color: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .sc-maintenance .stacked-card-badge { background-color: rgba(245, 166, 35, 0.15); color: #f5a623; }
+
+    /* 2. Side-by-side Program Grid */
+    .programs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.25rem;
+      margin-top: 3.5rem;
+    }
+
+    .program-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.005) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: var(--radius-md);
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .program-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: transparent;
+      transition: all 0.4s ease;
+    }
+
+    /* Program specific themes */
+    .pc-diesel::before { background: var(--color-accent); }
+    .pc-diesel:hover {
+      border-color: rgba(34, 201, 138, 0.25);
+      box-shadow: 0 20px 40px rgba(34, 201, 138, 0.08), 0 10px 25px rgba(0,0,0,0.3);
+      transform: translateY(-8px);
+    }
+    
+    .pc-cash::before { background: #10b981; }
+    .pc-cash:hover {
+      border-color: rgba(16, 185, 129, 0.25);
+      box-shadow: 0 20px 40px rgba(16, 185, 129, 0.08), 0 10px 25px rgba(0,0,0,0.3);
+      transform: translateY(-8px);
+    }
+
+    .pc-maintenance::before { background: #f5a623; }
+    .pc-maintenance:hover {
+      border-color: rgba(245, 166, 35, 0.25);
+      box-shadow: 0 20px 40px rgba(245, 166, 35, 0.08), 0 10px 25px rgba(0,0,0,0.3);
+      transform: translateY(-8px);
+    }
+
+    .program-card-header {
+      margin-bottom: 2rem;
+    }
+    .program-icon-badge {
+      width: 54px;
+      height: 54px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      margin-bottom: 1.5rem;
+    }
+    .pc-diesel .program-icon-badge { background-color: rgba(34, 201, 138, 0.08); color: var(--color-accent); border: 1px solid rgba(34, 201, 138, 0.15); }
+    .pc-cash .program-icon-badge { background-color: rgba(16, 185, 129, 0.08); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.15); }
+    .pc-maintenance .program-icon-badge { background-color: rgba(245, 166, 35, 0.08); color: #f5a623; border: 1px solid rgba(245, 166, 35, 0.15); }
+
+    .program-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--color-white);
+      margin-bottom: 0.5rem;
+    }
+    .program-subtitle {
+      font-size: 0.9rem;
+      color: #a3c2c2;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .program-desc {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.5;
+    }
+
+    .program-features-list {
+      list-style: none;
+      margin: 2rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 2rem;
+    }
+    .program-features-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+    }
+    .program-features-list li i {
+      margin-top: 0.2rem;
+      font-size: 0.95rem;
+    }
+    .pc-diesel .program-features-list li i { color: var(--color-accent); }
+    .pc-cash .program-features-list li i { color: #10b981; }
+    .pc-maintenance .program-features-list li i { color: #f5a623; }
+
+    /* 3. Browser Mockup Frame styling */
+    .browser-mockup {
+      border: 1px solid rgba(34, 201, 138, 0.2);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-premium), 0 0 35px rgba(34, 201, 138, 0.05);
+      background-color: #060f0f;
+    }
+
+    .browser-header {
+      background-color: #0a1717;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .browser-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .browser-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .bd-red { background-color: #ff5f56; }
+    .bd-yellow { background-color: #ffbd2e; }
+    .bd-green { background-color: #27c93f; }
+
+    .browser-address {
+      flex-grow: 1;
+      max-width: 500px;
+      background-color: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm);
+      padding: 0.25rem 1rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #a3c2c2;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 0 auto;
+    }
+
+    /* 4. Responsive media queries */
+    @media (max-width: 992px) {
+      .fc-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        text-align: center;
+      }
+      .card-stack-viewport {
+        height: 320px;
+      }
+      .programs-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
   <%- include('partials/header') %>
 
-  <!-- Hero Banner -->
-  <section class="hero-mesh" style="padding: 6rem 0 5rem 0;">
-    <div class="container text-center">
-      <h1 class="hero-title" style="font-size: 3rem; margin-bottom: 1rem;">
-        What Can The <span class="text-accent">KSG Fuel Card</span> Do For You?
-      </h1>
-      <p class="hero-subtitle" style="margin: 0 auto 2rem auto; max-width: 700px;">
-        Empower your drivers with a dynamic, secure, and universally accepted card program. Track expenses, optimize taxes, and unlock massive savings at high-volume refueling terminals.
-      </p>
-      <a href="/apply" class="btn btn-primary btn-large">Get Started Now</a>
+  <!-- Redesigned Hero Section -->
+  <section class="hero-mesh" style="padding: 5rem 0 4.5rem 0;">
+    <!-- Animated background glow blobs -->
+    <div class="glow-blob-container">
+      <div class="glow-blob glow-blob-1"></div>
+      <div class="glow-blob glow-blob-2"></div>
+    </div>
+    
+    <div class="container">
+      <div class="fc-hero-grid">
+        
+        <!-- Left Side: Copy Elements -->
+        <div style="position: relative; z-index: 2;">
+          <div class="status-badge" style="display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1.25rem;">
+            <span class="pulse-dot"></span>
+            <span class="status-text" style="letter-spacing: 0.5px;">KSG PREMIUM NETWORK CAPABILITIES</span>
+          </div>
+          <h1 class="hero-title" style="font-size: 3rem; line-height: 1.15; margin-bottom: 1.25rem;">
+            Premium Fleet Cards. <br>
+            <span class="text-accent">Engineered to Save.</span>
+          </h1>
+          <p class="hero-subtitle" style="font-size: 1.05rem; line-height: 1.6; margin-bottom: 2rem; max-width: 620px;">
+            Empower your transport operations with specialized cost-saving cards. Access cost-plus wholesale prices, robust geofencing, custom spending limits, and audit-ready bookkeeping.
+          </p>
+          <div class="button-group" style="justify-content: flex-start;">
+            <a href="/apply" class="btn btn-primary btn-large">Get Started Now</a>
+            <a href="#specialized-programs" class="btn btn-outline btn-large">Compare Programs</a>
+          </div>
+        </div>
+
+        <!-- Right Side: Interactive Card Stack -->
+        <div class="card-stack-viewport">
+          <div class="card-stack-wrapper">
+            
+            <!-- Card 1: Diesel -->
+            <div class="stacked-card sc-diesel" onclick="scrollToProgram('diesel-program')">
+              <div class="stacked-card-top">
+                <span class="stacked-card-brand">KSG DIESEL PRO</span>
+                <div class="stacked-card-chip"></div>
+              </div>
+              <div class="stacked-card-num">5412 8903 0012 3456</div>
+              <div class="stacked-card-bottom">
+                <div class="stacked-card-holder">
+                  <span>WHOLESALE RACK RATE</span>
+                  <div class="stacked-card-name">KSG Fuel System</div>
+                </div>
+                <span class="stacked-card-badge"><i class="fas fa-truck-fast"></i> ACTIVE</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Cash -->
+            <div class="stacked-card sc-cash" onclick="scrollToProgram('cash-program')">
+              <div class="stacked-card-top">
+                <span class="stacked-card-brand">KSG CASH PLUS</span>
+                <div class="stacked-card-chip"></div>
+              </div>
+              <div class="stacked-card-num">5412 8903 8876 5432</div>
+              <div class="stacked-card-bottom">
+                <div class="stacked-card-holder">
+                  <span>EXPENSE ALLOCATOR</span>
+                  <div class="stacked-card-name">KSG Fleet Wallet</div>
+                </div>
+                <span class="stacked-card-badge"><i class="fas fa-wallet"></i> ACTIVE</span>
+              </div>
+            </div>
+
+            <!-- Card 3: Maintenance -->
+            <div class="stacked-card sc-maintenance" onclick="scrollToProgram('maintenance-program')">
+              <div class="stacked-card-top">
+                <span class="stacked-card-brand">KSG SERVICE MAX</span>
+                <div class="stacked-card-chip"></div>
+              </div>
+              <div class="stacked-card-num">5412 8903 9901 2345</div>
+              <div class="stacked-card-bottom">
+                <div class="stacked-card-holder">
+                  <span>SERVICE CREDIT</span>
+                  <div class="stacked-card-name">KSG Mechanical</div>
+                </div>
+                <span class="stacked-card-badge"><i class="fas fa-screwdriver-wrench"></i> ACTIVE</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
     </div>
   </section>
 
-  <!-- 3-Tab Program Switcher Section -->
-  <section class="section" id="program-switcher">
+  <!-- Side-by-side specialized program matrix section -->
+  <section class="section" id="specialized-programs" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
     <div class="container">
       <div class="section-title-wrap">
-        <h2>Choose The Perfect Fleet Program</h2>
-        <p class="max-w-md text-center" style="color: var(--color-muted);">Select the specialized card plan that matches your logistics operations and cash flow requirements.</p>
+        <h2>Specialized Card Programs</h2>
+        <p class="max-w-md text-center" style="color: var(--color-muted); font-size: 1rem;">Choose the targeted plan that coordinates with your active fleet size and corporate cash flow goals.</p>
       </div>
 
-      <div class="tabs-container">
-        <!-- Pure EJS & JS-assisted Tabs Controls -->
-        <div class="tabs-nav" role="tablist">
-          <button class="tab-btn active" data-tab="tab-diesel" role="tab" aria-selected="true" aria-controls="tab-diesel">
-            <i class="fas fa-truck-monochrome" style="margin-right: 0.5rem;"></i> Diesel Program
-          </button>
-          <button class="tab-btn" data-tab="tab-cash" role="tab" aria-selected="false" aria-controls="tab-cash">
-            <i class="fas fa-wallet" style="margin-right: 0.5rem;"></i> Cash Program
-          </button>
-          <button class="tab-btn" data-tab="tab-maintenance" role="tab" aria-selected="false" aria-controls="tab-maintenance">
-            <i class="fas fa-screwdriver-wrench" style="margin-right: 0.5rem;"></i> Maintenance Program
-          </button>
+      <div class="programs-grid">
+        
+        <!-- Diesel Program Card -->
+        <div class="program-card pc-diesel" id="diesel-program">
+          <div>
+            <div class="program-card-header">
+              <div class="program-icon-badge">
+                <i class="fas fa-gas-pump"></i>
+              </div>
+              <span class="program-subtitle">Diesel Program</span>
+              <h3 class="program-title">Maximum Wholesale Cost Savings</h3>
+              <p class="program-desc">Engineered exclusively for high-volume commercial freight operators seeking direct wholesale cost-plus pricing structures.</p>
+            </div>
+            <ul class="program-features-list">
+              <li><i class="fas fa-circle-check"></i> <span>Save an average of **15¢ - 30¢ per gallon** at major refueling stops.</span></li>
+              <li><i class="fas fa-circle-check"></i> <span>Zero card transaction fees on bulk fill transactions.</span></li>
+              <li><i class="fas fa-circle-check"></i> <span>Complete wholesale cost-plus rack pricing accessibility.</span></li>
+              <li><i class="fas fa-circle-check"></i> <span>Consolidated direct billing cycles for IFTA tax efficiency.</span></li>
+            </ul>
+          </div>
+          <a href="/apply" class="btn btn-primary btn-full btn-large" style="margin-top: 1.5rem;">Apply for Diesel Card</a>
         </div>
 
-        <!-- Tab 1: Diesel Program -->
-        <div class="tab-pane active" id="tab-diesel" role="tabpanel">
+        <!-- Cash Program Card -->
+        <div class="program-card pc-cash" id="cash-program">
           <div>
-            <h3 class="text-accent">Maximum Wholesale Cost Savings</h3>
-            <p style="font-size: 1.05rem; margin-bottom: 1.5rem;">The KSG Diesel Program is designed for high-volume, long-haul freight operations. It leverages major network agreements to offer dynamic volume rebates and wholesale rack-pricing at key logistics corridors.</p>
-            <ul class="bullet-features" style="margin-bottom: 2rem;">
-              <li><i class="fas fa-circle-check"></i> Save an average of 15¢-30¢ per gallon at major retail truck stops.</li>
-              <li><i class="fas fa-circle-check"></i> Eliminate card transaction fees on major bulk fill purchases.</li>
-              <li><i class="fas fa-circle-check"></i> Consolidated billing lines for easy tax filing and financial accounting.</li>
+            <div class="program-card-header">
+              <div class="program-icon-badge">
+                <i class="fas fa-wallet"></i>
+              </div>
+              <span class="program-subtitle">Cash Program</span>
+              <h3 class="program-title">Flexible Spend Controls</h3>
+              <p class="program-desc">Integrates primary refueling capabilities with instant driver expense funding for emergency services and logistics support.</p>
+            </div>
+            <ul class="program-features-list">
+              <li><i class="fas fa-circle-check"></i> <span>Wire secure emergency cash directly to driver cards in real-time.</span></li>
+              <li><i class="fas fa-circle-check"></i> <span>Block non-fuel purchase lines instantaneously via dashboard controls.</span></li>
+              <li><i class="fas fa-circle-check"></i> <span>Zero transaction fees on standard network ATM withdrawals.</span></li>
+              <li><i class="fas fa-circle-check"></i> <span>Granular allowances for food, tolls, and lodging options.</span></li>
             </ul>
-            <a href="/apply" class="btn btn-outline-dark">Apply for Diesel Card</a>
           </div>
-          <div class="tab-card-preview-wrapper diesel-glow">
-            <div class="glow-ring"></div>
-            <img src="/assets/physical_card.png" alt="KSG Fuel Diesel Card" class="tab-card-render">
-          </div>
+          <a href="/apply" class="btn btn-primary btn-full btn-large" style="background-color: #10b981; color: #060f0f; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25); margin-top: 1.5rem;">Apply for Cash Card</a>
         </div>
 
-        <!-- Tab 2: Cash Program -->
-        <div class="tab-pane" id="tab-cash" role="tabpanel">
+        <!-- Maintenance Program Card -->
+        <div class="program-card pc-maintenance" id="maintenance-program">
           <div>
-            <h3 class="text-accent">Flexible Fleet Spend Controls</h3>
-            <p style="font-size: 1.05rem; margin-bottom: 1.5rem;">The Cash Program combines standard refueling capabilities with instant driver expense funding. Dispense daily food allowances, toll fees, and lodging budgets directly to the driver's card without complex wire transfers.</p>
-            <ul class="bullet-features" style="margin-bottom: 2rem;">
-              <li><i class="fas fa-circle-check"></i> Instantly wire secure emergency cash to cards on the road.</li>
-              <li><i class="fas fa-circle-check"></i> Lock down non-fuel spending options in the online dashboard.</li>
-              <li><i class="fas fa-circle-check"></i> Zero transaction fees on standard ATM cash withdrawals.</li>
+            <div class="program-card-header">
+              <div class="program-icon-badge">
+                <i class="fas fa-screwdriver-wrench"></i>
+              </div>
+              <span class="program-subtitle">Maintenance Program</span>
+              <h3 class="program-title">Minimize Operational Downtime</h3>
+              <p class="program-desc">Keeps your commercial trucks rolling with secure limits and immediate payment clearance at terminal mechanics.</p>
+            </div>
+            <ul class="program-features-list">
+              <li><i class="fas fa-circle-check"></i> <span>Corporate commercial repair rates at 15,000+ shops across North America.</span></li>
+              <li><i class="fas fa-circle-check"></i> <span>Pre-approved credit limits to prevent sudden roadside delays.</span></li>
+              <li><i class="fas fa-circle-check"></i> <span>Centralized tracking of mechanical service history in the cloud.</span></li>
+              <li><i class="fas fa-circle-check"></i> <span>Direct clearance of mechanical claims and commercial receipts.</span></li>
             </ul>
-            <a href="/apply" class="btn btn-outline-dark">Apply for Cash Card</a>
           </div>
-          <div class="tab-card-preview-wrapper cash-glow">
-            <div class="glow-ring"></div>
-            <img src="/assets/physical_card.png" alt="KSG Fuel Cash Card" class="tab-card-render">
-          </div>
-        </div>
-
-        <!-- Tab 3: Maintenance Program -->
-        <div class="tab-pane" id="tab-maintenance" role="tabpanel">
-          <div>
-            <h3 class="text-accent">Minimize Downtime on Critical Repairs</h3>
-            <p style="font-size: 1.05rem; margin-bottom: 1.5rem;">Keep your assets rolling. The Maintenance Program provides pre-approved credit limits and immediate payment clearance at over 15,000 commercial repair centers, tire facilities, and towing operators across Canada and the US.</p>
-            <ul class="bullet-features" style="margin-bottom: 2rem;">
-              <li><i class="fas fa-circle-check"></i> National corporate repair pricing on brand-name truck tires.</li>
-              <li><i class="fas fa-circle-check"></i> Pre-approved credit lines to prevent sudden roadside payment delays.</li>
-              <li><i class="fas fa-circle-check"></i> Centralized mechanical service history logs directly in the cloud.</li>
-            </ul>
-            <a href="/apply" class="btn btn-outline-dark">Apply for Maintenance Card</a>
-          </div>
-          <div class="tab-card-preview-wrapper maintenance-glow">
-            <div class="glow-ring"></div>
-            <img src="/assets/physical_card.png" alt="KSG Fuel Maintenance Card" class="tab-card-render">
-          </div>
+          <a href="/apply" class="btn btn-primary btn-full btn-large" style="background-color: #f5a623; color: #060f0f; box-shadow: 0 4px 15px rgba(245, 166, 35, 0.25); margin-top: 1.5rem;">Apply for Maintenance Card</a>
         </div>
 
       </div>
     </div>
   </section>
 
-  <!-- How It Works Section -->
+  <!-- How It Works Timeline Section -->
   <section class="section section-light-teal" id="how-it-works">
     <div class="container">
       <div class="section-title-wrap">
@@ -126,68 +535,84 @@
         <div class="flow-step">
           <div class="flow-circle">1</div>
           <h3 style="font-size: 1.25rem;">Apply Online</h3>
-          <p style="color: var(--color-muted); font-size: 0.95rem; padding: 0 1rem;">Complete our simplified 2-minute application. Our credit underwriters process submissions within 24 business hours.</p>
+          <p style="color: var(--color-muted); font-size: 0.95rem; padding: 0 1rem; margin-top: 0.5rem;">Complete our simplified 2-minute application. Our credit underwriters process submissions within 24 business hours.</p>
         </div>
 
         <!-- Step 2 -->
         <div class="flow-step">
           <div class="flow-circle">2</div>
           <h3 style="font-size: 1.25rem;">Set Control Rules</h3>
-          <p style="color: var(--color-muted); font-size: 0.95rem; padding: 0 1rem;">Log into our central dashboard. Designate individual limits, approved fuel stations, and secure driver PIN codes.</p>
+          <p style="color: var(--color-muted); font-size: 0.95rem; padding: 0 1rem; margin-top: 0.5rem;">Log into our central dashboard. Designate individual limits, approved fuel stations, and secure driver PIN codes.</p>
         </div>
 
         <!-- Step 3 -->
         <div class="flow-step">
           <div class="flow-circle">3</div>
           <h3 style="font-size: 1.25rem;">Ship & Refuel</h3>
-          <p style="color: var(--color-muted); font-size: 0.95rem; padding: 0 1rem;">We ship physical cards next-day. Distribute them to your drivers, and monitor savings instantly via online reports.</p>
+          <p style="color: var(--color-muted); font-size: 0.95rem; padding: 0 1rem; margin-top: 0.5rem;">We ship physical cards next-day. Distribute them to your drivers, and monitor savings instantly via online reports.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- High-Fidelity Interactive Dashboard Mockup & Management Features -->
+  <!-- High-Fidelity browser frame and dashboard mockup -->
   <section class="section" id="management-features">
     <div class="container">
       <div class="section-title-wrap">
         <h2>Total Command from One Screen</h2>
-        <p class="max-w-md text-center" style="color: var(--color-muted);">No more tracking paperwork or receipts. Our advanced portal consolidates everything into a single, high-fidelity experience.</p>
+        <p class="max-w-md text-center" style="color: var(--color-muted); font-size: 1rem;">Eliminate receipts and invoices. Our advanced administration portal consolidates variables into a unified, high-fidelity experience.</p>
       </div>
 
       <div class="card-presentation" id="dashboard-mockup">
-        <div class="dashboard-preview-container">
-          <div class="dashboard-shadow-glow"></div>
-          <img src="/assets/dashboard_mockup.png" alt="KSG Fuel Portal Live Dashboard" class="dashboard-mockup-img">
+        
+        <!-- Browser Mockup Container wrapping the asset -->
+        <div class="browser-mockup">
+          <div class="browser-header">
+            <div class="browser-dots">
+              <div class="browser-dot bd-red"></div>
+              <div class="browser-dot bd-yellow"></div>
+              <div class="browser-dot bd-green"></div>
+            </div>
+            <div class="browser-address">
+              <i class="fas fa-lock" style="font-size: 0.7rem; color: var(--color-accent);"></i>
+              <span>ksgfuel.com/admin-portal</span>
+            </div>
+          </div>
+          <div style="background-color: var(--color-bg-darker); position: relative; display: block; overflow: hidden; line-height: 0;">
+            <div class="dashboard-shadow-glow" style="pointer-events: none;"></div>
+            <img src="/assets/dashboard_mockup.png" alt="KSG Fuel Portal Live Dashboard" class="dashboard-mockup-img" style="width: 100%; height: auto; display: block;">
+          </div>
         </div>
 
-        <!-- Right Column: Text copy of key management features -->
+        <!-- Details list -->
         <div>
           <h2>Cloud Operations Dashboard</h2>
-          <p style="color: rgba(255,255,255,0.85); margin-bottom: 2rem; font-size: 1.05rem;">Our proprietary administrative software puts full oversight of refueling variables in your hand. Instantly monitor fleet behaviors, adjust cards, and pull compliance logs.</p>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-size: 0.95rem;">
+          <p style="color: rgba(255,255,255,0.85); margin-bottom: 2rem; font-size: 1.05rem; line-height: 1.6;">Our proprietary administrative software puts full oversight of refueling variables in your hand. Instantly monitor fleet behaviors, adjust cards, and pull compliance logs.</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; font-size: 0.95rem;">
             <div>
               <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-lock"></i> Instant Lock</h4>
-              <p style="color: rgba(255,255,255,0.75);">Freeze cards in one tap if a driver reports a loss, shielding you from any fraud risk.</p>
+              <p style="color: rgba(255,255,255,0.75); line-height: 1.5;">Freeze active fleet cards in one click if a driver reports a loss, shielding operations from fraud liabilities.</p>
             </div>
             <div>
               <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-gears"></i> Limit Toggles</h4>
-              <p style="color: rgba(255,255,255,0.75);">Toggle cash, diesel, and maintenance limits dynamically from any desktop or mobile device.</p>
+              <p style="color: rgba(255,255,255,0.75); line-height: 1.5;">Configure cash limits, DEF lines, and repair allowances dynamically across desktop and mobile browsers.</p>
             </div>
             <div>
               <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-receipt"></i> Receipts Upload</h4>
-              <p style="color: rgba(255,255,255,0.75);">Automate accounting operations. Drivers photograph receipts, and our system links them to card logs.</p>
+              <p style="color: rgba(255,255,255,0.75); line-height: 1.5;">Drivers capture invoices on the road; our database matches them to transactions automatically.</p>
             </div>
             <div>
               <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-chart-line"></i> Analytics Dashboard</h4>
-              <p style="color: rgba(255,255,255,0.75);">Generate automated reports identifying low-cost lanes, underperforming units, and driver anomalies.</p>
+              <p style="color: rgba(255,255,255,0.75); line-height: 1.5;">Export automated reports highlighting route metrics, underperforming units, and low-cost fueling lanes.</p>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- Interactive IFTA Tax splits visualizer (Surpassing Nomad.io) -->
+  <!-- Interactive IFTA Tax splits visualizer -->
   <section class="section section-light-teal" id="interactive-ifta-compliance" style="border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
     <div class="container">
       <div class="form-split-layout" style="align-items: center; gap: 4rem;">
@@ -199,7 +624,7 @@
             <li><i class="fas fa-circle-check"></i> Standard 100% audit compliance ready formats.</li>
             <li><i class="fas fa-circle-check"></i> Prevent double-taxation penalty risks from missed logs.</li>
           </ul>
-          <button class="btn btn-outline-dark" id="recalculate-ifta-btn"><i class="fas fa-arrows-rotate" style="margin-right: 0.5rem;"></i> Recalculate Live Splits</button>
+          <button class="btn btn-outline-dark" id="recalculate-ifta-btn" style="border-color: rgba(34, 201, 138, 0.35); color: var(--color-accent); background-color: rgba(34, 201, 138, 0.03);"><i class="fas fa-arrows-rotate" style="margin-right: 0.5rem;"></i> Recalculate Live Splits</button>
         </div>
 
         <div class="glass-panel" style="background: linear-gradient(135deg, rgba(13, 79, 79, 0.95) 0%, rgba(10, 28, 28, 0.95) 100%); box-shadow: var(--shadow-premium); border-color: rgba(34, 201, 138, 0.2); width: 100%;">
@@ -213,10 +638,10 @@
             <div class="ifta-state-card" style="background: rgba(255,255,255,0.03); padding: 1rem 1.25rem;">
               <div class="state-header">
                 <span class="state-code">ON (Ontario)</span>
-                <span class="state-gallons">4,850 L</span>
+                <span class="state-gallons"><span id="ifta-on-val">4,850</span> L</span>
               </div>
               <div class="state-bar-track">
-                <div class="state-bar-fill" data-pct="85" style="width: 85%;"></div>
+                <div class="state-bar-fill" id="ifta-on-bar" data-pct="85" style="width: 85%;"></div>
               </div>
             </div>
 
@@ -224,10 +649,10 @@
             <div class="ifta-state-card" style="background: rgba(255,255,255,0.03); padding: 1rem 1.25rem;">
               <div class="state-header">
                 <span class="state-code">MI (Michigan)</span>
-                <span class="state-gallons">2,120 Gal</span>
+                <span class="state-gallons"><span id="ifta-mi-val">2,120</span> Gal</span>
               </div>
               <div class="state-bar-track">
-                <div class="state-bar-fill" data-pct="65" style="width: 65%;"></div>
+                <div class="state-bar-fill" id="ifta-mi-bar" data-pct="65" style="width: 65%;"></div>
               </div>
             </div>
 
@@ -235,10 +660,10 @@
             <div class="ifta-state-card" style="background: rgba(255,255,255,0.03); padding: 1rem 1.25rem;">
               <div class="state-header">
                 <span class="state-code">NY (New York)</span>
-                <span class="state-gallons">1,840 Gal</span>
+                <span class="state-gallons"><span id="ifta-ny-val">1,840</span> Gal</span>
               </div>
               <div class="state-bar-track">
-                <div class="state-bar-fill" data-pct="45" style="width: 45%;"></div>
+                <div class="state-bar-fill" id="ifta-ny-bar" data-pct="45" style="width: 45%;"></div>
               </div>
             </div>
 
@@ -246,10 +671,10 @@
             <div class="ifta-state-card" style="background: rgba(255,255,255,0.03); padding: 1rem 1.25rem;">
               <div class="state-header">
                 <span class="state-code">PA (Pennsylvania)</span>
-                <span class="state-gallons">1,290 Gal</span>
+                <span class="state-gallons"><span id="ifta-pa-val">1,290</span> Gal</span>
               </div>
               <div class="state-bar-track">
-                <div class="state-bar-fill" data-pct="35" style="width: 35%;"></div>
+                <div class="state-bar-fill" id="ifta-pa-bar" data-pct="35" style="width: 35%;"></div>
               </div>
             </div>
           </div>
@@ -330,3 +755,21 @@
   </section>
 
   <%- include('partials/footer') %>
+
+  <!-- Page specific smooth scroll navigation helper -->
+  <script>
+    function scrollToProgram(elementId) {
+      const element = document.getElementById(elementId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Highlight active card border dynamically as flash reminder
+        element.style.borderColor = 'rgba(255,255,255,0.4)';
+        setTimeout(() => {
+          element.style.borderColor = '';
+        }, 1500);
+      }
+    }
+  </script>
+</body>
+</html>

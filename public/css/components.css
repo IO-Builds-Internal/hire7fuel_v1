@@ -104,7 +104,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 80px;
+  height: 70px;
 }
 
 .logo-link {
@@ -181,7 +181,7 @@
 /* 3. Hero Visual Composition */
 .hero-mesh {
   background: radial-gradient(circle at 50% -20%, var(--color-mid-teal) 0%, var(--color-primary) 70%);
-  padding: 9rem 0 8rem 0;
+  padding: 5.5rem 0 5rem 0;
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);

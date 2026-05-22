@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDashboardEmulator();
   initIftaSplitPreview();
   initHeroSimulator();
+  initCardStack3D();
 });
 
 /**
@@ -424,41 +425,97 @@ function initDashboardEmulator() {
  */
 function initIftaSplitPreview() {
   const reCalcBtn = document.getElementById('recalculate-ifta-btn');
-  const barFills = document.querySelectorAll('.state-bar-fill');
+  const onBar = document.getElementById('ifta-on-bar');
+  const miBar = document.getElementById('ifta-mi-bar');
+  const nyBar = document.getElementById('ifta-ny-bar');
+  const paBar = document.getElementById('ifta-pa-bar');
 
-  if (barFills.length > 0) {
-    const triggerAnimation = () => {
-      barFills.forEach(bar => {
-        const pct = bar.getAttribute('data-pct');
-        bar.style.width = '0%';
+  const onValEl = document.getElementById('ifta-on-val');
+  const miValEl = document.getElementById('ifta-mi-val');
+  const nyValEl = document.getElementById('ifta-ny-val');
+  const paValEl = document.getElementById('ifta-pa-val');
+
+  if (reCalcBtn) {
+    // Starting values and bounds
+    let states = {
+      on: { el: onValEl, bar: onBar, min: 3800, max: 6200, val: 4850 },
+      mi: { el: miValEl, bar: miBar, min: 1500, max: 3200, val: 2120 },
+      ny: { el: nyValEl, bar: nyBar, min: 1200, max: 2800, val: 1840 },
+      pa: { el: paValEl, bar: paBar, min: 800, max: 2000, val: 1290 }
+    };
+
+    const triggerRecalculate = () => {
+      Object.entries(states).forEach(([key, state]) => {
+        if (!state.el || !state.bar) return;
+        
+        // Randomize a new value within ranges
+        const newVal = Math.floor(Math.random() * (state.max - state.min)) + state.min;
+        const oldVal = state.val;
+        state.val = newVal;
+
+        // Proportional scale bar animation
+        const maxLimit = state.max * 1.1;
+        const pct = Math.min(Math.round((newVal / maxLimit) * 100), 100);
+        state.bar.style.width = '0%';
         setTimeout(() => {
-          bar.style.width = pct + '%';
-        }, 150);
+          state.bar.style.width = pct + '%';
+        }, 120);
+
+        // Value counter transition
+        animateValue(oldVal, newVal, state.el);
       });
     };
 
-    if (reCalcBtn) {
-      reCalcBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        triggerAnimation();
-        
-        // Dynamic simulated notification
-        const originalText = reCalcBtn.textContent;
-        reCalcBtn.textContent = 'Recalculating Tax Ledgers...';
-        reCalcBtn.disabled = true;
-        
-        setTimeout(() => {
-          reCalcBtn.textContent = '✓ Tax Ledgers Compiled';
-          setTimeout(() => {
-            reCalcBtn.textContent = originalText;
-            reCalcBtn.disabled = false;
-          }, 1500);
-        }, 800);
-      });
-    }
+    const animateValue = (start, end, element) => {
+      const duration = 600; // ms
+      const startTime = performance.now();
 
-    // Initial animation trigger on mount
-    triggerAnimation();
+      const step = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = progress * (2 - progress); // easeOutQuad
+        const current = Math.round(start + (end - start) * ease);
+        element.textContent = current.toLocaleString();
+
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          element.textContent = end.toLocaleString();
+        }
+      };
+      requestAnimationFrame(step);
+    };
+
+    reCalcBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      const originalText = reCalcBtn.innerHTML;
+      reCalcBtn.innerHTML = '<i class="fas fa-arrows-rotate fa-spin" style="margin-right: 0.5rem;"></i> Compiling splits...';
+      reCalcBtn.disabled = true;
+      
+      triggerRecalculate();
+
+      setTimeout(() => {
+        reCalcBtn.innerHTML = '✓ Tax Ledgers Compiled';
+        setTimeout(() => {
+          reCalcBtn.innerHTML = originalText;
+          reCalcBtn.disabled = false;
+        }, 1500);
+      }, 750);
+    });
+
+    // Initial load animation
+    setTimeout(() => {
+      Object.entries(states).forEach(([key, state]) => {
+        if (state.bar) {
+          const pct = state.bar.getAttribute('data-pct');
+          state.bar.style.width = '0%';
+          setTimeout(() => {
+            state.bar.style.width = pct + '%';
+          }, 80);
+        }
+      });
+    }, 200);
   }
 }
 
@@ -567,6 +624,44 @@ function initHeroSimulator() {
         holoCard.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
       });
     }
+  }
+}
+
+/**
+ * 10. Fuel Card Page Interactive 3D Stack tilt
+ */
+function initCardStack3D() {
+  const stackWrapper = document.querySelector('.card-stack-viewport');
+  const stackedCards = document.querySelectorAll('.stacked-card');
+
+  if (stackWrapper && stackedCards.length > 0) {
+    stackWrapper.addEventListener('mousemove', (e) => {
+      const rect = stackWrapper.getBoundingClientRect();
+      const x = e.clientX - rect.left - (rect.width / 2);
+      const y = e.clientY - rect.top - (rect.height / 2);
+
+      const tiltX = (y / (rect.height / 2)) * -12;
+      const tiltY = (x / (rect.width / 2)) * 12;
+
+      stackedCards.forEach((card, idx) => {
+        const defaultOffset = idx * 30;
+        const defaultYOffset = idx * 20;
+        const defaultZOffset = idx * -40;
+
+        if (!card.matches(':hover')) {
+          card.style.transform = `translate3d(${defaultOffset + (x * 0.06)}px, ${defaultYOffset + (y * 0.06)}px, ${defaultZOffset}px) rotateX(${5 + tiltX}deg) rotateY(${-10 + tiltY}deg)`;
+        }
+      });
+    });
+
+    stackWrapper.addEventListener('mouseleave', () => {
+      stackedCards.forEach((card, idx) => {
+        const defaultOffset = idx * 30;
+        const defaultYOffset = idx * 20;
+        const defaultZOffset = idx * -40;
+        card.style.transform = `translate3d(${defaultOffset}px, ${defaultYOffset}px, ${defaultZOffset}px) rotateX(5deg) rotateY(-10deg)`;
+      });
+    });
   }
 }
 

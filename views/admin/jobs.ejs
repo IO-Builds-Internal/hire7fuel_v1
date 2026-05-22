@@ -83,6 +83,11 @@
                     </label>
                   </div>
 
+                  <!-- Edit button -->
+                  <a href="/admin/jobs/edit/<%= job.id %>" class="btn btn-sm btn-outline-dark" style="margin-right: 0.5rem; text-decoration: none; border-color: rgba(245, 166, 35, 0.4); color: #f5a623; display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;">
+                    <i class="fas fa-pen-to-square"></i> Edit
+                  </a>
+
                   <!-- Delete button form -->
                   <form action="/admin/jobs/delete/<%= job.id %>" method="POST" onsubmit="return confirm('Are you absolutely sure you want to permanently delete this job listing?');">
                     <button type="submit" class="btn btn-danger btn-sm">

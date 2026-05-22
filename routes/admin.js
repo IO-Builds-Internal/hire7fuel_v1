@@ -261,4 +261,52 @@ router.post('/jobs/delete/:id', async (req, res) => {
   }
 });
 
+/**
+ * GET /admin/jobs/edit/:id - Render Job Edit Form
+ */
+router.get('/jobs/edit/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const config = await db.getSettings();
+    const job = await db.getJob(id);
+    if (!job) {
+      return res.redirect('/admin/jobs?error=Job+posting+not+found');
+    }
+    res.render('admin/jobs_edit', {
+      config,
+      job,
+      success: req.query.success === 'true',
+      error: req.query.error || null,
+      page: 'admin-jobs'
+    });
+  } catch (err) {
+    console.error('Failed to load job edit page:', err);
+    res.status(500).send('Edit careers manager loader error.');
+  }
+});
+
+/**
+ * POST /admin/jobs/edit/:id - Process Job Listing Updates
+ */
+router.post('/jobs/edit/:id', async (req, res) => {
+  const { id } = req.params;
+  const { title, department, location, type, description, requirements } = req.body;
+
+  if (!title || !department || !location || !description || !requirements) {
+    return res.redirect(`/admin/jobs/edit/${id}?error=Please+fill+in+all+required+fields`);
+  }
+
+  try {
+    const ok = await db.updateJob(id, { title, department, location, type, description, requirements });
+    if (ok) {
+      res.redirect('/admin/jobs?success=true');
+    } else {
+      res.redirect(`/admin/jobs/edit/${id}?error=Failed+to+update+job+posting`);
+    }
+  } catch (err) {
+    console.error('Error updating job listing:', err);
+    res.redirect(`/admin/jobs/edit/${id}?error=${encodeURIComponent(err.message)}`);
+  }
+});
+
 module.exports = router;
