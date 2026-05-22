@@ -162,15 +162,97 @@ function initAdminModal() {
           // Populate dynamically based on submission type
           const payload = submission.payload || {};
           
-          // Form header information
-          const typeFieldStr = getSubmissionTypeBadge(submission.type);
-          addModalField('Form Category', typeFieldStr);
-          addModalField('Submitted On', new Date(submission.created_at).toLocaleString());
+          const categoryName = getSubmissionTypeBadge(submission.type);
+          const submittedDate = new Date(submission.created_at).toLocaleString();
+          
+          let badgeClass = 'badge-contact';
+          let categoryIcon = 'fa-envelope-open-text';
+          if (submission.type === 'fuelcard') {
+            badgeClass = 'badge-fuelcard';
+            categoryIcon = 'fa-id-card';
+          } else if (submission.type === 'career') {
+            badgeClass = 'badge-career';
+            categoryIcon = 'fa-briefcase';
+          }
 
-          // Populate payload parameters
+          let modalHtml = `
+            <!-- Top Header Profile Banner -->
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem 1.5rem; border-radius: var(--radius-sm); margin-bottom: 2rem;">
+              <div>
+                <span class="badge-pill ${badgeClass}" style="font-size: 0.8rem; padding: 0.3rem 0.85rem; display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px;">
+                  <i class="fas ${categoryIcon}"></i> ${categoryName}
+                </span>
+                <span style="display: block; font-size: 0.8rem; color: #a3c2c2; margin-top: 0.5rem; font-weight: 500;">
+                  <i class="far fa-clock" style="margin-right: 0.25rem;"></i> Submitted On: ${submittedDate}
+                </span>
+              </div>
+              <i class="fas fa-file-shield" style="font-size: 2.25rem; color: rgba(34, 201, 138, 0.22);"></i>
+            </div>
+
+            <!-- Two-Column Fields Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem;">
+          `;
+
+          const gridFields = [];
+          let messageContent = '';
+
           Object.entries(payload).forEach(([key, val]) => {
-            const formattedLabel = formatKeyLabel(key);
-            addModalField(formattedLabel, val);
+            if (key.toLowerCase() === 'message' || key.toLowerCase() === 'requirements' || key.toLowerCase() === 'description' || key.toLowerCase() === 'notes') {
+              messageContent = val;
+            } else {
+              gridFields.push({ key: formatKeyLabel(key), val: val });
+            }
+          });
+
+          gridFields.forEach(field => {
+            let fieldIcon = 'fa-circle-info';
+            const labelLower = field.key.toLowerCase();
+            if (labelLower.includes('name')) fieldIcon = 'fa-user';
+            else if (labelLower.includes('email')) fieldIcon = 'fa-envelope';
+            else if (labelLower.includes('phone')) fieldIcon = 'fa-phone';
+            else if (labelLower.includes('company')) fieldIcon = 'fa-building';
+            else if (labelLower.includes('truck') || labelLower.includes('fleet')) fieldIcon = 'fa-truck-front';
+            else if (labelLower.includes('address') || labelLower.includes('city')) fieldIcon = 'fa-map-location-dot';
+
+            modalHtml += `
+              <div style="background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 6px; padding: 1rem; display: flex; align-items: center; gap: 0.85rem;">
+                <div style="width: 36px; height: 36px; border-radius: 6px; background: rgba(34, 201, 138, 0.08); border: 1px solid rgba(34, 201, 138, 0.15); display: flex; align-items: center; justify-content: center; color: var(--color-accent); font-size: 0.9rem; flex-shrink: 0;">
+                  <i class="fas ${fieldIcon}"></i>
+                </div>
+                <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-grow: 1;">
+                  <span style="display: block; font-size: 0.75rem; color: #a3c2c2; text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">${field.key}</span>
+                  <span style="font-size: 0.95rem; font-weight: 600; color: var(--color-white);" title="${field.val}">${field.val || '—'}</span>
+                </div>
+              </div>
+            `;
+          });
+
+          modalHtml += `</div>`; // Close grid
+
+          if (messageContent) {
+            modalHtml += `
+              <div style="background: rgba(34, 201, 138, 0.02); border: 1px solid rgba(34, 201, 138, 0.12); border-left: 4px solid var(--color-accent); border-radius: 6px; padding: 1.25rem 1.5rem; margin-top: 1rem;">
+                <span style="display: block; font-size: 0.75rem; color: var(--color-accent); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+                  <i class="fas fa-comment-dots"></i> Message Content
+                </span>
+                <p style="margin: 0; font-size: 0.95rem; color: #e5ebeb; line-height: 1.6; white-space: pre-wrap; font-style: italic;">${messageContent}</p>
+              </div>
+            `;
+          }
+
+          modalHtml += `
+            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2.25rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.06);">
+              <button type="button" class="btn btn-outline modal-close-btn" style="padding: 0.65rem 1.25rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.4rem;">
+                <i class="fas fa-times-circle"></i> Close Parameters
+              </button>
+            </div>
+          `;
+
+          fieldsWrap.innerHTML = modalHtml;
+
+          // Bind close event to the new close button in footer
+          fieldsWrap.querySelector('.modal-close-btn').addEventListener('click', () => {
+            modal.classList.remove('active');
           });
 
           // Show modal
@@ -199,24 +281,62 @@ function initAdminModal() {
       }
     });
   }
-}
 
-// Modal helper: add visual label/value block
-function addModalField(label, value) {
-  const fieldsWrap = document.getElementById('modalFields');
-  const div = document.createElement('div');
-  div.className = 'modal-field';
-  
-  const labelEl = document.createElement('label');
-  labelEl.textContent = label;
-  
-  const valueEl = document.createElement('p');
-  // Safe text injection to prevent XSS in admin UI
-  valueEl.textContent = value;
-  
-  div.appendChild(labelEl);
-  div.appendChild(valueEl);
-  fieldsWrap.appendChild(div);
+  // Bind dynamic SMTP delete event listener
+  const deleteBtns = document.querySelectorAll('.admin-delete-btn');
+  if (deleteBtns.length > 0) {
+    deleteBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const subId = btn.getAttribute('data-id');
+        if (!subId) return;
+
+        if (confirm('Are you absolutely certain you want to permanently delete this inbox submission? This action is irreversible.')) {
+          const originalContent = btn.innerHTML;
+          btn.disabled = true;
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+          btn.style.opacity = '0.7';
+
+          fetch(`/admin/submissions/delete/${subId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              const tr = btn.closest('tr');
+              if (tr) {
+                tr.style.transition = 'all 0.3s ease';
+                tr.style.opacity = '0';
+                tr.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                  tr.remove();
+                  const table = document.getElementById('submissionsTable');
+                  if (table && table.querySelectorAll('tbody tr').length === 0) {
+                    window.location.reload();
+                  }
+                }, 300);
+              }
+            } else {
+              alert('Error: ' + (data.error || 'Failed to delete submission.'));
+              btn.disabled = false;
+              btn.innerHTML = originalContent;
+              btn.style.opacity = '1';
+            }
+          })
+          .catch(err => {
+            console.error('Delete request failed:', err);
+            alert('Network error: Failed to delete submission.');
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+            btn.style.opacity = '1';
+          });
+        }
+      });
+    });
+  }
 }
 
 // Formatting helper: full name instead of contact_email

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrier Testimonials Admin | <%= config.brand.name %></title>
+  <link class="styles" rel="stylesheet" href="/css/styles.css?v=2.0">
+</head>
+<body class="admin-body">
+
+  <!-- Admin Navigation -->
+  <nav class="admin-nav">
+    <div class="admin-nav-container">
+      <a href="/admin" class="logo-link" style="font-size: 1.35rem;">
+        <i class="fas fa-screwdriver-wrench text-accent"></i>
+        <span><%= config.brand.name %> Admin</span>
+      </a>
+
+      <ul class="admin-nav-links">
+        <li><a href="/admin" class="admin-nav-link">Dashboard Hub</a></li>
+        <li><a href="/admin/settings" class="admin-nav-link">Site Settings</a></li>
+        <li><a href="/admin/jobs" class="admin-nav-link">Careers Admin</a></li>
+        <li><a href="/admin/testimonials" class="admin-nav-link active">Manage Testimonials</a></li>
+        <li><a href="/" class="admin-nav-link" target="_blank">View Site <i class="fas fa-up-right-from-square" style="font-size: 0.75rem; margin-left: 0.25rem;"></i></a></li>
+      </ul>
+
+      <a href="/admin/logout" class="admin-logout">
+        <i class="fas fa-power-off"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <!-- Testimonials Administration Grid Container -->
+  <main class="admin-container">
+    
+    <div class="admin-header-wrap">
+      <div>
+        <h1>Carrier Testimonial Administrator</h1>
+        <p style="color: #a3c2c2; margin-top: 0.25rem;">Manage the social proof testimonials and carrier quotes visible on the public homepage. Toggle visibility instantly.</p>
+      </div>
+    </div>
+
+    <!-- Alert notifications -->
+    <% if (success) { %>
+      <div class="alert alert-success" style="background-color: rgba(16, 185, 129, 0.15); border: 1px solid var(--color-success); color: #a7f3d0; margin-bottom: 2rem;">
+        <i class="fas fa-circle-check" style="margin-right: 0.5rem; color: var(--color-success);"></i> 
+        <strong>Success!</strong> Testimonials database transaction completed successfully.
+      </div>
+    <% } %>
+
+    <% if (error) { %>
+      <div class="alert" style="background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--color-error); color: #fca5a5; margin-bottom: 2rem;">
+        <i class="fas fa-triangle-exclamation" style="margin-right: 0.5rem; color: var(--color-error);"></i> 
+        <strong>Transaction Error:</strong> <%= error %>
+      </div>
+    <% } %>
+
+    <div class="admin-jobs-grid">
+      
+      <!-- Left Column: Existing Testimonials -->
+      <div class="admin-card">
+        <h2 style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Existing Testimonials</h2>
+        
+        <% if (testimonials && testimonials.length > 0) { %>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <% testimonials.forEach((t) => { %>
+              <div class="job-admin-card" id="admin-testi-<%= t.id %>" style="align-items: flex-start; flex-direction: column; gap: 1rem; padding: 1.5rem;">
+                <div style="width: 100%; display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+                  <div class="job-admin-info">
+                    <h4 style="font-size: 1.1rem; color: var(--color-white);"><%= t.author %></h4>
+                    <div style="font-size: 0.85rem; color: var(--color-accent); font-weight: 500; margin-top: 0.15rem;"><%= t.role %></div>
+                    
+                    <div style="margin-top: 0.5rem; color: var(--color-highlight);">
+                      <% for (let s = 0; s < t.stars; s++) { %>
+                        <i class="fas fa-star" style="font-size: 0.8rem;"></i>
+                      <% } %>
+                    </div>
+                  </div>
+
+                  <!-- Active status switch toggle -->
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 0.8rem; color: #a3c2c2; font-weight: 500;">Active</span>
+                    <label class="toggle-switch">
+                      <input type="checkbox" <%= t.active ? 'checked' : '' %> onchange="handleTestimonialToggle('<%= t.id %>', this.checked)">
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div style="width: 100%; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: var(--radius-sm); padding: 1rem; font-size: 0.9rem; color: var(--color-text-off); font-style: italic; line-height: 1.5;">
+                  "<%= t.quote %>"
+                </div>
+
+                <div style="width: 100%; display: flex; justify-content: flex-end; gap: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.75rem;">
+                  <!-- Edit button -->
+                  <a href="/admin/testimonials/edit/<%= t.id %>" class="btn btn-sm btn-outline-dark" style="text-decoration: none; border-color: rgba(245, 166, 35, 0.4); color: #f5a623; display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;">
+                    <i class="fas fa-pen-to-square"></i> Edit
+                  </a>
+
+                  <!-- Delete button form -->
+                  <form action="/admin/testimonials/delete/<%= t.id %>" method="POST" onsubmit="return confirm('Are you absolutely sure you want to permanently delete this testimonial?');">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                      <i class="fas fa-trash-can"></i> Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <div style="text-align: center; padding: 4rem 2rem; color: #a3c2c2;">
+            <i class="fas fa-quote-right" style="font-size: 2.5rem; color: rgba(255,255,255,0.05); margin-bottom: 1.5rem;"></i>
+            <h3>No Testimonials Found</h3>
+            <p style="color: #6B7280; font-size: 0.9rem; max-width: 300px; margin: 0.5rem auto 0 auto;">Use the right-side form to publish dynamic carrier statements instantly to the home page.</p>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Right Column: Add New Testimonial Form -->
+      <div class="admin-card">
+        <h2 style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Add New Testimonial</h2>
+        
+        <form action="/admin/testimonials/add" method="POST">
+          <div class="form-group admin-form-group">
+            <label for="author">Author Name <span style="color: var(--color-error);">*</span></label>
+            <input type="text" id="author" name="author" class="form-control admin-input" placeholder="e.g. John Doe" required>
+          </div>
+
+          <div class="form-group admin-form-group">
+            <label for="role">Client Role / Company Name <span style="color: var(--color-error);">*</span></label>
+            <input type="text" id="role" name="role" class="form-control admin-input" placeholder="e.g. CEO, Logistics Transit Inc." required>
+          </div>
+
+          <div class="form-group admin-form-group">
+            <label for="stars">Star Rating <span style="color: var(--color-error);">*</span></label>
+            <select id="stars" name="stars" class="form-control admin-input" required>
+              <option value="5" selected>5 Stars (Excellent)</option>
+              <option value="4">4 Stars (Good)</option>
+              <option value="3">3 Stars (Average)</option>
+              <option value="2">2 Stars (Poor)</option>
+              <option value="1">1 Star (Very Poor)</option>
+            </select>
+          </div>
+
+          <div class="form-group admin-form-group" style="margin-bottom: 2rem;">
+            <label for="quote">Carrier Review Quote <span style="color: var(--color-error);">*</span></label>
+            <textarea id="quote" name="quote" class="form-control admin-input" placeholder="Enter the exact quote or feedback given by the carrier..." required style="min-height: 120px;"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-large">Publish Testimonial</button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Client-side script handling active toggles with dynamic server endpoints -->
+  <script>
+    async function handleTestimonialToggle(testiId, isChecked) {
+      try {
+        const response = await fetch(`/admin/testimonials/toggle/${testiId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ active: isChecked })
+        });
+        
+        const resData = await response.json();
+        if (!response.ok || !resData.success) {
+          alert('Error: Failed to update testimonial visibility.');
+          window.location.reload();
+        }
+      } catch (err) {
+        console.error('Error toggling testimonial visibility:', err);
+        alert('Server connection error. Failed to toggle status.');
+        window.location.reload();
+      }
+    }
+  </script>
+
+  <!-- FontAwesome for standard icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</body>
+</html>

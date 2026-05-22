@@ -5,6 +5,233 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Website Settings | <%= config.brand.name %></title>
   <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  
+  <style>
+    /* Premium settings dashboard layout enhancements */
+    .settings-dashboard-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      align-items: start;
+      margin-top: 1rem;
+      margin-bottom: 4rem;
+    }
+    
+    @media (max-width: 992px) {
+      .settings-dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+    
+    /* Left column navigation sidebar */
+    .settings-sidebar {
+      background: linear-gradient(135deg, rgba(16, 37, 37, 0.75) 0%, rgba(6, 17, 17, 0.85) 100%);
+      border: 1px solid rgba(34, 201, 138, 0.18);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+    
+    .settings-sidebar-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #a3c2c2;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: block;
+    }
+    
+    .settings-nav-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    
+    @media (max-width: 992px) {
+      .settings-sidebar {
+        padding: 1.25rem;
+      }
+      .settings-nav-list {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 0.25rem;
+        gap: 0.5rem;
+      }
+      .settings-sidebar-title {
+        display: none;
+      }
+    }
+    
+    .settings-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.9rem 1.25rem;
+      color: #a3c2c2;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      text-align: left;
+      width: 100%;
+      white-space: nowrap;
+    }
+    
+    .settings-nav-item i {
+      font-size: 1.05rem;
+      width: 20px;
+      text-align: center;
+      transition: all 0.25s ease;
+    }
+    
+    .settings-nav-item:hover {
+      color: var(--color-white);
+      background: rgba(255, 255, 255, 0.02);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    .settings-nav-item.active {
+      color: var(--color-white);
+      background: rgba(34, 201, 138, 0.08);
+      border-color: rgba(34, 201, 138, 0.22);
+      box-shadow: 0 0 15px rgba(34, 201, 138, 0.04);
+    }
+    
+    .settings-nav-item.active i {
+      color: var(--color-accent);
+      transform: scale(1.15);
+    }
+    
+    /* Right column configuration workspace panel */
+    .settings-content-panel {
+      background: linear-gradient(135deg, rgba(16, 37, 37, 0.75) 0%, rgba(6, 17, 17, 0.85) 100%);
+      border: 1px solid rgba(34, 201, 138, 0.18);
+      border-radius: var(--radius-md);
+      padding: 3rem 2.5rem;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    
+    @media (max-width: 768px) {
+      .settings-content-panel {
+        padding: 2rem 1.5rem;
+      }
+    }
+    
+    .settings-tab-pane {
+      display: none;
+      animation: fadeInSettingsTab 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    
+    .settings-tab-pane.active {
+      display: block;
+    }
+    
+    @keyframes fadeInSettingsTab {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Tab header styles */
+    .settings-pane-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 1.25rem;
+      margin-bottom: 2.25rem;
+    }
+    
+    .settings-pane-header h2 {
+      font-size: 1.35rem;
+      color: var(--color-white);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0;
+      font-weight: 700;
+    }
+    
+    .settings-pane-header h2 i {
+      color: var(--color-accent);
+    }
+    
+    .settings-pane-header p {
+      color: #a3c2c2;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+    
+    /* Outlined custom controls footer */
+    .settings-control-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 2rem;
+      margin-top: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    @media (max-width: 600px) {
+      .settings-control-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.25rem;
+      }
+    }
+    
+    .settings-status-box {
+      font-size: 0.85rem;
+      color: #a3c2c2;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 500;
+    }
+    
+    .settings-status-indicator {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background-color: var(--color-accent);
+      box-shadow: 0 0 10px var(--color-accent);
+      animation: pulseSettingsIndicator 2s infinite;
+      display: inline-block;
+    }
+    
+    @keyframes pulseSettingsIndicator {
+      0% {
+        opacity: 0.65;
+        box-shadow: 0 0 4px var(--color-accent);
+      }
+      50% {
+        opacity: 1;
+        box-shadow: 0 0 12px var(--color-accent);
+      }
+      100% {
+        opacity: 0.65;
+        box-shadow: 0 0 4px var(--color-accent);
+      }
+    }
+  </style>
 </head>
 <body class="admin-body">
 
@@ -20,6 +247,7 @@
         <li><a href="/admin" class="admin-nav-link">Dashboard Hub</a></li>
         <li><a href="/admin/settings" class="admin-nav-link active">Site Settings</a></li>
         <li><a href="/admin/jobs" class="admin-nav-link">Careers Admin</a></li>
+        <li><a href="/admin/testimonials" class="admin-nav-link">Manage Testimonials</a></li>
         <li><a href="/" class="admin-nav-link" target="_blank">View Site <i class="fas fa-up-right-from-square" style="font-size: 0.75rem; margin-left: 0.25rem;"></i></a></li>
       </ul>
 
@@ -29,114 +257,373 @@
     </div>
   </nav>
 
-  <!-- Control panel settings layout -->
-  <main class="admin-container" style="max-width: 1000px;">
+  <!-- Main settings dashboard wrapper -->
+  <main class="admin-container">
     
     <div class="admin-header-wrap">
       <div>
         <h1>Website Brand Customizer</h1>
-        <p style="color: #a3c2c2; margin-top: 0.25rem;">Dynamically update contact coordinates, brand titles, logos, and social coordinates across the entire live site.</p>
+        <p style="color: #a3c2c2; margin-top: 0.25rem;">Dynamically update contact coordinates, brand titles, logos, and SMTP alerts across the entire live site.</p>
       </div>
     </div>
 
-    <!-- Alert systems -->
+    <!-- Alert notifications -->
     <% if (success) { %>
-      <div class="alert alert-success" style="background-color: rgba(16, 185, 129, 0.15); border: 1px solid var(--color-success); color: #a7f3d0; margin-bottom: 2rem;">
+      <div class="alert alert-success" style="background-color: rgba(16, 185, 129, 0.12); border: 1px solid var(--color-success); color: #a7f3d0; margin-bottom: 2.5rem; padding: 1rem 1.25rem; border-radius: var(--radius-sm);">
         <i class="fas fa-circle-check" style="margin-right: 0.5rem; color: var(--color-success);"></i> 
         <strong>Success!</strong> Core configurations updated successfully and propagated instantly to all pages.
       </div>
     <% } %>
 
     <% if (error) { %>
-      <div class="alert" style="background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--color-error); color: #fca5a5; margin-bottom: 2rem;">
+      <div class="alert" style="background-color: rgba(239, 68, 68, 0.12); border: 1px solid var(--color-error); color: #fca5a5; margin-bottom: 2.5rem; padding: 1rem 1.25rem; border-radius: var(--radius-sm);">
         <i class="fas fa-triangle-exclamation" style="margin-right: 0.5rem; color: var(--color-error);"></i> 
         <strong>Error:</strong> <%= error %>
       </div>
     <% } %>
 
-    <div class="admin-card">
-      <form action="/admin/settings" method="POST" enctype="multipart/form-data">
+    <!-- Master Form container encompassing tab panels -->
+    <form action="/admin/settings" method="POST" enctype="multipart/form-data">
+      
+      <div class="settings-dashboard-grid">
         
-        <!-- Branding Parameters -->
-        <h3 style="color: var(--color-white); font-size: 1.15rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-          <i class="fas fa-gem text-accent"></i> Company & Identity
-        </h3>
-        
-        <!-- Logo block -->
-        <div style="display: flex; gap: 2rem; align-items: center; background-color: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.04); margin-bottom: 2rem;">
-          <div style="text-align: center;">
-            <span style="display: block; font-size: 0.8rem; color: #a3c2c2; text-transform: uppercase; margin-bottom: 0.5rem;">Active Logo</span>
-            <div style="background-color: var(--color-primary); padding: 0.75rem 1.5rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1); display: inline-block;">
-              <img src="<%= config.brand.logo %>" alt="Active Logo" style="height: 50px; width: auto; object-fit: contain;">
+        <!-- Left Side: Interactive Sidebar Navigation -->
+        <aside class="settings-sidebar">
+          <span class="settings-sidebar-title">Configuration Modules</span>
+          <ul class="settings-nav-list">
+            <li>
+              <button type="button" class="settings-nav-item active" onclick="switchSettingsTab('tab-identity', this)">
+                <i class="fas fa-gem"></i> Company Identity
+              </button>
+            </li>
+            <li>
+              <button type="button" class="settings-nav-item" onclick="switchSettingsTab('tab-contact', this)">
+                <i class="fas fa-envelope-open-text"></i> Contact & HQ Details
+              </button>
+            </li>
+            <li>
+              <button type="button" class="settings-nav-item" onclick="switchSettingsTab('tab-social', this)">
+                <i class="fas fa-share-nodes"></i> Social Coordinates
+              </button>
+            </li>
+            <li>
+              <button type="button" class="settings-nav-item" onclick="switchSettingsTab('tab-smtp', this)">
+                <i class="fas fa-paper-plane"></i> Outbound Mail Engine
+              </button>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- Right Side: Settings Editor Workspace -->
+        <div class="settings-content-panel">
+          
+          <!-- ==================== TAB 1: Company Identity ==================== -->
+          <div class="settings-tab-pane active" id="tab-identity">
+            <div class="settings-pane-header">
+              <h2><i class="fas fa-gem"></i> Company & Identity</h2>
+              <p>Customize primary branding properties, identity names, sub-slogans, and official corporate logos.</p>
+            </div>
+
+            <!-- Enhanced Frosted Logo Uplink Card -->
+            <div style="display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center; background: rgba(255, 255, 255, 0.015); border: 1px solid rgba(255, 255, 255, 0.04); padding: 1.75rem 2rem; border-radius: 8px; margin-bottom: 2.25rem;">
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 0.75rem; color: #a3c2c2; text-transform: uppercase; margin-bottom: 0.65rem; font-weight: 700; letter-spacing: 0.05em;">Current Logo</span>
+                <div style="background-color: var(--color-primary); padding: 1rem; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.06); display: inline-flex; align-items: center; justify-content: center; min-width: 140px; height: 80px; box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);">
+                  <img src="<%= config.brand.logo %>" alt="Active Logo" style="max-height: 58px; max-width: 120px; object-fit: contain;">
+                </div>
+              </div>
+              <div style="flex-grow: 1;">
+                <div class="admin-form-group">
+                  <label for="logo_file" style="font-weight: 600; margin-bottom: 0.5rem; display: block; color: var(--color-white);">Upload Custom Logo Image</label>
+                  <input type="file" id="logo_file" name="logo_file" class="form-control admin-input" accept="image/*" style="padding: 0.65rem 1rem;">
+                  <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.5rem;">Supported formats: PNG, JPG, JPEG, SVG, ICO. Instantly replaces active header/footer brand icons.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Brand text controls -->
+            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1rem;">
+              <div class="form-group admin-form-group">
+                <label for="brand_name" style="font-weight: 600;">Brand Name <span style="color: var(--color-error);">*</span></label>
+                <input type="text" id="brand_name" name="brand_name" class="form-control admin-input" value="<%= config.brand.name %>" required style="padding: 0.85rem 1rem;">
+              </div>
+              <div class="form-group admin-form-group">
+                <label for="brand_tagline" style="font-weight: 600;">Brand Tagline <span style="color: var(--color-error);">*</span></label>
+                <input type="text" id="brand_tagline" name="brand_tagline" class="form-control admin-input" value="<%= config.brand.tagline %>" required style="padding: 0.85rem 1rem;">
+              </div>
             </div>
           </div>
-          <div style="flex-grow: 1;">
-            <div class="admin-form-group">
-              <label for="logo_file" style="color: #a3c2c2;">Upload Custom Logo Image</label>
-              <input type="file" id="logo_file" name="logo_file" class="form-control admin-input" accept="image/*">
-              <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.25rem;">Supported formats: PNG, JPG, JPEG, SVG, ICO. Replaces the default site logo instantly.</span>
+
+          <!-- ==================== TAB 2: Contact HQ Details ==================== -->
+          <div class="settings-tab-pane" id="tab-contact">
+            <div class="settings-pane-header">
+              <h2><i class="fas fa-envelope-open-text"></i> Contact & HQ Details</h2>
+              <p>Configure verified support channels, phone parameters, help desk entries, and corporate office maps locators.</p>
+            </div>
+
+            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.75rem;">
+              <div class="form-group admin-form-group">
+                <label for="contact_phone" style="font-weight: 600;">Canonical Phone Support <span style="color: var(--color-error);">*</span></label>
+                <input type="text" id="contact_phone" name="contact_phone" class="form-control admin-input" value="<%= config.contact.phone %>" required style="padding: 0.85rem 1rem;">
+              </div>
+              <div class="form-group admin-form-group">
+                <label for="contact_email" style="font-weight: 600;">Canonical Support Email <span style="color: var(--color-error);">*</span></label>
+                <input type="email" id="contact_email" name="contact_email" class="form-control admin-input" value="<%= config.contact.email %>" required style="padding: 0.85rem 1rem;">
+              </div>
+            </div>
+
+            <div class="form-group admin-form-group" style="margin-bottom: 1rem;">
+              <label for="contact_address" style="font-weight: 600;">Office Headquarters Address <span style="color: var(--color-error);">*</span></label>
+              <input type="text" id="contact_address" name="contact_address" class="form-control admin-input" value="<%= config.contact.address %>" required style="padding: 0.85rem 1rem;">
+              <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.5rem;">Controls standard footer alignment lists, maps search triggers, and application references.</span>
             </div>
           </div>
+
+          <!-- ==================== TAB 3: Social Coordinates ==================== -->
+          <div class="settings-tab-pane" id="tab-social">
+            <div class="settings-pane-header">
+              <h2><i class="fas fa-share-nodes"></i> Social Coordinates</h2>
+              <p>Input verified URLs for primary company handles. Empty handle values are hidden automatically in footers.</p>
+            </div>
+
+            <div class="form-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 1rem;">
+              <div class="form-group admin-form-group">
+                <label for="social_linkedin" style="font-weight: 600; display: flex; align-items: center; gap: 0.45rem;"><i class="fab fa-linkedin" style="color: #0a66c2;"></i> LinkedIn URL</label>
+                <input type="url" id="social_linkedin" name="social_linkedin" class="form-control admin-input" value="<%= config.social.linkedin %>" placeholder="https://linkedin.com/company/..." style="padding: 0.85rem 1rem;">
+              </div>
+              <div class="form-group admin-form-group">
+                <label for="social_facebook" style="font-weight: 600; display: flex; align-items: center; gap: 0.45rem;"><i class="fab fa-square-facebook" style="color: #1877f2;"></i> Facebook URL</label>
+                <input type="url" id="social_facebook" name="social_facebook" class="form-control admin-input" value="<%= config.social.facebook %>" placeholder="https://facebook.com/..." style="padding: 0.85rem 1rem;">
+              </div>
+              <div class="form-group admin-form-group">
+                <label for="social_instagram" style="font-weight: 600; display: flex; align-items: center; gap: 0.45rem;"><i class="fab fa-instagram" style="color: #e1306c;"></i> Instagram URL</label>
+                <input type="url" id="social_instagram" name="social_instagram" class="form-control admin-input" value="<%= config.social.instagram %>" placeholder="https://instagram.com/..." style="padding: 0.85rem 1rem;">
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== TAB 4: Outbound Mail Engine ==================== -->
+          <div class="settings-tab-pane" id="tab-smtp">
+            <div class="settings-pane-header">
+              <h2><i class="fas fa-paper-plane"></i> Outbound Mail Engine</h2>
+              <p>Configure corporate outgoing SMTP routing credentials to dispatch real-time notifications for user submissions.</p>
+            </div>
+
+            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+              <div class="form-group admin-form-group">
+                <label for="smtp_enabled" style="font-weight: 600;">Dispatcher State</label>
+                <select id="smtp_enabled" name="smtp_enabled" class="form-control admin-input" style="appearance: none; -webkit-appearance: none; padding: 0.85rem 2.5rem 0.85rem 1rem; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2322C98A%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.65rem auto;">
+                  <option value="true" <%= config.smtp.enabled === 'true' ? 'selected' : '' %>>ENABLED - Send Dynamic Email Alerts</option>
+                  <option value="false" <%= config.smtp.enabled !== 'true' ? 'selected' : '' %>>DISABLED - Quiet/Maintenance Mode</option>
+                </select>
+              </div>
+              <div class="form-group admin-form-group">
+                <label for="smtp_to" style="font-weight: 600;">Alert Recipient Target Address ("To")</label>
+                <input type="email" id="smtp_to" name="smtp_to" class="form-control admin-input" value="<%= config.smtp.to %>" placeholder="alerts@hire7fuel.com" style="padding: 0.85rem 1rem;">
+              </div>
+            </div>
+
+            <div class="form-row" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+              <div class="form-group admin-form-group">
+                <label for="smtp_host" style="font-weight: 600;">SMTP Outgoing Hostname</label>
+                <input type="text" id="smtp_host" name="smtp_host" class="form-control admin-input" value="<%= config.smtp.host %>" placeholder="e.g. smtp.mailgun.org or smtp.mailtrap.io" style="padding: 0.85rem 1rem;">
+              </div>
+              <div class="form-group admin-form-group">
+                <label for="smtp_port" style="font-weight: 600;">SMTP Dispatcher Port</label>
+                <input type="text" id="smtp_port" name="smtp_port" class="form-control admin-input" value="<%= config.smtp.port %>" placeholder="e.g. 587 or 2525" style="padding: 0.85rem 1rem;">
+              </div>
+            </div>
+
+            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+              <div class="form-group admin-form-group">
+                <label for="smtp_user" style="font-weight: 600;">SMTP Authentication Username</label>
+                <input type="text" id="smtp_user" name="smtp_user" class="form-control admin-input" value="<%= config.smtp.user %>" placeholder="Username / Credentials" style="padding: 0.85rem 1rem;">
+              </div>
+              <div class="form-group admin-form-group">
+                <label for="smtp_pass" style="font-weight: 600;">SMTP Authentication Password</label>
+                <input type="password" id="smtp_pass" name="smtp_pass" class="form-control admin-input" value="<%= config.smtp.pass %>" placeholder="••••••••••••" style="padding: 0.85rem 1rem;">
+              </div>
+            </div>
+
+            <div class="form-group admin-form-group" style="margin-bottom: 1rem;">
+              <label for="smtp_from" style="font-weight: 600;">Sender E-Mail Address ("From")</label>
+              <input type="email" id="smtp_from" name="smtp_from" class="form-control admin-input" value="<%= config.smtp.from %>" placeholder="notifications@hire7fuel.com" style="padding: 0.85rem 1rem;">
+              <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.5rem;">The verified sender address. Must align with authorized domains in your SMTP provider.</span>
+            </div>
+
+            <!-- Frosted SMTP Connection Test Card -->
+            <div style="background: rgba(255, 255, 255, 0.015); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 8px; padding: 1.5rem; margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                <div>
+                  <h4 style="margin: 0; font-size: 0.95rem; color: var(--color-white); font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-circle-check" style="color: var(--color-accent);"></i> SMTP Credentials Validator
+                  </h4>
+                  <p style="margin: 0.25rem 0 0 0; font-size: 0.8rem; color: #a3c2c2;">Verify outbound connectivity and credentials by dispatching a real-time test mail before saving.</p>
+                </div>
+                <button type="button" id="btn-test-smtp" class="btn btn-outline" style="border-color: rgba(34, 201, 138, 0.3); color: var(--color-accent); font-weight: 600; padding: 0.75rem 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                  <i class="fas fa-envelope-circle-check"></i> Dispatch Test Mail
+                </button>
+              </div>
+              
+              <!-- Connection Logs Console -->
+              <div id="smtp-test-result" style="display: none; background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 1.25rem; font-family: monospace; font-size: 0.85rem; line-height: 1.6;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Unified control Action Bar sticky at the bottom -->
+          <footer class="settings-control-footer">
+            <div class="settings-status-box">
+              <span class="settings-status-indicator"></span>
+              <span>Unified Settings Engine Online</span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-large" style="min-width: 240px; display: inline-flex; align-items: center; justify-content: center; gap: 0.65rem;">
+              <i class="fas fa-floppy-disk"></i> Save All Configurations
+            </button>
+          </footer>
+
         </div>
-
-        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
-          <div class="form-group admin-form-group">
-            <label for="brand_name">Brand Name <span style="color: var(--color-error);">*</span></label>
-            <input type="text" id="brand_name" name="brand_name" class="form-control admin-input" value="<%= config.brand.name %>" required>
-          </div>
-          <div class="form-group admin-form-group">
-            <label for="brand_tagline">Brand Tagline <span style="color: var(--color-error);">*</span></label>
-            <input type="text" id="brand_tagline" name="brand_tagline" class="form-control admin-input" value="<%= config.brand.tagline %>" required>
-          </div>
-        </div>
-
-        <!-- Contact Coordinates -->
-        <h3 style="color: var(--color-white); font-size: 1.15rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-          <i class="fas fa-envelope-open-text text-accent"></i> Contact Parameters
-        </h3>
-
-        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-          <div class="form-group admin-form-group">
-            <label for="contact_phone">Canonical Phone Support <span style="color: var(--color-error);">*</span></label>
-            <input type="text" id="contact_phone" name="contact_phone" class="form-control admin-input" value="<%= config.contact.phone %>" required>
-          </div>
-          <div class="form-group admin-form-group">
-            <label for="contact_email">Canonical Support Email <span style="color: var(--color-error);">*</span></label>
-            <input type="email" id="contact_email" name="contact_email" class="form-control admin-input" value="<%= config.contact.email %>" required>
-          </div>
-        </div>
-
-        <div class="form-group admin-form-group" style="margin-bottom: 2rem;">
-          <label for="contact_address">Office Headquarters Address <span style="color: var(--color-error);">*</span></label>
-          <input type="text" id="contact_address" name="contact_address" class="form-control admin-input" value="<%= config.contact.address %>" required>
-          <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.25rem;">Must be the complete canonical address. Controls footers, contact displays, and maps searches.</span>
-        </div>
-
-        <!-- Social Media Coordinates -->
-        <h3 style="color: var(--color-white); font-size: 1.15rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-          <i class="fas fa-share-nodes text-accent"></i> Social Media Handles
-        </h3>
-
-        <div class="form-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem;">
-          <div class="form-group admin-form-group">
-            <label for="social_linkedin">LinkedIn URL</label>
-            <input type="url" id="social_linkedin" name="social_linkedin" class="form-control admin-input" value="<%= config.social.linkedin %>" placeholder="https://linkedin.com/company/...">
-          </div>
-          <div class="form-group admin-form-group">
-            <label for="social_facebook">Facebook URL</label>
-            <input type="url" id="social_facebook" name="social_facebook" class="form-control admin-input" value="<%= config.social.facebook %>" placeholder="https://facebook.com/...">
-          </div>
-          <div class="form-group admin-form-group">
-            <label for="social_instagram">Instagram URL</label>
-            <input type="url" id="social_instagram" name="social_instagram" class="form-control admin-input" value="<%= config.social.instagram %>" placeholder="https://instagram.com/...">
-          </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-large" style="min-width: 200px;">Save Customizations</button>
-      </form>
-    </div>
+        
+      </div>
+      
+    </form>
 
   </main>
+
+  <!-- Client-Side Settings Tab Switcher Script -->
+  <script>
+    function switchSettingsTab(tabId, buttonEl) {
+      // Remove active tag from all tabs in the list
+      document.querySelectorAll('.settings-nav-item').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // Remove active tags from all settings panes
+      document.querySelectorAll('.settings-tab-pane').forEach(pane => {
+        pane.classList.remove('active');
+      });
+
+      // Grant active status to triggers
+      buttonEl.classList.add('active');
+      const targetPane = document.getElementById(tabId);
+      if (targetPane) {
+        targetPane.classList.add('active');
+      }
+
+      // Persist active settings tab in browser session storage
+      localStorage.setItem('active_settings_tab', tabId);
+    }
+
+    // Auto-restore active panel on window DOM load & bind validator actions
+    window.addEventListener('DOMContentLoaded', () => {
+      const activeTabId = localStorage.getItem('active_settings_tab');
+      if (activeTabId) {
+        // Locate matching navigation item button trigger
+        const matchingBtn = Array.from(document.querySelectorAll('.settings-nav-item')).find(btn => {
+          return btn.getAttribute('onclick').includes(activeTabId);
+        });
+
+        if (matchingBtn) {
+          switchSettingsTab(activeTabId, matchingBtn);
+        }
+      }
+
+      // Bind dynamic SMTP test event listener
+      const testBtn = document.getElementById('btn-test-smtp');
+      if (testBtn) {
+        testBtn.addEventListener('click', () => {
+          const smtp_host = document.getElementById('smtp_host').value.trim();
+          const smtp_port = document.getElementById('smtp_port').value.trim();
+          const smtp_user = document.getElementById('smtp_user').value.trim();
+          const smtp_pass = document.getElementById('smtp_pass').value;
+          const smtp_from = document.getElementById('smtp_from').value.trim();
+          const smtp_to = document.getElementById('smtp_to').value.trim();
+          
+          const logConsole = document.getElementById('smtp-test-result');
+          
+          if (!smtp_host || !smtp_port || !smtp_from || !smtp_to) {
+            logConsole.style.display = 'block';
+            logConsole.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+            logConsole.style.color = '#fca5a5';
+            logConsole.innerHTML = '<i class="fas fa-triangle-exclamation" style="color: #ef4444; margin-right: 0.5rem;"></i> <strong>Error:</strong> Missing required fields. Please ensure SMTP Host, Port, Sender Address ("From"), and Alert Recipient ("To") are configured.';
+            return;
+          }
+          
+          const originalHtml = testBtn.innerHTML;
+          testBtn.disabled = true;
+          testBtn.style.opacity = '0.7';
+          testBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Dispatched SMTP Validation...';
+          
+          logConsole.style.display = 'block';
+          logConsole.style.borderColor = 'rgba(34, 201, 138, 0.3)';
+          logConsole.style.color = '#a3c2c2';
+          logConsole.innerHTML = '<span style="color: var(--color-accent);"><i class="fas fa-network-wired"></i> Establishing connection to ' + smtp_host + ':' + smtp_port + '...</span>';
+          
+          fetch('/admin/settings/test-smtp', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              smtp_host,
+              smtp_port,
+              smtp_user,
+              smtp_pass,
+              smtp_from,
+              smtp_to
+            })
+          })
+          .then(response => response.json().then(data => ({ status: response.status, data })))
+          .then(({ status, data }) => {
+            if (status === 200 && data.success) {
+              logConsole.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+              logConsole.style.color = '#a7f3d0';
+              logConsole.innerHTML = `
+                <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                  <i class="fas fa-circle-check" style="color: var(--color-success); font-size: 1.1rem; margin-top: 0.2rem;"></i>
+                  <div>
+                    <strong style="color: #fff;">Success: Outbound SMTP dispatch verified!</strong>
+                    <p style="margin: 0.35rem 0 0 0; color: #a3c2c2; font-size: 0.8rem;">${data.message}</p>
+                  </div>
+                </div>
+              `;
+            } else {
+              logConsole.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+              logConsole.style.color = '#fca5a5';
+              logConsole.innerHTML = `
+                <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                  <i class="fas fa-circle-exclamation" style="color: var(--color-error); font-size: 1.1rem; margin-top: 0.2rem;"></i>
+                  <div>
+                    <strong style="color: #fff;">SMTP Connection Failed</strong>
+                    <p style="margin: 0.35rem 0 0 0; color: #fca5a5; font-size: 0.85rem;"><strong>Details:</strong> ${data.error || 'Unknown transporter error'}</p>
+                    <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.5rem;">Tip: Verify your hostname, credentials, port, and security rules (e.g. secure connection requirements on your SMTP console).</span>
+                  </div>
+                </div>
+              `;
+            }
+          })
+          .catch(err => {
+            logConsole.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+            logConsole.style.color = '#fca5a5';
+            logConsole.innerHTML = `
+              <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                <i class="fas fa-circle-exclamation" style="color: var(--color-error); font-size: 1.1rem; margin-top: 0.2rem;"></i>
+                <div>
+                  <strong style="color: #fff;">Network Error</strong>
+                  <p style="margin: 0.35rem 0 0 0; color: #fca5a5; font-size: 0.8rem;">Failed to dispatch test request to backend settings route.</p>
+                </div>
+              </div>
+            `;
+          })
+          .finally(() => {
+            testBtn.disabled = false;
+            testBtn.style.opacity = '1';
+            testBtn.innerHTML = originalHtml;
+          });
+        });
+      }
+    });
+  </script>
 
   <!-- FontAwesome for standard icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />

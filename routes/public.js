@@ -21,11 +21,22 @@ router.use(loadDynamicSettings);
 /**
  * GET / - Home Page
  */
-router.get('/', (req, res) => {
-  res.render('index', { 
-    page: 'home', 
-    success: req.query.success === 'true' 
-  });
+router.get('/', async (req, res) => {
+  try {
+    const testimonials = await db.getTestimonials(true);
+    res.render('index', { 
+      page: 'home', 
+      success: req.query.success === 'true',
+      testimonials: testimonials
+    });
+  } catch (err) {
+    console.error('Failed to load testimonials for home page:', err);
+    res.render('index', { 
+      page: 'home', 
+      success: req.query.success === 'true',
+      testimonials: []
+    });
+  }
 });
 
 /**

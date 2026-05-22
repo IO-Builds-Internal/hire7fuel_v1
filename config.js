@@ -30,5 +30,14 @@ module.exports = {
     linkedin: '',   // Empty by default (hidden in footer per spec)
     facebook: '',   // Empty by default
     instagram: ''   // Empty by default
+  },
+  smtp: {
+    host: 'smtp.mailtrap.io',
+    port: '2525',
+    user: '',
+    pass: '',
+    from: 'notifications@hire7fuel.com',
+    to: 'alerts@hire7fuel.com',
+    enabled: 'false'
   }
 };

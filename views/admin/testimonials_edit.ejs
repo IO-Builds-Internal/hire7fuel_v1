@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Carrier Testimonial | <%= config.brand.name %></title>
+  <link class="styles" rel="stylesheet" href="/css/styles.css?v=2.0">
+</head>
+<body class="admin-body">
+
+  <!-- Admin Navigation -->
+  <nav class="admin-nav">
+    <div class="admin-nav-container">
+      <a href="/admin" class="logo-link" style="font-size: 1.35rem;">
+        <i class="fas fa-screwdriver-wrench text-accent"></i>
+        <span><%= config.brand.name %> Admin</span>
+      </a>
+
+      <ul class="admin-nav-links">
+        <li><a href="/admin" class="admin-nav-link">Dashboard Hub</a></li>
+        <li><a href="/admin/settings" class="admin-nav-link">Site Settings</a></li>
+        <li><a href="/admin/jobs" class="admin-nav-link">Careers Admin</a></li>
+        <li><a href="/admin/testimonials" class="admin-nav-link active">Manage Testimonials</a></li>
+        <li><a href="/" class="admin-nav-link" target="_blank">View Site <i class="fas fa-up-right-from-square" style="font-size: 0.75rem; margin-left: 0.25rem;"></i></a></li>
+      </ul>
+
+      <a href="/admin/logout" class="admin-logout">
+        <i class="fas fa-power-off"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <!-- Edit testimonial layout -->
+  <main class="admin-container" style="max-width: 800px;">
+    
+    <div class="admin-header-wrap">
+      <div>
+        <h1 style="display: flex; align-items: center; gap: 0.75rem;">
+          <a href="/admin/testimonials" style="color: #a3c2c2; font-size: 1.75rem; text-decoration: none;"><i class="fas fa-arrow-left"></i></a>
+          Edit Carrier Testimonial
+        </h1>
+        <p style="color: #a3c2c2; margin-top: 0.25rem; margin-left: 2.5rem;">Modify dynamic testimonial attributes for "<%= testimonial.author %>". Changes propagate instantly.</p>
+      </div>
+    </div>
+
+    <!-- Alert notifications -->
+    <% if (error) { %>
+      <div class="alert" style="background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--color-error); color: #fca5a5; margin-bottom: 2rem;">
+        <i class="fas fa-triangle-exclamation" style="margin-right: 0.5rem; color: var(--color-error);"></i> 
+        <strong>Transaction Error:</strong> <%= error %>
+      </div>
+    <% } %>
+
+    <div class="admin-card">
+      <h3 style="color: var(--color-white); font-size: 1.15rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-pen-to-square text-accent"></i> Testimonial Parameters
+      </h3>
+
+      <form action="/admin/testimonials/edit/<%= testimonial.id %>" method="POST">
+        
+        <div class="form-group admin-form-group">
+          <label for="author">Author Name <span style="color: var(--color-error);">*</span></label>
+          <input type="text" id="author" name="author" class="form-control admin-input" value="<%= testimonial.author %>" required>
+        </div>
+
+        <div class="form-group admin-form-group">
+          <label for="role">Client Role / Company Name <span style="color: var(--color-error);">*</span></label>
+          <input type="text" id="role" name="role" class="form-control admin-input" value="<%= testimonial.role %>" required>
+        </div>
+
+        <div class="form-group admin-form-group">
+          <label for="stars">Star Rating <span style="color: var(--color-error);">*</span></label>
+          <select id="stars" name="stars" class="form-control admin-input" required>
+            <option value="5" <%= testimonial.stars === 5 ? 'selected' : '' %>>5 Stars (Excellent)</option>
+            <option value="4" <%= testimonial.stars === 4 ? 'selected' : '' %>>4 Stars (Good)</option>
+            <option value="3" <%= testimonial.stars === 3 ? 'selected' : '' %>>3 Stars (Average)</option>
+            <option value="2" <%= testimonial.stars === 2 ? 'selected' : '' %>>2 Stars (Poor)</option>
+            <option value="1" <%= testimonial.stars === 1 ? 'selected' : '' %>>1 Star (Very Poor)</option>
+          </select>
+        </div>
+
+        <div class="form-group admin-form-group" style="margin-bottom: 2rem;">
+          <label for="quote">Carrier Review Quote <span style="color: var(--color-error);">*</span></label>
+          <textarea id="quote" name="quote" class="form-control admin-input" required style="min-height: 120px;"><%= testimonial.quote %></textarea>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+          <button type="submit" class="btn btn-primary btn-large" style="min-width: 180px;">Save Updates</button>
+          <a href="/admin/testimonials" class="btn btn-outline-dark btn-large" style="min-width: 120px; text-decoration: none;">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- FontAwesome for standard icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</body>
+</html>

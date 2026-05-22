@@ -6,6 +6,8 @@ node_modules/
 
 # Local database file fallback
 database/local_db.json
+database/*.sqlite
+database/*.sqlite-journal
 
 # Administrative custom media uploads
 public/uploads/

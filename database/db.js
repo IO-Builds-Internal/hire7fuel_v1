@@ -134,6 +134,54 @@ function initSqliteTables() {
           'Full-time'
         );
 
+
+        stmt.finalize();
+      }
+    });
+
+    // 4. Testimonials Table
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS testimonials (
+        id TEXT PRIMARY KEY,
+        author TEXT NOT NULL,
+        role TEXT NOT NULL,
+        quote TEXT NOT NULL,
+        stars INTEGER DEFAULT 5,
+        active INTEGER DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Seed default testimonials if empty
+    sqliteDb.get("SELECT COUNT(*) as count FROM testimonials", (err, row) => {
+      if (!err && row && row.count === 0) {
+        console.log('SQLite Client: Seeding baseline carrier testimonials...');
+        const stmt = sqliteDb.prepare("INSERT INTO testimonials (id, author, role, quote, stars, active) VALUES (?, ?, ?, ?, ?, 1)");
+        
+        stmt.run(
+          'testi-1',
+          'Marcus Howell',
+          'Director of Logistics, Howell Transport',
+          'Implementing the Hire7 Fuel Card completely resolved our card abuse issues. The geofencing tool blocked two out-of-bounds fills in our first month alone, saving us hundreds of dollars in leakage.',
+          5
+        );
+        
+        stmt.run(
+          'testi-2',
+          'Sandeep Dhillon',
+          'Operations Manager, GTA Freightways',
+          'We scaled our fleet from 5 to 25 trucks without adding a single administrative hire. The automated IFTA tax logs export seamlessly to our accounting platform. It\'s clean, rapid, and transparent.',
+          5
+        );
+        
+        stmt.run(
+          'testi-3',
+          'Terri Lafleur',
+          'Fleet Coordinator, Lafleur Transport Inc.',
+          'Outstanding customer care. Whenever our drivers encounter weather route delays or require sudden limit extensions for truck maintenance, the phone dispatchers respond in under a minute.',
+          5
+        );
+        
         stmt.finalize();
       }
     });
@@ -182,7 +230,8 @@ module.exports = {
       brand: { ...baseConfig.brand },
       colors: { ...baseConfig.colors },
       contact: { ...baseConfig.contact },
-      social: { ...baseConfig.social }
+      social: { ...baseConfig.social },
+      smtp: { ...baseConfig.smtp }
     };
 
     if (this.isSupabase) {
@@ -204,6 +253,13 @@ module.exports = {
             if (item.key === 'social_linkedin') settingsObj.social.linkedin = item.value;
             if (item.key === 'social_facebook') settingsObj.social.facebook = item.value;
             if (item.key === 'social_instagram') settingsObj.social.instagram = item.value;
+            if (item.key === 'smtp_host') settingsObj.smtp.host = item.value;
+            if (item.key === 'smtp_port') settingsObj.smtp.port = item.value;
+            if (item.key === 'smtp_user') settingsObj.smtp.user = item.value;
+            if (item.key === 'smtp_pass') settingsObj.smtp.pass = item.value;
+            if (item.key === 'smtp_from') settingsObj.smtp.from = item.value;
+            if (item.key === 'smtp_to') settingsObj.smtp.to = item.value;
+            if (item.key === 'smtp_enabled') settingsObj.smtp.enabled = item.value;
           });
         }
       } catch (err) {
@@ -223,6 +279,13 @@ module.exports = {
             if (row.key === 'social_linkedin') settingsObj.social.linkedin = row.value;
             if (row.key === 'social_facebook') settingsObj.social.facebook = row.value;
             if (row.key === 'social_instagram') settingsObj.social.instagram = row.value;
+            if (row.key === 'smtp_host') settingsObj.smtp.host = row.value;
+            if (row.key === 'smtp_port') settingsObj.smtp.port = row.value;
+            if (row.key === 'smtp_user') settingsObj.smtp.user = row.value;
+            if (row.key === 'smtp_pass') settingsObj.smtp.pass = row.value;
+            if (row.key === 'smtp_from') settingsObj.smtp.from = row.value;
+            if (row.key === 'smtp_to') settingsObj.smtp.to = row.value;
+            if (row.key === 'smtp_enabled') settingsObj.smtp.enabled = row.value;
           });
         }
       } catch (err) {
@@ -548,6 +611,227 @@ module.exports = {
       } catch (err) {
         console.error('SQLite getSubmissions failed:', err.message);
         return [];
+      }
+    }
+  },
+
+  /**
+   * Delete a submission by ID.
+   */
+  async deleteSubmission(id) {
+    if (this.isSupabase) {
+      try {
+        const { error } = await dbClient
+          .from('submissions')
+          .delete()
+          .eq('id', id);
+        if (error) throw error;
+        return true;
+      } catch (err) {
+        console.error('Supabase deleteSubmission failed:', err.message);
+        return false;
+      }
+    } else {
+      try {
+        await dbRun("DELETE FROM submissions WHERE id = ?", [id]);
+        return true;
+      } catch (err) {
+        console.error('SQLite deleteSubmission failed:', err.message);
+        return false;
+      }
+    }
+  },
+
+  /**
+   * Fetch all testimonials, optionally filtering only active ones.
+   */
+  async getTestimonials(onlyActive = false) {
+    if (this.isSupabase) {
+      try {
+        let query = dbClient.from('testimonials').select('*').order('created_at', { ascending: false });
+        if (onlyActive) {
+          query = query.eq('active', true);
+        }
+        const { data, error } = await query;
+        if (error) throw error;
+        return data || [];
+      } catch (err) {
+        console.error('Supabase getTestimonials failed:', err.message);
+        return [];
+      }
+    } else {
+      try {
+        let sql = "SELECT * FROM testimonials ORDER BY created_at DESC";
+        let params = [];
+        if (onlyActive) {
+          sql = "SELECT * FROM testimonials WHERE active = 1 ORDER BY created_at DESC";
+        }
+        const rows = await dbAll(sql, params);
+        return rows.map(r => ({
+          ...r,
+          active: !!r.active
+        }));
+      } catch (err) {
+        console.error('SQLite getTestimonials failed:', err.message);
+        return [];
+      }
+    }
+  },
+
+  /**
+   * Fetch a single testimonial.
+   */
+  async getTestimonial(id) {
+    if (this.isSupabase) {
+      try {
+        const { data, error } = await dbClient
+          .from('testimonials')
+          .select('*')
+          .eq('id', id)
+          .single();
+        if (error) throw error;
+        return data;
+      } catch (err) {
+        console.error('Supabase getTestimonial failed:', err.message);
+        return null;
+      }
+    } else {
+      try {
+        const row = await dbGet("SELECT * FROM testimonials WHERE id = ?", [id]);
+        if (!row) return null;
+        return {
+          ...row,
+          active: !!row.active
+        };
+      } catch (err) {
+        console.error('SQLite getTestimonial failed:', err.message);
+        return null;
+      }
+    }
+  },
+
+  /**
+   * Insert a new testimonial.
+   */
+  async addTestimonial({ author, role, quote, stars = 5 }) {
+    const newTestimonial = {
+      author,
+      role,
+      quote,
+      stars: parseInt(stars, 10) || 5,
+      active: true,
+      created_at: new Date().toISOString()
+    };
+
+    if (this.isSupabase) {
+      try {
+        const { data, error } = await dbClient
+          .from('testimonials')
+          .insert([newTestimonial])
+          .select();
+        if (error) throw error;
+        return data ? data[0] : true;
+      } catch (err) {
+        console.error('Supabase addTestimonial failed:', err.message);
+        return false;
+      }
+    } else {
+      try {
+        newTestimonial.id = generateId();
+        await dbRun(
+          "INSERT INTO testimonials (id, author, role, quote, stars, active, created_at) VALUES (?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)",
+          [newTestimonial.id, newTestimonial.author, newTestimonial.role, newTestimonial.quote, newTestimonial.stars]
+        );
+        return newTestimonial;
+      } catch (err) {
+        console.error('SQLite addTestimonial failed:', err.message);
+        return false;
+      }
+    }
+  },
+
+  /**
+   * Update an existing testimonial.
+   */
+  async updateTestimonial(id, { author, role, quote, stars }) {
+    const parsedStars = parseInt(stars, 10) || 5;
+    if (this.isSupabase) {
+      try {
+        const { error } = await dbClient
+          .from('testimonials')
+          .update({ author, role, quote, stars: parsedStars })
+          .eq('id', id);
+        if (error) throw error;
+        return true;
+      } catch (err) {
+        console.error('Supabase updateTestimonial failed:', err.message);
+        return false;
+      }
+    } else {
+      try {
+        await dbRun(
+          "UPDATE testimonials SET author = ?, role = ?, quote = ?, stars = ? WHERE id = ?",
+          [author, role, quote, parsedStars, id]
+        );
+        return true;
+      } catch (err) {
+        console.error('SQLite updateTestimonial failed:', err.message);
+        return false;
+      }
+    }
+  },
+
+  /**
+   * Toggle a testimonial's active status.
+   */
+  async toggleTestimonialStatus(id, active) {
+    if (this.isSupabase) {
+      try {
+        const { error } = await dbClient
+          .from('testimonials')
+          .update({ active })
+          .eq('id', id);
+        if (error) throw error;
+        return true;
+      } catch (err) {
+        console.error('Supabase toggleTestimonialStatus failed:', err.message);
+        return false;
+      }
+    } else {
+      try {
+        const activeInt = active ? 1 : 0;
+        await dbRun("UPDATE testimonials SET active = ? WHERE id = ?", [activeInt, id]);
+        return true;
+      } catch (err) {
+        console.error('SQLite toggleTestimonialStatus failed:', err.message);
+        return false;
+      }
+    }
+  },
+
+  /**
+   * Delete a testimonial.
+   */
+  async deleteTestimonial(id) {
+    if (this.isSupabase) {
+      try {
+        const { error } = await dbClient
+          .from('testimonials')
+          .delete()
+          .eq('id', id);
+        if (error) throw error;
+        return true;
+      } catch (err) {
+        console.error('Supabase deleteTestimonial failed:', err.message);
+        return false;
+      }
+    } else {
+      try {
+        await dbRun("DELETE FROM testimonials WHERE id = ?", [id]);
+        return true;
+      } catch (err) {
+        console.error('SQLite deleteTestimonial failed:', err.message);
+        return false;
       }
     }
   }

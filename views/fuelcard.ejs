@@ -336,6 +336,134 @@
       margin: 0 auto;
     }
 
+    /* 3.5 Card Presentation Side-by-Side & Premium Interactive Feature Cards */
+    .card-presentation {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 5rem;
+      align-items: center;
+      margin-top: 3.5rem;
+    }
+    @media (max-width: 1024px) {
+      .card-presentation {
+        grid-template-columns: 1fr;
+        gap: 3.5rem;
+      }
+    }
+
+    .feature-cards-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .feature-glass-card {
+      background: rgba(255, 255, 255, 0.015);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.01);
+    }
+
+    .feature-glass-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: transparent;
+      transition: all 0.4s ease;
+    }
+
+    .feature-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+      transition: all 0.4s ease;
+    }
+
+    /* Interactive state mappings by features */
+    .fg-lock .feature-card-icon {
+      background-color: rgba(34, 201, 138, 0.06);
+      color: var(--color-accent);
+      border: 1px solid rgba(34, 201, 138, 0.15);
+      box-shadow: 0 0 15px rgba(34, 201, 138, 0.05);
+    }
+    .fg-lock::before { background: var(--color-accent); }
+    .fg-lock:hover {
+      background: rgba(34, 201, 138, 0.03);
+      border-color: rgba(34, 201, 138, 0.25);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(34, 201, 138, 0.05);
+      transform: translateX(8px);
+    }
+
+    .fg-gears .feature-card-icon {
+      background-color: rgba(16, 185, 129, 0.06);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.15);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.05);
+    }
+    .fg-gears::before { background: #10b981; }
+    .fg-gears:hover {
+      background: rgba(16, 185, 129, 0.03);
+      border-color: rgba(16, 185, 129, 0.25);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(16, 185, 129, 0.05);
+      transform: translateX(8px);
+    }
+
+    .fg-receipt .feature-card-icon {
+      background-color: rgba(245, 166, 35, 0.06);
+      color: #f5a623;
+      border: 1px solid rgba(245, 166, 35, 0.15);
+      box-shadow: 0 0 15px rgba(245, 166, 35, 0.05);
+    }
+    .fg-receipt::before { background: #f5a623; }
+    .fg-receipt:hover {
+      background: rgba(245, 166, 35, 0.03);
+      border-color: rgba(245, 166, 35, 0.25);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(245, 166, 35, 0.05);
+      transform: translateX(8px);
+    }
+
+    .fg-chart .feature-card-icon {
+      background-color: rgba(59, 130, 246, 0.06);
+      color: #3b82f6;
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.05);
+    }
+    .fg-chart::before { background: #3b82f6; }
+    .fg-chart:hover {
+      background: rgba(59, 130, 246, 0.03);
+      border-color: rgba(59, 130, 246, 0.25);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(59, 130, 246, 0.05);
+      transform: translateX(8px);
+    }
+
+    .feature-card-content h4 {
+      font-size: 1.1rem;
+      color: var(--color-white);
+      margin-bottom: 0.25rem;
+      font-weight: 700;
+    }
+    .feature-card-content p {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.45;
+    }
+
     /* 4. Responsive media queries */
     @media (max-width: 992px) {
       .fc-hero-grid {
@@ -895,23 +1023,51 @@
         <!-- Details list -->
         <div>
           <h2>Cloud Operations Dashboard</h2>
-          <p style="color: rgba(255,255,255,0.85); margin-bottom: 2rem; font-size: 1.05rem; line-height: 1.6;">Our proprietary administrative software puts full oversight of refueling variables in your hand. Instantly monitor fleet behaviors, adjust cards, and pull compliance logs.</p>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; font-size: 0.95rem;">
-            <div>
-              <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-lock"></i> Instant Lock</h4>
-              <p style="color: rgba(255,255,255,0.75); line-height: 1.5;">Freeze active fleet cards in one click if a driver reports a loss, shielding operations from fraud liabilities.</p>
+          <p style="color: var(--color-muted); margin-bottom: 2rem; font-size: 1.05rem; line-height: 1.6;">Our proprietary administrative software puts full oversight of refueling variables in your hand. Instantly monitor fleet behaviors, adjust cards, and pull compliance logs.</p>
+          
+          <div class="feature-cards-stack">
+            <!-- Card 1: Instant Lock -->
+            <div class="feature-glass-card fg-lock">
+              <div class="feature-card-icon">
+                <i class="fas fa-lock"></i>
+              </div>
+              <div class="feature-card-content">
+                <h4>Instant Lock</h4>
+                <p>Freeze active fleet cards in one click if a driver reports a loss, shielding operations from fraud liabilities.</p>
+              </div>
             </div>
-            <div>
-              <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-gears"></i> Limit Toggles</h4>
-              <p style="color: rgba(255,255,255,0.75); line-height: 1.5;">Configure cash limits, DEF lines, and repair allowances dynamically across desktop and mobile browsers.</p>
+
+            <!-- Card 2: Limit Toggles -->
+            <div class="feature-glass-card fg-gears">
+              <div class="feature-card-icon">
+                <i class="fas fa-gears"></i>
+              </div>
+              <div class="feature-card-content">
+                <h4>Limit Toggles</h4>
+                <p>Configure cash limits, DEF lines, and repair allowances dynamically across desktop and mobile browsers.</p>
+              </div>
             </div>
-            <div>
-              <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-receipt"></i> Receipts Upload</h4>
-              <p style="color: rgba(255,255,255,0.75); line-height: 1.5;">Drivers capture invoices on the road; our database matches them to transactions automatically.</p>
+
+            <!-- Card 3: Receipts Upload -->
+            <div class="feature-glass-card fg-receipt">
+              <div class="feature-card-icon">
+                <i class="fas fa-receipt"></i>
+              </div>
+              <div class="feature-card-content">
+                <h4>Receipts Upload</h4>
+                <p>Drivers capture invoices on the road; our database matches them to transactions automatically.</p>
+              </div>
             </div>
-            <div>
-              <h4 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fas fa-chart-line"></i> Analytics Dashboard</h4>
-              <p style="color: rgba(255,255,255,0.75); line-height: 1.5;">Export automated reports highlighting route metrics, underperforming units, and low-cost fueling lanes.</p>
+
+            <!-- Card 4: Analytics Dashboard -->
+            <div class="feature-glass-card fg-chart">
+              <div class="feature-card-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div class="feature-card-content">
+                <h4>Analytics Dashboard</h4>
+                <p>Export automated reports highlighting route metrics, underperforming units, and low-cost fueling lanes.</p>
+              </div>
             </div>
           </div>
         </div>

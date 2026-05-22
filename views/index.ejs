@@ -378,11 +378,6 @@
               <td>Retail Price + hidden markups</td>
             </tr>
             <tr>
-              <td><strong>Security Suite</strong></td>
-              <td class="highlight-col"><span class="check-icon"><i class="fas fa-circle-check"></i> Shield AI™ (Instant)</span></td>
-              <td>Retroactive statements only</td>
-            </tr>
-            <tr>
               <td><strong>Automated IFTA Tax Export</strong></td>
               <td class="highlight-col"><span class="check-icon"><i class="fas fa-circle-check"></i> Included (Free)</span></td>
               <td><span class="cross-icon"><i class="fas fa-circle-xmark"></i> $15/month extra addon</span></td>
@@ -482,56 +477,36 @@
       </div>
 
       <div class="testimonials-grid">
-        <!-- Testimonial 1 -->
-        <div class="testimonial-card" id="testi1">
-          <div class="quote-bubble">
-            <div class="rating-stars">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        <% if (locals.testimonials && testimonials.length > 0) { %>
+          <% testimonials.forEach((t) => { %>
+            <% 
+              // Compute initials from author name
+              const initials = t.author.trim().split(/\s+/).map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            %>
+            <div class="testimonial-card" id="testi-<%= t.id %>">
+              <div class="quote-bubble">
+                <div class="rating-stars">
+                  <% for (let s = 0; s < t.stars; s++) { %>
+                    <i class="fas fa-star"></i>
+                  <% } %>
+                </div>
+                <p>"<%= t.quote %>"</p>
+              </div>
+              <div class="testimonial-client">
+                <div class="client-avatar"><%= initials %></div>
+                <div class="client-info">
+                  <h4><%= t.author %></h4>
+                  <span><%= t.role %></span>
+                </div>
+              </div>
             </div>
-            <p>"Implementing the Hire7 Fuel Card completely resolved our card abuse issues. The geofencing tool blocked two out-of-bounds fills in our first month alone, saving us hundreds of dollars in leakage."</p>
+          <% }) %>
+        <% } else { %>
+          <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--color-muted);">
+            <i class="fas fa-quote-right" style="font-size: 2rem; opacity: 0.15; margin-bottom: 1rem; display: block;"></i>
+            <p style="font-style: italic;">No verified fleet testimonials active at this time.</p>
           </div>
-          <div class="testimonial-client">
-            <div class="client-avatar">MH</div>
-            <div class="client-info">
-              <h4>Marcus Howell</h4>
-              <span>Director of Logistics, Howell Transport</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Testimonial 2 -->
-        <div class="testimonial-card" id="testi2">
-          <div class="quote-bubble">
-            <div class="rating-stars">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            </div>
-            <p>"We scaled our fleet from 5 to 25 trucks without adding a single administrative hire. The automated IFTA tax logs export seamlessly to our accounting platform. It's clean, rapid, and transparent."</p>
-          </div>
-          <div class="testimonial-client">
-            <div class="client-avatar">SD</div>
-            <div class="client-info">
-              <h4>Sandeep Dhillon</h4>
-              <span>Operations Manager, GTA Freightways</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Testimonial 3 -->
-        <div class="testimonial-card" id="testi3">
-          <div class="quote-bubble">
-            <div class="rating-stars">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            </div>
-            <p>"Outstanding customer care. Whenever our drivers encounter weather route delays or require sudden limit extensions for truck maintenance, the phone dispatchers respond in under a minute."</p>
-          </div>
-          <div class="testimonial-client">
-            <div class="client-avatar">TL</div>
-            <div class="client-info">
-              <h4>Terri Lafleur</h4>
-              <span>Fleet Coordinator, Lafleur Transport Inc.</span>
-            </div>
-          </div>
-        </div>
+        <% } %>
       </div>
     </div>
   </section>
@@ -542,20 +517,35 @@
       <div class="form-intro">
         <h2>Power Your Fleet to the Next Level</h2>
         <p>Contact our onboarding team for a customized pricing proposal tailored to your unique lane schedules and truck volume.</p>
-        <ul class="bullet-features">
-          <li>
-            <i class="fas fa-circle-check"></i>
-            <span>No sign-up setup charges or long-term lock-in contracts</span>
-          </li>
-          <li>
-            <i class="fas fa-circle-check"></i>
-            <span>Approved credit checks within 24 business hours</span>
-          </li>
-          <li>
-            <i class="fas fa-circle-check"></i>
-            <span>Physical fuel cards shipped next-day via express delivery</span>
-          </li>
-        </ul>
+        <div class="onboarding-cards">
+          <div class="onboarding-card">
+            <div class="onboarding-icon">
+              <i class="fas fa-file-contract"></i>
+            </div>
+            <div class="onboarding-content">
+              <h3>Zero Lock-In Contracts</h3>
+              <p>No sign-up setup charges or long-term commitments. Scale your fleet on your own terms.</p>
+            </div>
+          </div>
+          <div class="onboarding-card">
+            <div class="onboarding-icon">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <div class="onboarding-content">
+              <h3>Rapid Underwriting</h3>
+              <p>Approved credit checks within 24 business hours so your trucks can get moving immediately.</p>
+            </div>
+          </div>
+          <div class="onboarding-card">
+            <div class="onboarding-icon">
+              <i class="fas fa-truck-fast"></i>
+            </div>
+            <div class="onboarding-content">
+              <h3>Express Card Delivery</h3>
+              <p>Physical fuel cards shipped next-day via express delivery directly to your dispatch office.</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="form-card" id="contact-form">
