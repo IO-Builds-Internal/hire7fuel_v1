@@ -67,6 +67,7 @@ const templatesToTest = [
   { name: 'careers.ejs', path: '../views/careers.ejs', data: { page: 'careers', success: false, jobs: mockJobs, config: mockConfig } },
   { name: 'contact.ejs', path: '../views/contact.ejs', data: { page: 'contact', success: false, config: mockConfig } },
   { name: 'fuelcard.ejs', path: '../views/fuelcard.ejs', data: { page: 'fuelcard', config: mockConfig } },
+  { name: 'app.ejs', path: '../views/app.ejs', data: { page: 'app', config: mockConfig } },
   
   // Admin Views
   { name: 'admin/testimonials.ejs', path: '../views/admin/testimonials.ejs', data: { config: mockConfig, testimonials: mockTestimonials, success: null, error: null } },
@@ -110,7 +111,7 @@ async function runAudit() {
   if (failCount > 0) {
     process.exit(1);
   } else {
-    console.log('\n[✓] ALL 11 EJS TEMPLATES COMPILED SUCCESSFULLY WITH 0 PARSING ERRORS!');
+    console.log('\n[✓] ALL 12 EJS TEMPLATES COMPILED SUCCESSFULLY WITH 0 PARSING ERRORS!');
     process.exit(0);
   }
 }

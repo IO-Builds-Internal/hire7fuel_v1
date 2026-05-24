@@ -49,6 +49,15 @@ router.get('/fuelcard', (req, res) => {
 });
 
 /**
+ * GET /app - Interactive Mobile Companion App Showcase
+ */
+router.get('/app', (req, res) => {
+  res.render('app', { 
+    page: 'app' 
+  });
+});
+
+/**
  * GET /apply - Fuel Card Application Portal
  */
 router.get('/apply', (req, res) => {
