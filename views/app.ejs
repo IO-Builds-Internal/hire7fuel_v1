@@ -245,9 +245,25 @@
                     <span style="font-size: 0.65rem; color: #a3c2c2; display: block;">FUEL DRAW-DOWN</span>
                     <strong style="font-size: 1.15rem; color: var(--color-white);" id="liveFuelDraw">6.8 Gal/Hr</strong>
                   </div>
-                  <div style="text-align: right;">
-                    <span style="font-size: 0.65rem; color: #a3c2c2; display: block;">RESERVE LEVEL</span>
-                    <strong style="font-size: 1.15rem; color: var(--color-accent);" id="liveReserveLevel">84% Full</strong>
+                  
+                  <!-- Dynamic sparkline bar chart -->
+                  <div style="display: flex; gap: 4px; align-items: flex-end; height: 28px; justify-content: center;" id="liveTelemetryChart">
+                    <div style="width: 5px; height: 60%; background: rgba(34, 201, 138, 0.3); border-radius: 3px; transition: height 0.4s ease;"></div>
+                    <div style="width: 5px; height: 75%; background: rgba(34, 201, 138, 0.4); border-radius: 3px; transition: height 0.4s ease;"></div>
+                    <div style="width: 5px; height: 68%; background: rgba(34, 201, 138, 0.5); border-radius: 3px; transition: height 0.4s ease;"></div>
+                    <div style="width: 5px; height: 82%; background: rgba(34, 201, 138, 0.7); border-radius: 3px; transition: height 0.4s ease;"></div>
+                    <div style="width: 5px; height: 70%; background: var(--color-accent); border-radius: 3px; transition: height 0.4s ease; box-shadow: 0 0 6px var(--color-accent);"></div>
+                  </div>
+                </div>
+                
+                <!-- Dynamic reserve level progress bar -->
+                <div style="margin-top: 0.85rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.6rem; color: #a3c2c2; margin-bottom: 0.25rem;">
+                    <span>RESERVE LEVEL</span>
+                    <span id="liveReservePercentageText">84% Full</span>
+                  </div>
+                  <div style="width: 100%; height: 5px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03);">
+                    <div id="liveFuelLevelProgress" style="width: 84%; height: 100%; background: linear-gradient(90deg, #1a6b6b 0%, var(--color-accent) 100%); box-shadow: 0 0 6px var(--color-accent); border-radius: 10px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
                   </div>
                 </div>
               </div>
@@ -393,9 +409,25 @@
                 <span style="font-size: 0.65rem; color: #a3c2c2; display: block;">FUEL DRAW-DOWN</span>
                 <strong style="font-size: 1.15rem; color: var(--color-white);" id="liveFuelDraw">6.8 Gal/Hr</strong>
               </div>
-              <div style="text-align: right;">
-                <span style="font-size: 0.65rem; color: #a3c2c2; display: block;">RESERVE LEVEL</span>
-                <strong style="font-size: 1.15rem; color: var(--color-accent);" id="liveReserveLevel">84% Full</strong>
+              
+              <!-- Dynamic sparkline bar chart -->
+              <div style="display: flex; gap: 4px; align-items: flex-end; height: 28px; justify-content: center;" id="liveTelemetryChart">
+                <div style="width: 5px; height: 60%; background: rgba(34, 201, 138, 0.3); border-radius: 3px; transition: height 0.4s ease;"></div>
+                <div style="width: 5px; height: 75%; background: rgba(34, 201, 138, 0.4); border-radius: 3px; transition: height 0.4s ease;"></div>
+                <div style="width: 5px; height: 68%; background: rgba(34, 201, 138, 0.5); border-radius: 3px; transition: height 0.4s ease;"></div>
+                <div style="width: 5px; height: 82%; background: rgba(34, 201, 138, 0.7); border-radius: 3px; transition: height 0.4s ease;"></div>
+                <div style="width: 5px; height: 70%; background: var(--color-accent); border-radius: 3px; transition: height 0.4s ease; box-shadow: 0 0 6px var(--color-accent);"></div>
+              </div>
+            </div>
+            
+            <!-- Dynamic reserve level progress bar -->
+            <div style="margin-top: 0.85rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.6rem; color: #a3c2c2; margin-bottom: 0.25rem;">
+                <span>RESERVE LEVEL</span>
+                <span id="liveReservePercentageText">84% Full</span>
+              </div>
+              <div style="width: 100%; height: 5px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03);">
+                <div id="liveFuelLevelProgress" style="width: 84%; height: 100%; background: linear-gradient(90deg, #1a6b6b 0%, var(--color-accent) 100%); box-shadow: 0 0 6px var(--color-accent); border-radius: 10px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
               </div>
             </div>
           </div>
@@ -508,9 +540,14 @@
                 <span style="color: #a3c2c2;"><i class="fas fa-arrow-trend-up" style="color: var(--color-error); margin-right: 0.25rem;"></i> Harsh Accelerations</span>
                 <strong style="color: var(--color-white);">0 Logs</strong>
               </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span style="color: #a3c2c2;"><i class="fas fa-circle-nodes" style="color: var(--color-seafoam); margin-right: 0.25rem;"></i> Speed corridor compliance</span>
-                <strong style="color: var(--color-accent);">98% Optimal</strong>
+              <div style="margin-top: 0.65rem;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: #a3c2c2; margin-bottom: 0.25rem;">
+                  <span><i class="fas fa-circle-nodes" style="color: var(--color-seafoam); margin-right: 0.25rem;"></i> Speed compliance</span>
+                  <strong style="color: var(--color-accent);" id="liveComplianceText">98%</strong>
+                </div>
+                <div style="width: 100%; height: 5px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03);">
+                  <div id="liveComplianceProgress" style="width: 98%; height: 100%; background: linear-gradient(90deg, var(--color-seafoam) 0%, var(--color-accent) 100%); box-shadow: 0 0 6px var(--color-accent); border-radius: 10px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -538,9 +575,18 @@
               <span>Active Driver Score</span>
               <span style="color: var(--color-accent); font-weight: bold;"><i class="fas fa-award"></i> EXCELLENT</span>
             </div>
-            <div class="mobile-score-circle">
-              <span class="mobile-score-val" id="liveDriverScore">96</span>
+            
+            <div style="position: relative; width: 90px; height: 90px; margin: 0.85rem auto; display: flex; align-items: center; justify-content: center;">
+              <svg width="90" height="90" viewBox="0 0 36 36" style="transform: rotate(-90deg);">
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2.5" />
+                <path id="liveScoreCircleStroke" stroke-dasharray="96, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round" style="transition: stroke-dasharray 0.6s cubic-bezier(0.4, 0, 0.2, 1); filter: drop-shadow(0 0 3px var(--color-accent));" />
+              </svg>
+              <div style="position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <span id="liveDriverScore" style="font-size: 1.7rem; font-weight: 800; color: var(--color-white); line-height: 1;">96</span>
+                <span style="font-size: 0.55rem; color: #a3c2c2; text-transform: uppercase; font-weight: bold; margin-top: 2px;">Score</span>
+              </div>
             </div>
+            
             <p style="font-size: 0.65rem; color: #a3c2c2; margin: 0.5rem 0 0 0; line-height: 1.4; text-align: center;">Zero harsh acceleration logs, 98% optimal speed corridor maintenance, 0 wasteful idle events.</p>
           </div>
 
@@ -637,12 +683,26 @@
         simState.fuelDraw = (6.4 + Math.random() * 0.9).toFixed(1);
         drawEl.innerText = `${simState.fuelDraw} Gal/Hr`;
         
+        // Sparkline dynamic columns shifts
+        const chartContainer = document.getElementById('liveTelemetryChart');
+        if (chartContainer) {
+          const bars = chartContainer.children;
+          for (let i = 0; i < bars.length - 1; i++) {
+            bars[i].style.height = bars[i+1].style.height;
+          }
+          const newHeight = Math.floor(40 + Math.random() * 55) + '%';
+          bars[bars.length - 1].style.height = newHeight;
+        }
+
         // Slow draw-down on reserve levels
         if (Math.random() > 0.85) {
           simState.reserveLevel = Math.max(10, simState.reserveLevel - 1);
-          const reserveEl = document.getElementById('liveReserveLevel');
-          if (reserveEl) reserveEl.innerText = `${simState.reserveLevel}% Full`;
         }
+        
+        const reserveBar = document.getElementById('liveFuelLevelProgress');
+        const reserveText = document.getElementById('liveReservePercentageText');
+        if (reserveBar) reserveBar.style.width = `${simState.reserveLevel}%`;
+        if (reserveText) reserveText.innerText = `${simState.reserveLevel}% Full`;
 
         // Increment trip savings slightly to simulate active lane optimization
         if (Math.random() > 0.7) {
@@ -665,15 +725,30 @@
 
       // 4. Driver Score active ring pulsing
       const scoreEl = document.getElementById('liveDriverScore');
+      const scoreStroke = document.getElementById('liveScoreCircleStroke');
       if (scoreEl) {
         // Micro fluctuations (e.g. 96 <-> 97) to show live scoring calibration
         if (Math.random() > 0.9) {
           simState.driverScore = 95 + Math.floor(Math.random() * 3);
           scoreEl.innerText = simState.driverScore;
+          if (scoreStroke) {
+            scoreStroke.setAttribute('stroke-dasharray', `${simState.driverScore}, 100`);
+          }
         }
       }
 
-      // 5. Fraud Protection One-Time Passcode (OTP) Ticker
+      // 5. Compliance speed limit bar updates
+      const complianceText = document.getElementById('liveComplianceText');
+      const complianceBar = document.getElementById('liveComplianceProgress');
+      if (complianceText && complianceBar) {
+        if (Math.random() > 0.9) {
+          const complianceVal = 96 + Math.floor(Math.random() * 5); // 96-100%
+          complianceText.innerText = `${complianceVal}%`;
+          complianceBar.style.width = `${complianceVal}%`;
+        }
+      }
+
+      // 6. Fraud Protection One-Time Passcode (OTP) Ticker
       const otpSecondsEl = document.getElementById('livePinCountdown');
       const otpPinEl = document.getElementById('liveVerificationPin');
       if (otpSecondsEl && otpPinEl) {
