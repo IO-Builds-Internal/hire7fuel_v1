@@ -372,3 +372,23 @@ input:checked + .toggle-slider:before {
     grid-template-columns: 1fr;
   }
 }
+
+/* Branded Navbar Logo Styling */
+.admin-nav-logo {
+  height: 34px;
+  width: auto;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid rgba(34, 201, 138, 0.45); /* Premium stroke */
+  padding: 2px 5px;
+  background: rgba(13, 79, 79, 0.4);
+  box-shadow: 0 0 10px rgba(34, 201, 138, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-link:hover .admin-nav-logo {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 15px rgba(34, 201, 138, 0.35);
+  transform: scale(1.04);
+}
+

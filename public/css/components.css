@@ -721,28 +721,44 @@
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+.footer-logo-img-wrapper {
   position: relative;
+  display: inline-flex;
+  align-items: center;
 }
 
 .logo-glow-ring {
   position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 100%;
+  height: 100%;
   border-radius: var(--radius-sm);
   background: rgba(34, 201, 138, 0.15);
   filter: blur(8px);
   left: 0;
   top: 0;
+  z-index: 0;
 }
 
 .footer-logo-img {
-  width: 40px;
   height: 40px;
+  width: auto;
+  max-width: 140px;
   object-fit: contain;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(34, 201, 138, 0.3);
+  border: 1.5px solid rgba(34, 201, 138, 0.35); /* Premium stroke */
+  padding: 3px 6px;
+  background: rgba(13, 79, 79, 0.3);
   position: relative;
   z-index: 1;
+  box-shadow: 0 0 10px rgba(34, 201, 138, 0.1);
+  transition: all 0.3s ease;
+}
+
+.footer-logo-img:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 15px rgba(34, 201, 138, 0.25);
 }
 
 .footer-brand-title {
@@ -1508,7 +1524,7 @@
     -webkit-backdrop-filter: blur(20px);
     flex-direction: column;
     align-items: center;
-    padding: 2rem 0;
+    padding: 2rem 1.5rem;
     gap: 1.5rem;
     transform: translateY(-150%);
     opacity: 0;
@@ -1516,6 +1532,18 @@
     transition: all var(--transition-normal);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5);
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+  }
+  
+  .nav-menu li {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .nav-menu .nav-btn {
+    width: 100%;
+    margin-top: 1rem;
   }
   
   .nav-menu.active {
@@ -1596,6 +1624,29 @@
     bottom: auto;
     left: auto;
     margin-top: -2rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .button-group .btn {
+    width: 100%;
+  }
+
+  .job-board-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .job-info-left {
+    width: 100%;
+  }
+  
+  .job-board-card .btn {
+    width: 100%;
   }
 }
 
