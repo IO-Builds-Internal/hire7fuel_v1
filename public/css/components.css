@@ -1937,6 +1937,55 @@
   font-size: 0.85rem;
 }
 
+/* ============================================================================
+   HIRE7 FUEL - MOBILE RESPONSIVE OVERRIDES
+   ============================================================================ */
+
+@media (max-width: 576px) {
+  .mobile-device-mockup {
+    width: 290px; /* Scale phone frame mockup to fit narrow screens perfectly */
+    height: 540px;
+    padding: 1rem;
+    border-width: 3px;
+    border-radius: 30px;
+  }
+  .mobile-device-mockup::before {
+    width: 90px;
+    height: 18px;
+    border-radius: 0 0 10px 10px;
+  }
+  .mobile-device-screen {
+    border-radius: 20px;
+    padding: 1.25rem 1rem;
+    gap: 1rem;
+  }
+  .mobile-score-circle {
+    width: 70px;
+    height: 70px;
+  }
+  .mobile-score-val {
+    font-size: 1.4rem;
+  }
+  
+  .mobile-app-feature-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.25rem 1rem;
+    gap: 1rem;
+  }
+  .mobile-app-feature-icon {
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* Hide brand name text on small phones to prevent logo overlap */
+@media (max-width: 480px) {
+  #navBrandName {
+    display: none;
+  }
+}
+
 
 
 
