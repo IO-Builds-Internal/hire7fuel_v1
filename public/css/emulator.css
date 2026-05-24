@@ -579,24 +579,31 @@ input:checked + .switch-slider:before {
   justify-content: center;
   position: relative;
   z-index: 1;
+  height: 230px; /* Safe height for overlapping layers */
+  align-items: center;
+  margin-bottom: 2rem;
+  margin-top: 0.5rem;
 }
 
 .hologram-card {
-  width: 320px;
-  height: 190px;
+  width: 300px;
+  height: 180px;
   background: linear-gradient(135deg, #0a1f1f 0%, #050e0e 50%, #0f4040 100%);
   border-radius: 12px;
-  border: 1px solid rgba(34, 201, 138, 0.3);
+  border: 1.5px solid rgba(34, 201, 138, 0.35);
   box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 15px rgba(34, 201, 138, 0.1);
   padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
   overflow: hidden;
   transform-style: preserve-3d;
-  transition: transform 0.1s ease, box-shadow 0.3s ease;
   cursor: pointer;
+  position: absolute !important;
+  z-index: 2 !important;
+  transform: rotateY(-18deg) rotateX(8deg) translateZ(15px) translateX(-45px) translateY(-5px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  margin: 0 !important;
 }
 
 .hologram-card::after {
@@ -614,6 +621,167 @@ input:checked + .switch-slider:before {
 .hologram-card:hover {
   box-shadow: 0 20px 45px rgba(0,0,0,0.6), 0 0 25px rgba(34, 201, 138, 0.25);
   border-color: rgba(34, 201, 138, 0.6);
+}
+
+.hologram-card-container:hover .hologram-card {
+  transform: rotateY(-6deg) rotateX(4deg) translateZ(35px) translateX(-50px) translateY(-3px) !important;
+}
+
+/* Sleek 3D Mini Mobile Companion Mockup */
+.hero-mini-mobile {
+  width: 155px;
+  height: 235px;
+  background: linear-gradient(135deg, #071414 0%, #030808 100%);
+  border: 1.5px solid rgba(34, 201, 138, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(34, 201, 138, 0.08);
+  border-radius: 20px;
+  padding: 0.75rem 0.65rem;
+  position: absolute;
+  z-index: 1;
+  transform: rotateY(18deg) rotateX(8deg) translateZ(-35px) translateX(95px) translateY(-15px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none; /* Let clicks pass to inputs below */
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  box-sizing: border-box;
+}
+
+.hologram-card-container:hover .hero-mini-mobile {
+  transform: rotateY(8deg) rotateX(4deg) translateZ(-10px) translateX(115px) translateY(-10px);
+  border-color: rgba(34, 201, 138, 0.6);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(34, 201, 138, 0.25);
+}
+
+.mini-phone-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  height: 100%;
+}
+
+.mini-phone-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #a3c2c2;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding-bottom: 0.25rem;
+}
+
+.mini-phone-dot {
+  width: 4px;
+  height: 4px;
+  background-color: var(--color-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--color-accent);
+  animation: pulseMiniPhoneDot 2s infinite;
+}
+
+@keyframes pulseMiniPhoneDot {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.mini-phone-widget {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 0.45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.mini-phone-widget .widget-title {
+  font-size: 0.45rem;
+  color: #a3c2c2;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.mini-phone-widget .widget-data {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mini-phone-widget .widget-data strong {
+  font-size: 0.75rem;
+  color: var(--color-white);
+  font-weight: 700;
+}
+
+.mini-phone-widget .widget-data span {
+  font-size: 0.5rem;
+  font-weight: 700;
+}
+
+.mini-phone-widget.alert-widget {
+  background: rgba(34, 201, 138, 0.02);
+  border-color: rgba(34, 201, 138, 0.15);
+}
+
+.secure-badge {
+  color: var(--color-accent);
+  font-size: 0.6rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Clean responsiveness override so layers stack perfectly on smaller viewports */
+@media (max-width: 576px) {
+  .hologram-card-container {
+    height: auto;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    margin-top: 1rem;
+  }
+  .hologram-card {
+    position: relative !important;
+    transform: none !important;
+    width: 290px;
+    height: 170px;
+  }
+  .hologram-card-container:hover .hologram-card {
+    transform: none !important;
+  }
+  .hero-mini-mobile {
+    position: relative !important;
+    transform: none !important;
+    width: 290px;
+    height: 110px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+  }
+  .hologram-card-container:hover .hero-mini-mobile {
+    transform: none !important;
+  }
+  .mini-phone-screen {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .mini-phone-header {
+    display: none;
+  }
+  .mini-phone-widget {
+    flex-grow: 1;
+    height: auto;
+  }
 }
 
 .card-top {
