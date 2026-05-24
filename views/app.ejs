@@ -225,7 +225,7 @@
       <div class="app-showcase-grid">
         
         <!-- Left Side: Interactive Glass Phone Emulator -->
-        <div class="mobile-device-mockup" style="margin-top: 0;">
+        <div class="mobile-device-mockup" id="emulatorDeviceMockup" style="margin-top: 0; transition: all 0.4s ease;">
           <div class="mobile-device-screen" id="emulatorScreen">
             <!-- Initial Widget Load (Fuel Usage telemetry) -->
             <div class="screen-widget-fade" style="display: flex; flex-direction: column; gap: 1.25rem; height: 100%;">
@@ -779,6 +779,7 @@
       // 6. Fraud Protection One-Time Passcode (OTP) Ticker
       const otpSecondsEl = document.getElementById('livePinCountdown');
       const otpPinEl = document.getElementById('liveVerificationPin');
+      const mockupEl = document.getElementById('emulatorDeviceMockup');
       if (otpSecondsEl && otpPinEl) {
         simState.otpSeconds--;
         if (simState.otpSeconds <= 0) {
@@ -790,8 +791,30 @@
           otpPinEl.style.color = 'var(--color-accent)';
           otpPinEl.innerText = simState.otpPin;
           setTimeout(() => { otpPinEl.style.color = 'var(--color-white)'; }, 800);
+
+          // EXPERIMENTAL: Green glow flash on physical outer mobile frame during PIN regeneration
+          if (mockupEl) {
+            mockupEl.style.boxShadow = '0 0 45px rgba(34, 201, 138, 0.75), 0 25px 60px rgba(0, 0, 0, 0.6)';
+            mockupEl.style.outlineColor = 'var(--color-accent)';
+            mockupEl.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+              mockupEl.style.boxShadow = '';
+              mockupEl.style.outlineColor = '';
+              mockupEl.style.transform = '';
+            }, 600);
+          }
         } else {
           otpSecondsEl.innerText = simState.otpSeconds;
+
+          // EXPERIMENTAL: Warning orange glow pulse in final 5 seconds before PIN rollover
+          if (simState.otpSeconds <= 5 && mockupEl) {
+            mockupEl.style.boxShadow = '0 0 30px rgba(245, 166, 35, 0.45), 0 25px 60px rgba(0, 0, 0, 0.6)';
+            mockupEl.style.outlineColor = 'var(--color-highlight)';
+            setTimeout(() => {
+              mockupEl.style.boxShadow = '';
+              mockupEl.style.outlineColor = '';
+            }, 400);
+          }
         }
       }
     }, 1000);
