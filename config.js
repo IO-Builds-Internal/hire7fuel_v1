@@ -31,6 +31,10 @@ module.exports = {
     facebook: '',   // Empty by default
     instagram: ''   // Empty by default
   },
+  app: {
+    playstore: 'https://play.google.com/store',
+    appstore: 'https://apps.apple.com'
+  },
   smtp: {
     host: 'smtp.mailtrap.io',
     port: '2525',

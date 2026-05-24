@@ -303,7 +303,7 @@
             </li>
             <li>
               <button type="button" class="settings-nav-item" onclick="switchSettingsTab('tab-social', this)">
-                <i class="fas fa-share-nodes"></i> Social Coordinates
+                <i class="fas fa-share-nodes"></i> Social & App Links
               </button>
             </li>
             <li>
@@ -379,14 +379,15 @@
             </div>
           </div>
 
-          <!-- ==================== TAB 3: Social Coordinates ==================== -->
+          <!-- ==================== TAB 3: Social & App Links ==================== -->
           <div class="settings-tab-pane" id="tab-social">
             <div class="settings-pane-header">
-              <h2><i class="fas fa-share-nodes"></i> Social Coordinates</h2>
-              <p>Input verified URLs for primary company handles. Empty handle values are hidden automatically in footers.</p>
+              <h2><i class="fas fa-share-nodes"></i> Social & Mobile App Links</h2>
+              <p>Input verified URLs for primary company handles and mobile companion app store listings.</p>
             </div>
 
-            <div class="form-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 1rem;">
+            <h3 style="font-size: 1.15rem; color: var(--color-white); margin: 0 0 1rem 0; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem;"><i class="fas fa-hashtag" style="color: var(--color-accent); font-size: 0.95rem;"></i> Social Networking Handles</h3>
+            <div class="form-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
               <div class="form-group admin-form-group">
                 <label for="social_linkedin" style="font-weight: 600; display: flex; align-items: center; gap: 0.45rem;"><i class="fab fa-linkedin" style="color: #0a66c2;"></i> LinkedIn URL</label>
                 <input type="url" id="social_linkedin" name="social_linkedin" class="form-control admin-input" value="<%= config.social.linkedin %>" placeholder="https://linkedin.com/company/..." style="padding: 0.85rem 1rem;">
@@ -398,6 +399,18 @@
               <div class="form-group admin-form-group">
                 <label for="social_instagram" style="font-weight: 600; display: flex; align-items: center; gap: 0.45rem;"><i class="fab fa-instagram" style="color: #e1306c;"></i> Instagram URL</label>
                 <input type="url" id="social_instagram" name="social_instagram" class="form-control admin-input" value="<%= config.social.instagram %>" placeholder="https://instagram.com/..." style="padding: 0.85rem 1rem;">
+              </div>
+            </div>
+
+            <h3 style="font-size: 1.15rem; color: var(--color-white); margin: 0 0 1rem 0; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem;"><i class="fas fa-mobile-screen-button" style="color: var(--color-highlight); font-size: 0.95rem;"></i> Mobile Store Links</h3>
+            <div class="form-row" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1rem;">
+              <div class="form-group admin-form-group">
+                <label for="app_playstore" style="font-weight: 600; display: flex; align-items: center; gap: 0.45rem;"><i class="fab fa-google-play" style="color: var(--color-highlight);"></i> Google Play Store URL</label>
+                <input type="url" id="app_playstore" name="app_playstore" class="form-control admin-input" value="<%= config.app.playstore %>" placeholder="https://play.google.com/store/apps/details?id=..." style="padding: 0.85rem 1rem;">
+              </div>
+              <div class="form-group admin-form-group">
+                <label for="app_appstore" style="font-weight: 600; display: flex; align-items: center; gap: 0.45rem;"><i class="fab fa-apple" style="color: var(--color-white);"></i> Apple App Store URL</label>
+                <input type="url" id="app_appstore" name="app_appstore" class="form-control admin-input" value="<%= config.app.appstore %>" placeholder="https://apps.apple.com/us/app/..." style="padding: 0.85rem 1rem;">
               </div>
             </div>
           </div>

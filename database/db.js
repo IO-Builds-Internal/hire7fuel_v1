@@ -94,6 +94,8 @@ function initSqliteTables() {
         stmt.run('social_linkedin', baseConfig.social.linkedin);
         stmt.run('social_facebook', baseConfig.social.facebook);
         stmt.run('social_instagram', baseConfig.social.instagram);
+        stmt.run('app_playstore', baseConfig.app.playstore);
+        stmt.run('app_appstore', baseConfig.app.appstore);
         stmt.finalize();
       }
     });
@@ -231,6 +233,7 @@ module.exports = {
       colors: { ...baseConfig.colors },
       contact: { ...baseConfig.contact },
       social: { ...baseConfig.social },
+      app: { ...baseConfig.app },
       smtp: { ...baseConfig.smtp }
     };
 
@@ -260,6 +263,8 @@ module.exports = {
             if (item.key === 'smtp_from') settingsObj.smtp.from = item.value;
             if (item.key === 'smtp_to') settingsObj.smtp.to = item.value;
             if (item.key === 'smtp_enabled') settingsObj.smtp.enabled = item.value;
+            if (item.key === 'app_playstore') settingsObj.app.playstore = item.value;
+            if (item.key === 'app_appstore') settingsObj.app.appstore = item.value;
           });
         }
       } catch (err) {
@@ -286,6 +291,8 @@ module.exports = {
             if (row.key === 'smtp_from') settingsObj.smtp.from = row.value;
             if (row.key === 'smtp_to') settingsObj.smtp.to = row.value;
             if (row.key === 'smtp_enabled') settingsObj.smtp.enabled = row.value;
+            if (row.key === 'app_playstore') settingsObj.app.playstore = row.value;
+            if (row.key === 'app_appstore') settingsObj.app.appstore = row.value;
           });
         }
       } catch (err) {

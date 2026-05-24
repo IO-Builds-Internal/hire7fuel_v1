@@ -8,6 +8,7 @@ const mockConfig = {
   brand: { name: 'Hire7 Fuel', tagline: 'Power Your Fleet to the Next Level', logo: '/images/logo.png' },
   contact: { phone: '(905) 965-0308', email: 'support@hire7fuel.com', address: '2575 Steeles Ave E, Unit 1, Brampton, ON' },
   social: { linkedin: 'https://linkedin.com', facebook: 'https://facebook.com', instagram: 'https://instagram.com' },
+  app: { playstore: 'https://play.google.com/store', appstore: 'https://apps.apple.com' },
   smtp: { enabled: 'false', to: 'alerts@hire7fuel.com', host: 'smtp.mailtrap.io', port: '2525', user: '', pass: '', from: 'notifications@hire7fuel.com' }
 };
 

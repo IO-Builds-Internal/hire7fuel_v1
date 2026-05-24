@@ -231,7 +231,7 @@
             <div class="screen-widget-fade" style="display: flex; flex-direction: column; gap: 1.25rem; height: 100%;">
               <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 0.5rem;">
                 <span style="font-weight: 800; font-size: 0.85rem; color: var(--color-white); display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-gas-pump" style="color: var(--color-accent);"></i> HIRE7 MOBILE</span>
-                <span style="font-size: 0.65rem; background-color: rgba(34,201,138,0.1); border: 1px solid rgba(34,201,138,0.2); color: var(--color-accent); padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;"><i class="fas fa-satellite"></i> LIVE</span>
+                <span style="font-size: 0.65rem; background-color: rgba(34,201,138,0.1); border: 1px solid rgba(34,201,138,0.2); color: var(--color-accent); padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;" id="liveBeacon"><i class="fas fa-satellite"></i> LIVE</span>
               </div>
 
               <!-- Main telemetry screen stats -->
@@ -243,11 +243,11 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
                   <div>
                     <span style="font-size: 0.65rem; color: #a3c2c2; display: block;">FUEL DRAW-DOWN</span>
-                    <strong style="font-size: 1.15rem; color: var(--color-white);">6.8 Gal/Hr</strong>
+                    <strong style="font-size: 1.15rem; color: var(--color-white);" id="liveFuelDraw">6.8 Gal/Hr</strong>
                   </div>
                   <div style="text-align: right;">
                     <span style="font-size: 0.65rem; color: #a3c2c2; display: block;">RESERVE LEVEL</span>
-                    <strong style="font-size: 1.15rem; color: var(--color-accent);">84% Full</strong>
+                    <strong style="font-size: 1.15rem; color: var(--color-accent);" id="liveReserveLevel">84% Full</strong>
                   </div>
                 </div>
               </div>
@@ -259,7 +259,7 @@
                 <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.75rem; margin-top: 0.25rem;">
                   <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem;">
                     <span style="color: #a3c2c2;">Active Fuel Swipes</span>
-                    <strong style="color: var(--color-white);">12 Fills</strong>
+                    <strong style="color: var(--color-white);" id="liveFuelSwipes">12 Fills</strong>
                   </div>
                   <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem;">
                     <span style="color: #a3c2c2;">Average Swipe Cost</span>
@@ -267,7 +267,7 @@
                   </div>
                   <div style="display: flex; justify-content: space-between;">
                     <span style="color: #a3c2c2;">Total Trip Savings</span>
-                    <strong style="color: var(--color-accent); font-weight: 700;">+$432.80</strong>
+                    <strong style="color: var(--color-accent); font-weight: 700;" id="liveTripSavings">+$432.80</strong>
                   </div>
                 </div>
               </div>
@@ -348,7 +348,7 @@
           </p>
         </div>
         <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
-          <a href="#" class="app-badge-btn" onclick="alert('Download link redirected to Apple App Store!'); return false;">
+          <a href="<%= config.app.appstore || '#' %>" target="_blank" class="app-badge-btn" id="appAppleDownloadBtn">
             <i class="fab fa-apple" style="font-size: 1.4rem; color: var(--color-accent);"></i>
             <div style="text-align: left;">
               <span style="font-size: 0.65rem; color: #a3c2c2; display: block; font-weight: 500; text-transform: uppercase;">Download on the</span>
@@ -356,7 +356,7 @@
             </div>
           </a>
           
-          <a href="#" class="app-badge-btn" onclick="alert('Download link redirected to Google Play Store!'); return false;">
+          <a href="<%= config.app.playstore || '#' %>" target="_blank" class="app-badge-btn" id="appGoogleDownloadBtn">
             <i class="fab fa-google-play" style="font-size: 1.25rem; color: var(--color-highlight);"></i>
             <div style="text-align: left;">
               <span style="font-size: 0.65rem; color: #a3c2c2; display: block; font-weight: 500; text-transform: uppercase;">Get it on</span>
@@ -380,7 +380,7 @@
         <div class="screen-widget-fade" style="display: flex; flex-direction: column; gap: 1.25rem; height: 100%;">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 0.5rem;">
             <span style="font-weight: 800; font-size: 0.85rem; color: var(--color-white); display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-gas-pump" style="color: var(--color-accent);"></i> HIRE7 MOBILE</span>
-            <span style="font-size: 0.65rem; background-color: rgba(34,201,138,0.1); border: 1px solid rgba(34,201,138,0.2); color: var(--color-accent); padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;"><i class="fas fa-satellite"></i> LIVE</span>
+            <span style="font-size: 0.65rem; background-color: rgba(34,201,138,0.1); border: 1px solid rgba(34,201,138,0.2); color: var(--color-accent); padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;" id="liveBeacon"><i class="fas fa-satellite"></i> LIVE</span>
           </div>
 
           <div class="mobile-widget">
@@ -391,11 +391,11 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
               <div>
                 <span style="font-size: 0.65rem; color: #a3c2c2; display: block;">FUEL DRAW-DOWN</span>
-                <strong style="font-size: 1.15rem; color: var(--color-white);">6.8 Gal/Hr</strong>
+                <strong style="font-size: 1.15rem; color: var(--color-white);" id="liveFuelDraw">6.8 Gal/Hr</strong>
               </div>
               <div style="text-align: right;">
                 <span style="font-size: 0.65rem; color: #a3c2c2; display: block;">RESERVE LEVEL</span>
-                <strong style="font-size: 1.15rem; color: var(--color-accent);">84% Full</strong>
+                <strong style="font-size: 1.15rem; color: var(--color-accent);" id="liveReserveLevel">84% Full</strong>
               </div>
             </div>
           </div>
@@ -407,7 +407,7 @@
             <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.75rem; margin-top: 0.25rem;">
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem;">
                 <span style="color: #a3c2c2;">Active Fuel Swipes</span>
-                <strong style="color: var(--color-white);">12 Fills</strong>
+                <strong style="color: var(--color-white);" id="liveFuelSwipes">12 Fills</strong>
               </div>
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem;">
                 <span style="color: #a3c2c2;">Average Swipe Cost</span>
@@ -415,7 +415,7 @@
               </div>
               <div style="display: flex; justify-content: space-between;">
                 <span style="color: #a3c2c2;">Total Trip Savings</span>
-                <strong style="color: var(--color-accent); font-weight: 700;">+$432.80</strong>
+                <strong style="color: var(--color-accent); font-weight: 700;" id="liveTripSavings">+$432.80</strong>
               </div>
             </div>
           </div>
@@ -442,7 +442,7 @@
           <div class="mobile-widget" style="background: rgba(0,0,0,0.3); border-color: rgba(245, 166, 35, 0.25);">
             <div class="mobile-widget-header">
               <span>Nearest Pump Node</span>
-              <span style="color: var(--color-highlight); font-weight: bold;"><i class="fas fa-location-crosshairs"></i> 2.4 MI</span>
+              <span style="color: var(--color-highlight); font-weight: bold;" id="liveGpsDistance"><i class="fas fa-location-crosshairs"></i> 2.4 MI</span>
             </div>
             
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.5rem;">
@@ -462,7 +462,7 @@
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem; align-items: center;">
                 <div>
                   <strong style="color: var(--color-white); display: block; font-size: 0.75rem;">Pilot #240</strong>
-                  <span style="font-size: 0.6rem; color: #a3c2c2;">Brampton, ON</span>
+                  <span style="font-size: 0.65rem; color: #a3c2c2;">Brampton, ON</span>
                 </div>
                 <strong style="color: var(--color-accent); font-size: 0.8rem;">$3.42/Gal</strong>
               </div>
@@ -470,7 +470,7 @@
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem; align-items: center;">
                 <div>
                   <strong style="color: var(--color-white); display: block; font-size: 0.75rem;">Flying J #92</strong>
-                  <span style="font-size: 0.6rem; color: #a3c2c2;">Mississauga, ON</span>
+                  <span style="font-size: 0.65rem; color: #a3c2c2;">Mississauga, ON</span>
                 </div>
                 <strong style="color: #a3c2c2; font-size: 0.8rem;">$3.48/Gal</strong>
               </div>
@@ -478,7 +478,7 @@
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                   <strong style="color: var(--color-white); display: block; font-size: 0.75rem;">WEX Retail pump</strong>
-                  <span style="font-size: 0.6rem; color: #a3c2c2;">Local highway pump</span>
+                  <span style="font-size: 0.65rem; color: #a3c2c2;">Local highway pump</span>
                 </div>
                 <strong style="color: var(--color-error); font-size: 0.8rem;">$3.78/Gal</strong>
               </div>
@@ -539,7 +539,7 @@
               <span style="color: var(--color-accent); font-weight: bold;"><i class="fas fa-award"></i> EXCELLENT</span>
             </div>
             <div class="mobile-score-circle">
-              <span class="mobile-score-val">96</span>
+              <span class="mobile-score-val" id="liveDriverScore">96</span>
             </div>
             <p style="font-size: 0.65rem; color: #a3c2c2; margin: 0.5rem 0 0 0; line-height: 1.4; text-align: center;">Zero harsh acceleration logs, 98% optimal speed corridor maintenance, 0 wasteful idle events.</p>
           </div>
@@ -580,10 +580,10 @@
             <div class="mobile-widget-header">
               <span>Verification PIN</span>
             </div>
-            <div style="text-align: center; padding: 0.45rem; font-family: monospace; font-size: 1.4rem; letter-spacing: 0.25em; color: var(--color-white); font-weight: bold; background-color: rgba(0,0,0,0.3); border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
+            <div id="liveVerificationPin" style="text-align: center; padding: 0.45rem; font-family: monospace; font-size: 1.4rem; letter-spacing: 0.25em; color: var(--color-white); font-weight: bold; background-color: rgba(0,0,0,0.3); border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
               8903
             </div>
-            <span style="font-size: 0.55rem; color: #6B7280; display: block; margin-top: 0.35rem; text-align: center;">Re-generates in 45 seconds for checkout protection.</span>
+            <span style="font-size: 0.55rem; color: #6B7280; display: block; margin-top: 0.35rem; text-align: center;">Re-generates in <span id="livePinCountdown" style="font-weight:bold;color:var(--color-accent);">45</span> seconds for checkout protection.</span>
           </div>
         </div>
       `
@@ -605,6 +605,93 @@
         screenEl.innerHTML = emulatorScreens[tabKey];
       }
     }
+
+    // High-fidelity Live Emulator Simulation State
+    const simState = {
+      fuelDraw: 6.8,
+      reserveLevel: 84,
+      savings: 432.80,
+      fuelSwipes: 12,
+      gpsDistance: 2.4,
+      driverScore: 96,
+      otpPin: 8903,
+      otpSeconds: 45
+    };
+
+    // Auto-looping Telemetry Simulator Ticker
+    setInterval(() => {
+      // 1. Live satellite beacon blinker
+      const beacon = document.getElementById('liveBeacon');
+      if (beacon) {
+        // Toggle neon glow pulse
+        const isDim = beacon.style.opacity === '0.6';
+        beacon.style.opacity = isDim ? '1' : '0.6';
+        beacon.style.transform = isDim ? 'scale(1)' : 'scale(0.97)';
+        beacon.style.transition = 'all 0.4s ease';
+      }
+
+      // 2. Telemetry panel auto-updates
+      const drawEl = document.getElementById('liveFuelDraw');
+      if (drawEl) {
+        // Fluctuate diesel draw slightly (e.g. between 6.4 and 7.3 Gal/Hr)
+        simState.fuelDraw = (6.4 + Math.random() * 0.9).toFixed(1);
+        drawEl.innerText = `${simState.fuelDraw} Gal/Hr`;
+        
+        // Slow draw-down on reserve levels
+        if (Math.random() > 0.85) {
+          simState.reserveLevel = Math.max(10, simState.reserveLevel - 1);
+          const reserveEl = document.getElementById('liveReserveLevel');
+          if (reserveEl) reserveEl.innerText = `${simState.reserveLevel}% Full`;
+        }
+
+        // Increment trip savings slightly to simulate active lane optimization
+        if (Math.random() > 0.7) {
+          simState.savings = parseFloat((simState.savings + (0.05 + Math.random() * 0.15)).toFixed(2));
+          const savingsEl = document.getElementById('liveTripSavings');
+          if (savingsEl) savingsEl.innerText = `+$${simState.savings.toFixed(2)}`;
+        }
+      }
+
+      // 3. GPS panel auto-updates
+      const gpsDistanceEl = document.getElementById('liveGpsDistance');
+      if (gpsDistanceEl) {
+        // Fluctuate distance slightly (e.g. Rig closing in: 2.4 -> 2.3 -> 2.2)
+        if (Math.random() > 0.8) {
+          simState.gpsDistance = parseFloat((simState.gpsDistance - 0.1).toFixed(1));
+          if (simState.gpsDistance <= 0.2) simState.gpsDistance = 2.8; // reset loop
+          gpsDistanceEl.innerHTML = `<i class="fas fa-location-crosshairs"></i> ${simState.gpsDistance} MI`;
+        }
+      }
+
+      // 4. Driver Score active ring pulsing
+      const scoreEl = document.getElementById('liveDriverScore');
+      if (scoreEl) {
+        // Micro fluctuations (e.g. 96 <-> 97) to show live scoring calibration
+        if (Math.random() > 0.9) {
+          simState.driverScore = 95 + Math.floor(Math.random() * 3);
+          scoreEl.innerText = simState.driverScore;
+        }
+      }
+
+      // 5. Fraud Protection One-Time Passcode (OTP) Ticker
+      const otpSecondsEl = document.getElementById('livePinCountdown');
+      const otpPinEl = document.getElementById('liveVerificationPin');
+      if (otpSecondsEl && otpPinEl) {
+        simState.otpSeconds--;
+        if (simState.otpSeconds <= 0) {
+          // Generate new 4-digit code and reset countdown
+          simState.otpSeconds = 45;
+          simState.otpPin = Math.floor(1000 + Math.random() * 9000);
+          
+          // Flash dynamic lock gate visual feedback
+          otpPinEl.style.color = 'var(--color-accent)';
+          otpPinEl.innerText = simState.otpPin;
+          setTimeout(() => { otpPinEl.style.color = 'var(--color-white)'; }, 800);
+        } else {
+          otpSecondsEl.innerText = simState.otpSeconds;
+        }
+      }
+    }, 1000);
   </script>
 
 </body>
