@@ -635,8 +635,24 @@
       `
     };
 
+    // Sequential Auto-cycling Carousel Logic
+    const tabKeys = ['telemetry', 'gps', 'behaviour', 'score', 'fraud'];
+    let currentTabIndex = 0;
+    let autoCycleTimer = null;
+
+    function startAutoCycle() {
+      autoCycleTimer = setInterval(() => {
+        currentTabIndex = (currentTabIndex + 1) % tabKeys.length;
+        const nextKey = tabKeys[currentTabIndex];
+        const nextBtn = document.querySelectorAll('.app-tab-btn')[currentTabIndex];
+        if (nextBtn) {
+          switchAppEmulatorTab(nextKey, nextBtn, true);
+        }
+      }, 8000); // cycle every 8 seconds
+    }
+
     // Main Tab Switching Function
-    function switchAppEmulatorTab(tabKey, buttonEl) {
+    function switchAppEmulatorTab(tabKey, buttonEl, isAuto = false) {
       // 1. Remove active class from all buttons
       document.querySelectorAll('.app-tab-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -650,7 +666,19 @@
       if (screenEl && emulatorScreens[tabKey]) {
         screenEl.innerHTML = emulatorScreens[tabKey];
       }
+
+      // 4. If manual click, sync tab index and reset cycle timer
+      if (!isAuto) {
+        currentTabIndex = tabKeys.indexOf(tabKey);
+        clearInterval(autoCycleTimer);
+        startAutoCycle();
+      }
     }
+
+    // Initialize auto-cycling on window load
+    window.addEventListener('DOMContentLoaded', () => {
+      startAutoCycle();
+    });
 
     // High-fidelity Live Emulator Simulation State
     const simState = {
