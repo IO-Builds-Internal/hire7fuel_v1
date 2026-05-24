@@ -121,6 +121,18 @@
   height: 40px;
   width: auto;
   object-fit: contain;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid rgba(34, 201, 138, 0.35); /* Neon mint stroke */
+  padding: 3px 6px;
+  background: rgba(13, 79, 79, 0.4);
+  box-shadow: 0 0 10px rgba(34, 201, 138, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-link:hover .logo-image {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 15px rgba(34, 201, 138, 0.35);
+  transform: scale(1.04);
 }
 
 .nav-menu {
@@ -1649,6 +1661,282 @@
     width: 100%;
   }
 }
+
+/* ============================================================================
+   HIRE7 FUEL - MOBILE COMPANION APP & TARGETED CARRIER SPECIFIC STYLES
+   ============================================================================ */
+
+.mobile-app-layout {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 4rem;
+  align-items: center;
+  margin-top: 3rem;
+  margin-bottom: 5rem;
+}
+
+@media (max-width: 992px) {
+  .mobile-app-layout {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
+}
+
+/* Glassmorphic Phone Device Mockup */
+.mobile-device-mockup {
+  background: linear-gradient(135deg, #0e2020 0%, #050d0d 100%);
+  border: 4px solid #1a3333;
+  outline: 1.5px solid rgba(34, 201, 138, 0.35);
+  border-radius: 40px;
+  padding: 1.25rem;
+  width: 330px;
+  height: 600px;
+  margin: 0 auto;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 35px rgba(34, 201, 138, 0.08);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Phone Top Speaker/Camera Bar */
+.mobile-device-mockup::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 22px;
+  background-color: #1a3333;
+  border-radius: 0 0 14px 14px;
+  z-index: 10;
+}
+
+.mobile-device-screen {
+  flex-grow: 1;
+  background: linear-gradient(180deg, #071212 0%, #030808 100%);
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 1.5rem 1.25rem 1rem 1.25rem;
+  position: relative;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  scrollbar-width: none;
+}
+
+.mobile-device-screen::-webkit-scrollbar {
+  display: none;
+}
+
+/* Screen Widgets */
+.mobile-widget {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.mobile-widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #a3c2c2;
+  margin-bottom: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* Circular driver score widget */
+.mobile-score-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid rgba(34, 201, 138, 0.1);
+  border-top-color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem auto;
+  position: relative;
+  animation: pulseScoreRing 2.5s infinite;
+}
+
+@keyframes pulseScoreRing {
+  0% { box-shadow: 0 0 0 0 rgba(34, 201, 138, 0.2); }
+  70% { box-shadow: 0 0 0 10px rgba(34, 201, 138, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 201, 138, 0); }
+}
+
+.mobile-score-val {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-white);
+}
+
+.mobile-app-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.mobile-app-feature-card {
+  background: linear-gradient(135deg, rgba(16, 37, 37, 0.45) 0%, rgba(6, 17, 17, 0.6) 100%);
+  border: 1px solid rgba(34, 201, 138, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 1.5rem;
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-app-feature-card:hover {
+  border-color: rgba(34, 201, 138, 0.4);
+  background: linear-gradient(135deg, rgba(16, 37, 37, 0.6) 0%, rgba(6, 17, 17, 0.75) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25), 0 0 15px rgba(34, 201, 138, 0.05);
+}
+
+.mobile-app-feature-icon {
+  background-color: rgba(34, 201, 138, 0.08);
+  border: 1px solid rgba(34, 201, 138, 0.25);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(34, 201, 138, 0.1);
+}
+
+.mobile-app-feature-info h3 {
+  font-size: 1.1rem;
+  color: var(--color-white);
+  margin-top: 0;
+  margin-bottom: 0.35rem;
+  font-weight: 700;
+}
+
+.mobile-app-feature-info p {
+  color: #a3c2c2;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Targeted Carriers Grid Styles */
+.targeted-carriers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 3.5rem;
+}
+
+@media (max-width: 992px) {
+  .targeted-carriers-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.carrier-profile-card {
+  background: linear-gradient(135deg, rgba(16, 37, 37, 0.5) 0%, rgba(6, 17, 17, 0.7) 100%);
+  border: 1px solid rgba(34, 201, 138, 0.15);
+  border-radius: var(--radius-md);
+  padding: 2.5rem 2rem;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.carrier-profile-card:hover {
+  border-color: rgba(34, 201, 138, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 20px rgba(34, 201, 138, 0.08);
+}
+
+.carrier-badge-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.carrier-badge-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background-color: rgba(34, 201, 138, 0.08);
+  border: 1px solid rgba(34, 201, 138, 0.25);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  box-shadow: 0 0 12px rgba(34, 201, 138, 0.1);
+}
+
+.carrier-size-tag {
+  background-color: rgba(245, 166, 35, 0.08);
+  border: 1px solid rgba(245, 166, 35, 0.25);
+  color: var(--color-highlight);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+}
+
+.carrier-profile-card h3 {
+  font-size: 1.3rem;
+  margin: 0;
+  color: var(--color-white);
+  font-weight: 700;
+}
+
+.carrier-profile-card p {
+  color: #a3c2c2;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.carrier-features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.carrier-features-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--color-white);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.carrier-features-list li i {
+  color: var(--color-accent);
+  font-size: 0.85rem;
+}
+
 
 
 
