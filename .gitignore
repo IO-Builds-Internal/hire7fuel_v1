@@ -12,6 +12,9 @@ database/*.sqlite-journal
 # Administrative custom media uploads
 public/uploads/
 
+# Temporary developer scripts (not part of the project)
+scratch/
+
 # Operating system configurations
 .DS_Store
 Thumbs.db
