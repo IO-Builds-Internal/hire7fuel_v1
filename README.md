@@ -1,132 +1,199 @@
-# Hire7 Fuel Website Redesign & Command Panel
+# Hire7 Fuel — Premium Website & Fleet Operations Platform
 
-This is the complete, high-performance Node.js website redesign for **Hire7 Fuel (hire7fuel.com)**.
+A fully custom, production-ready premium website redesign for **Hire7 Fuel** — a carrier-class commercial fuel card and fleet operations platform serving transport carriers across Canada.
 
-The platform is designed to be highly organized and modular. It features a modern, accessible interface with a premium color palette (deep teals, seafoams, mint accents, and high-visibility amber callouts) and smooth CSS3 interactive micro-animations. It comes built-in with a **secure Administrative Portal (`/admin`)** allowing real-time edits to branding, contact data (e.g. phone, address), job postings, and dynamic form submissions.
-
----
-
-## Key Features
-
-1. **Modular MVC Architecture**: Fully organized into clean, isolated controller routers (`routes/public.js`, `routes/admin.js`), database layers, and front-end views, ensuring that no file grows too large or hard to maintain.
-2. **Dual-Layer Database Interface (`database/db.js`)**:
-   - **Out-of-the-Box Local Fallback**: Zero configurations required! The system automatically detects if Supabase credentials are missing and uses a local JSON file database (`database/local_db.json`). All `/admin` functions, custom settings edits, and form submissions operate instantly offline.
-   - **Seamless Supabase Switch**: Provide your Supabase credentials in `.env`, and the application automatically and transparently switches to your cloud database instance.
-3. **Dynamic Rebranding**: Centralized branding configuration (`config.js`) acts as the baseline and reliable single source of truth.
-4. **Full Administrative Suite (`/admin`)**:
-   - **Identity & Brand customizer**: Instantly update your phone number, Brampton office address, brand tagline, and social media handles globally.
-   - **Logo Upload Manager**: Multer file upload integration to upload new brand logos (`logo.png`/`logo.svg`), propagating immediately across headers, footers, and dashboards.
-   - **Dynamic Job Openings CRUD**: Create, activate/deactivate, and delete open roles. The public Careers page automatically updates (displaying the job posts or showing a beautiful "No Current Openings" fallback card).
-   - **Submission Manager**: Review all incoming fleet card requests, general inquiries, and talent applications in a central command screen.
+Built with Node.js, Express, and EJS. Features a dark glassmorphic design system, a secure admin content management dashboard, and a premium interactive mobile app showcase page.
 
 ---
 
-## Project Structure
+## ✨ Key Features
+
+- **Dark Glassmorphic Design** — Premium dark teal / mint green aesthetic with CSS3 micro-animations, 3D card transforms, and smooth hover effects
+- **Interactive Mobile App Showcase** (`/app`) — Live smartphone emulator with real-time CAN-bus sparklines, SVG gauge rings, OTP countdown, GPS corridor simulator, and auto-cycling carousel
+- **3D Holographic Fuel Card** — Hero section features a parallax 3D-rotated physical card stacked with a mini mobile companion screen in CSS perspective space
+- **Admin Content Dashboard** — Secure session-authenticated staff panel for managing jobs, testimonials, and site settings
+- **SQLite Database** — Zero-config embedded database, starts automatically with no external server required
+- **Full Mobile Responsiveness** — All pages optimized for phones, tablets, and desktops
+- **SMTP Email Notifications** — Contact form and driver applications trigger email alerts (configurable)
+
+---
+
+## 🗂️ Project Structure
 
 ```
-Hire7-Fuel/
-├── package.json            # Node.js project manifest & scripts
-├── config.js               # Central brand baseline values (Single Source of Truth)
-├── server.js               # Express application entry point & bootstrap configurations
-├── start.sh                # Executable one-click setup and launcher script
-├── README.md               # Developer manual & operations guide
-├── STYLE_GUIDE.md          # Visual specs (Colors, Typography, UI Components)
+hire7fuel/
+├── server.js                    # Express app entry point
+├── config.js                    # Baseline brand, color & contact config
+├── start.sh                     # One-click LOCAL developer launcher
+├── deploy_note.md               # VPS deployment & operations guide
+├── .env                         # Environment secrets (not committed to git)
 ├── database/
-│   ├── db.js               # Dual-layer data adapter (Supabase <-> Local JSON fallback)
-│   ├── migration.sql       # PostgreSQL DDL table setup script for Supabase
-│   └── local_db.json       # Generated offline database (created automatically on launch)
+│   ├── db.js                    # SQLite database access layer
+│   └── hire7_fuel.sqlite        # SQLite database file
 ├── routes/
-│   ├── public.js           # Public views controller (Home, Fuel Card, Apply, Careers, Contact)
-│   └── admin.js            # Administrative panel gatekeeper, CRUD, and settings router
-├── public/
-│   ├── css/
-│   │   └── styles.css      # Core stylesheet with CSS custom variable definitions
-│   ├── js/
-│   │   └── main.js         # Interactive triggers: FAQs, program tabs, form validations
-│   ├── uploads/            # Admin custom uploaded brand assets directory
-│   └── assets/
-│       └── logo.png        # Active high-fidelity brand logo asset
-└── views/
-    ├── index.ejs           # Home page view with dynamic forms and testimonials
-    ├── fuelcard.ejs        # Fuel card switcher details and FAQ accordions
-    ├── apply.ejs           # Accessible enrollment application portal
-    ├── careers.ejs         #动态 Careers board, company culture values, and talent forms
-    ├── contact.ejs         # Contact coordinates panel, single address and Google Maps
-    ├── admin/
-    │   ├── login.ejs       # Secured glassmorphism administrative authenticator
-    │   ├── dashboard.ejs   # Admin Command Center & Statistics display
-    │   ├── settings.ejs    # Site settings customizer & logo upload form
-    │   └── jobs.ejs        # Dynamic Careers listings crud panel
-    └── partials/
-        ├── header.ejs      # Unified navigation bar with active highlighters
-        └── footer.ejs      # Dynamic copyright, social handles, and contact coordinates
+│   ├── public.js                # All public page route handlers
+│   └── admin.js                 # All protected admin route handlers
+├── views/
+│   ├── index.ejs                # Homepage
+│   ├── fuelcard.ejs             # Fuel Card product page
+│   ├── app.ejs                  # Mobile App interactive showcase
+│   ├── careers.ejs              # Job listings page
+│   ├── apply.ejs                # Driver application form
+│   ├── contact.ejs              # Contact form
+│   ├── partials/
+│   │   ├── header.ejs           # Global nav header
+│   │   └── footer.ejs           # Global footer
+│   └── admin/
+│       ├── login.ejs            # Admin login
+│       ├── dashboard.ejs        # Admin overview
+│       ├── jobs.ejs             # Job postings list
+│       ├── jobs_edit.ejs        # Job create/edit form
+│       ├── testimonials.ejs     # Testimonials list
+│       ├── testimonials_edit.ejs
+│       └── settings.ejs         # Site settings (brand, social, SMTP)
+└── public/
+    ├── css/
+    │   ├── base.css             # Design tokens, resets, typography
+    │   ├── components.css       # All UI components
+    │   ├── emulator.css         # Mobile emulator & 3D card styles
+    │   ├── forms.css            # Form styles
+    │   └── admin.css            # Admin panel styles
+    ├── js/
+    │   └── main.js              # Client-side JS (nav, counters, animations)
+    └── assets/
+        ├── logo.png             # Brand logo
+        └── favicon.ico          # Favicon
 ```
 
 ---
 
-## Installation & Running
+## 🚀 Local Development (Quick Start)
 
-You can boot the entire website redesign in a single command. 
-
-### Instant Setup (One-Click)
-Open your terminal inside the project directory and execute:
 ```bash
 chmod +x start.sh
 ./start.sh
 ```
 
-The script will automatically:
-1. Verify Node.js is installed.
-2. Generate your `.env` configuration file containing a random secure session secret and default admin credentials.
-3. Verify and build missing asset subdirectories.
-4. Install all NPM package dependencies (`express`, `ejs`, `@supabase/supabase-js`, `multer`, etc.).
-5. Boot up the server.
+`start.sh` will automatically:
+1. Check Node.js is installed (v20+ required)
+2. Generate a `.env` file with a secure random session secret if one doesn't exist
+3. Create required asset directories
+4. Run `npm install`
+5. Start the server
 
 Once running:
-- **Public Redesign Portal**: [http://localhost:3000](http://localhost:3000)
-- **Administrative Suite**: [http://localhost:3000/admin](http://localhost:3000/admin) (or `/admin/login`)
-- **Default Staff Passcode**: `admin123`
+- **Website:** [http://localhost:3000](http://localhost:3000)
+- **Admin Panel:** [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
+- **Default Password:** `admin123`
+
+> ⚠️ `start.sh` is for **local development only**. Do not use it to manage a live VPS deployment. See `deploy_note.md` for production instructions.
 
 ---
 
-## Dynamic Supabase Migration
+## 🌐 Pages & Routes
 
-When you are ready to move from the local JSON database fallback to your self-hosted or cloud Supabase instance, follow these simple steps:
+| Route | Description |
+|---|---|
+| `/` | Homepage |
+| `/fuelcard` | Fuel Card product page |
+| `/app` | Mobile App interactive showcase |
+| `/careers` | Job listings |
+| `/apply` | Driver application form |
+| `/contact` | Contact form |
+| `/admin/login` | Admin authentication |
+| `/admin/dashboard` | Admin overview |
+| `/admin/jobs` | Job postings management |
+| `/admin/testimonials` | Testimonials management |
+| `/admin/settings` | Site settings |
 
-### 1. Initialize Tables
-Log into your Supabase Dashboard, open the **SQL Editor**, paste the contents of `database/migration.sql`, and click **Run**. This bootstraps the settings, jobs, and submissions tables and seeds them with initial brand data.
+---
 
-### 2. Configure Environment Variables
-Open the `.env` file generated in the project root, uncomment the Supabase variables, and insert your unique URL and Anon API key:
+## 🗄️ Database
 
-```env
-# Supabase cloud credentials
-SUPABASE_URL=https://your-project-id.supabase.co
-SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.your-anon-api-key...
+This project uses **SQLite** — a lightweight, file-based embedded database. No external database server is required.
+
+- **File location:** `database/hire7_fuel.sqlite`
+- **Auto-initialized:** Tables and seed data are created automatically on first run
+- **Tables:** `settings`, `jobs`, `submissions`, `testimonials`
+
+### Backup
+```bash
+cp database/hire7_fuel.sqlite ~/backups/hire7_$(date +%Y%m%d).sqlite
 ```
 
-### 3. Restart Application
-Save the `.env` file and restart the server (`./start.sh` or `npm start`). 
+---
 
-The `database/db.js` adapter will immediately detect the keys, establish a connection, and switch over to your Supabase tables. All brand settings updates, job listings, and client form submissions will now load from and save to Supabase!
+## ⚙️ Environment Variables (`.env`)
+
+The `.env` file is generated automatically by `start.sh` on first run. You can also create it manually:
+
+```env
+# Server port
+PORT=3000
+
+# Admin panel password
+ADMIN_PASSWORD=admin123
+
+# Secure session secret (change this in production!)
+SESSION_SECRET=your_random_secret_here
+
+# Node environment
+NODE_ENV=development
+```
+
+For production, set `NODE_ENV=production` and use a strong `SESSION_SECRET`.
 
 ---
 
-## administrative Suite Usage
+## 🔐 Admin Panel
 
-### Access Control
-Access to `/admin` routes is fully secured via session-based cookies. Sessions automatically invalidate after 2 hours of inactivity. The access password can be changed at any time by updating `ADMIN_PASSWORD` inside the `.env` file.
+The admin panel at `/admin` is session-authenticated. Sessions expire after 2 hours.
 
-### Dynamic Branding & Uploads
-To alter the corporate identity or contact coordinates:
-1. Navigate to `/admin/settings`.
-2. Edit company titles, tagline, support lines, or the canonical Brampton office address.
-3. Select an image (PNG, JPG, SVG) to replace the logo. Multer handles the file upload, saving it directly to the assets repository.
-4. Click **Save Customizations**. The changes reflect globally on all public headers, footers, maps buttons, and emails instantly!
+**What you can manage:**
+- **Jobs** — Create, edit, toggle active/inactive, and delete job postings. Changes appear instantly on the public Careers page.
+- **Testimonials** — Create, edit, toggle visibility, and delete driver testimonials shown on the homepage.
+- **Settings** — Update brand name, tagline, phone, email, address, social media links, App Store / Play Store URLs, and SMTP email settings.
 
-### dynamic Career Postings
-To manage open vacancies:
-1. Navigate to `/admin/jobs`.
-2. Fill out the "Add New Career Posting" form. To enter requirements, type each bullet-point on a separate line (the EJS template parses and displays them dynamically).
-3. Click **Create Dynamic Post**. It immediately populates the public job board.
-4. **Active Toggle**: Use the custom checkbox slider next to any job in your list. It sends an background AJAX fetch request to toggle the job's active/inactive status immediately. If deactivated, the job will hide from the public Careers board. If all jobs are deactivated, the page automatically renders a fallback talent pool message!
+---
+
+## 🖥️ VPS Deployment
+
+For full production deployment instructions including Nginx config, PM2 setup, SSL, and the correct update workflow, see **[deploy_note.md](./deploy_note.md)**.
+
+**Quick update command on a live VPS:**
+```bash
+cd /var/www/hire7fuel
+git pull origin main
+npm install --production
+pm2 restart hire7fuel
+```
+
+---
+
+## 🎨 Design System
+
+See **[STYLE_GUIDE.md](./STYLE_GUIDE.md)** for the full color palette, typography, and UI component specifications.
+
+| Token | Hex | Usage |
+|---|---|---|
+| Primary | `#0D4F4F` | Header, hero, footer |
+| Accent (Mint) | `#22C98A` | CTAs, glows, active states |
+| Highlight (Amber) | `#F5A623` | Badges, warnings, callouts |
+| Near Black | `#0A1C1C` | Dark section backgrounds |
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Runtime | Node.js v20 LTS |
+| Framework | Express.js v4 |
+| Templating | EJS |
+| Database | SQLite3 |
+| Styling | Vanilla CSS |
+| Client JS | Vanilla JavaScript |
+| Auth | express-session |
+| Email | Nodemailer |
+| Uploads | Multer |
+| Process Mgr | PM2 (production) |
