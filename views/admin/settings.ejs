@@ -311,6 +311,11 @@
                 <i class="fas fa-paper-plane"></i> Outbound Mail Engine
               </button>
             </li>
+            <li>
+              <button type="button" class="settings-nav-item" onclick="switchSettingsTab('tab-programs', this)">
+                <i class="fas fa-credit-card"></i> Card Programs
+              </button>
+            </li>
           </ul>
         </aside>
 
@@ -480,6 +485,46 @@
               
               <!-- Connection Logs Console -->
               <div id="smtp-test-result" style="display: none; background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 1.25rem; font-family: monospace; font-size: 0.85rem; line-height: 1.6;">
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== TAB 5: Card Programs ==================== -->
+          <div class="settings-tab-pane" id="tab-programs">
+            <div class="settings-pane-header">
+              <h2><i class="fas fa-credit-card"></i> Fuel Card Programs</h2>
+              <p>Configure page status modes and click redirections for secondary Cash and Maintenance programs.</p>
+            </div>
+
+            <h3 style="font-size: 1.15rem; color: var(--color-white); margin: 0 0 1rem 0; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem;"><i class="fas fa-wallet" style="color: var(--color-seafoam); font-size: 0.95rem;"></i> Cash Program Settings</h3>
+            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-bottom: 2.25rem;">
+              <div class="form-group admin-form-group">
+                <label for="program_cash_coming_soon" style="font-weight: 600;">Status Mode</label>
+                <select id="program_cash_coming_soon" name="program_cash_coming_soon" class="form-control admin-input" style="appearance: none; -webkit-appearance: none; padding: 0.85rem 2.5rem 0.85rem 1rem; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2322C98A%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.65rem auto;">
+                  <option value="true" <%= config.programs.cash_coming_soon === 'true' ? 'selected' : '' %>>COMING SOON - Display "Coming Soon" Badge</option>
+                  <option value="false" <%= config.programs.cash_coming_soon !== 'true' ? 'selected' : '' %>>ACTIVE - Direct Signup Enabled</option>
+                </select>
+              </div>
+              <div class="form-group admin-form-group">
+                <label for="program_cash_redirect" style="font-weight: 600;">Button Click Destination URL</label>
+                <input type="text" id="program_cash_redirect" name="program_cash_redirect" class="form-control admin-input" value="<%= config.programs.cash_redirect %>" placeholder="/contact" style="padding: 0.85rem 1rem;">
+                <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.5rem;">Defines target page link when users click 'Apply for Cash Card'.</span>
+              </div>
+            </div>
+
+            <h3 style="font-size: 1.15rem; color: var(--color-white); margin: 0 0 1rem 0; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem;"><i class="fas fa-screwdriver-wrench" style="color: var(--color-highlight); font-size: 0.95rem;"></i> Maintenance Program Settings</h3>
+            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+              <div class="form-group admin-form-group">
+                <label for="program_maint_coming_soon" style="font-weight: 600;">Status Mode</label>
+                <select id="program_maint_coming_soon" name="program_maint_coming_soon" class="form-control admin-input" style="appearance: none; -webkit-appearance: none; padding: 0.85rem 2.5rem 0.85rem 1rem; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2322C98A%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.65rem auto;">
+                  <option value="true" <%= config.programs.maint_coming_soon === 'true' ? 'selected' : '' %>>COMING SOON - Display "Coming Soon" Badge</option>
+                  <option value="false" <%= config.programs.maint_coming_soon !== 'true' ? 'selected' : '' %>>ACTIVE - Direct Signup Enabled</option>
+                </select>
+              </div>
+              <div class="form-group admin-form-group">
+                <label for="program_maint_redirect" style="font-weight: 600;">Button Click Destination URL</label>
+                <input type="text" id="program_maint_redirect" name="program_maint_redirect" class="form-control admin-input" value="<%= config.programs.maint_redirect %>" placeholder="/contact" style="padding: 0.85rem 1rem;">
+                <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.5rem;">Defines target page link when users click 'Apply for Maintenance Card'.</span>
               </div>
             </div>
           </div>

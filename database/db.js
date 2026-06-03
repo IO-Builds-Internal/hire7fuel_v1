@@ -209,7 +209,13 @@ module.exports = {
       contact: { ...baseConfig.contact },
       social: { ...baseConfig.social },
       app: { ...baseConfig.app },
-      smtp: { ...baseConfig.smtp }
+      smtp: { ...baseConfig.smtp },
+      programs: {
+        cash_coming_soon: 'true',
+        cash_redirect: '/contact',
+        maint_coming_soon: 'true',
+        maint_redirect: '/contact'
+      }
     };
 
     try {
@@ -234,6 +240,11 @@ module.exports = {
           if (row.key === 'smtp_enabled') settingsObj.smtp.enabled = row.value;
           if (row.key === 'app_playstore') settingsObj.app.playstore = row.value;
           if (row.key === 'app_appstore') settingsObj.app.appstore = row.value;
+          
+          if (row.key === 'program_cash_coming_soon') settingsObj.programs.cash_coming_soon = row.value;
+          if (row.key === 'program_cash_redirect') settingsObj.programs.cash_redirect = row.value;
+          if (row.key === 'program_maint_coming_soon') settingsObj.programs.maint_coming_soon = row.value;
+          if (row.key === 'program_maint_redirect') settingsObj.programs.maint_redirect = row.value;
         });
       }
     } catch (err) {

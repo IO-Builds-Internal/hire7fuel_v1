@@ -214,7 +214,11 @@ router.post('/settings', upload.single('logo_file'), async (req, res) => {
     smtp_pass,
     smtp_from,
     smtp_to,
-    smtp_enabled
+    smtp_enabled,
+    program_cash_coming_soon,
+    program_cash_redirect,
+    program_maint_coming_soon,
+    program_maint_redirect
   } = req.body;
 
   const updates = {
@@ -234,7 +238,11 @@ router.post('/settings', upload.single('logo_file'), async (req, res) => {
     smtp_pass: smtp_pass || '',
     smtp_from: smtp_from || '',
     smtp_to: smtp_to || '',
-    smtp_enabled: smtp_enabled === 'true' ? 'true' : 'false'
+    smtp_enabled: smtp_enabled === 'true' ? 'true' : 'false',
+    program_cash_coming_soon: program_cash_coming_soon === 'true' ? 'true' : 'false',
+    program_cash_redirect: program_cash_redirect || '/contact',
+    program_maint_coming_soon: program_maint_coming_soon === 'true' ? 'true' : 'false',
+    program_maint_redirect: program_maint_redirect || '/contact'
   };
 
   // If a custom logo was uploaded, update the URL

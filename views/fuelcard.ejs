@@ -287,6 +287,48 @@
     .pc-cash .program-features-list li i { color: #10b981; }
     .pc-maintenance .program-features-list li i { color: #f5a623; }
 
+    /* Coming Soon Premium Card Overrides */
+    .program-card.coming-soon {
+      border-color: rgba(245, 166, 35, 0.15) !important;
+      position: relative;
+    }
+    
+    .coming-soon-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: rgba(245, 166, 35, 0.08);
+      border: 1px solid rgba(245, 166, 35, 0.28);
+      color: #f5a623;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.35rem 0.75rem;
+      border-radius: 4px;
+      letter-spacing: 0.08em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      box-shadow: 0 4px 15px rgba(245, 166, 35, 0.08);
+      backdrop-filter: blur(10px);
+    }
+    
+    .coming-soon-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #f5a623;
+      box-shadow: 0 0 8px #f5a623;
+      display: inline-block;
+      animation: comingSoonPulse 2s infinite ease-in-out;
+    }
+    
+    @keyframes comingSoonPulse {
+      0% { opacity: 0.45; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.45; transform: scale(0.9); }
+    }
+
     /* 3. Browser Mockup Frame styling */
     .browser-mockup {
       border: 1px solid rgba(34, 201, 138, 0.2);
@@ -911,7 +953,12 @@
         </div>
 
         <!-- Cash Program Card -->
-        <div class="program-card pc-cash" id="cash-program">
+        <div class="program-card pc-cash<%= config.programs.cash_coming_soon === 'true' ? ' coming-soon' : '' %>" id="cash-program">
+          <% if (config.programs.cash_coming_soon === 'true') { %>
+            <div class="coming-soon-badge">
+              <span class="coming-soon-dot"></span> Coming Soon
+            </div>
+          <% } %>
           <div>
             <div class="program-card-header">
               <div class="program-icon-badge">
@@ -928,11 +975,18 @@
               <li><i class="fas fa-circle-check"></i> <span>Granular allowances for food, tolls, and lodging options.</span></li>
             </ul>
           </div>
-          <a href="/apply" class="btn btn-primary btn-full btn-large" style="background-color: #10b981; color: #060f0f; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25); margin-top: 1.5rem;">Apply for Cash Card</a>
+          <a href="<%= config.programs.cash_redirect %>" class="btn btn-primary btn-full btn-large" style="background-color: #10b981; color: #060f0f; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25); margin-top: 1.5rem;">
+            <%= config.programs.cash_coming_soon === 'true' ? 'Apply (Coming Soon)' : 'Apply for Cash Card' %>
+          </a>
         </div>
 
         <!-- Maintenance Program Card -->
-        <div class="program-card pc-maintenance" id="maintenance-program">
+        <div class="program-card pc-maintenance<%= config.programs.maint_coming_soon === 'true' ? ' coming-soon' : '' %>" id="maintenance-program">
+          <% if (config.programs.maint_coming_soon === 'true') { %>
+            <div class="coming-soon-badge">
+              <span class="coming-soon-dot"></span> Coming Soon
+            </div>
+          <% } %>
           <div>
             <div class="program-card-header">
               <div class="program-icon-badge">
@@ -949,7 +1003,9 @@
               <li><i class="fas fa-circle-check"></i> <span>Direct clearance of mechanical claims and commercial receipts.</span></li>
             </ul>
           </div>
-          <a href="/apply" class="btn btn-primary btn-full btn-large" style="background-color: #f5a623; color: #060f0f; box-shadow: 0 4px 15px rgba(245, 166, 35, 0.25); margin-top: 1.5rem;">Apply for Maintenance Card</a>
+          <a href="<%= config.programs.maint_redirect %>" class="btn btn-primary btn-full btn-large" style="background-color: #f5a623; color: #060f0f; box-shadow: 0 4px 15px rgba(245, 166, 35, 0.25); margin-top: 1.5rem;">
+            <%= config.programs.maint_coming_soon === 'true' ? 'Apply (Coming Soon)' : 'Apply for Maintenance Card' %>
+          </a>
         </div>
 
       </div>
