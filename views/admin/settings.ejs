@@ -27,7 +27,7 @@
     /* Left column navigation sidebar */
     .settings-sidebar {
       background: linear-gradient(135deg, rgba(16, 37, 37, 0.75) 0%, rgba(6, 17, 17, 0.85) 100%);
-      border: 1px solid rgba(34, 201, 138, 0.18);
+      border: 1px solid rgba(20, 160, 119, 0.18);
       border-radius: var(--radius-md);
       padding: 1.75rem;
       backdrop-filter: blur(20px);
@@ -103,9 +103,9 @@
     
     .settings-nav-item.active {
       color: var(--color-white);
-      background: rgba(34, 201, 138, 0.08);
-      border-color: rgba(34, 201, 138, 0.22);
-      box-shadow: 0 0 15px rgba(34, 201, 138, 0.04);
+      background: rgba(20, 160, 119, 0.08);
+      border-color: rgba(20, 160, 119, 0.22);
+      box-shadow: 0 0 15px rgba(20, 160, 119, 0.04);
     }
     
     .settings-nav-item.active i {
@@ -116,7 +116,7 @@
     /* Right column configuration workspace panel */
     .settings-content-panel {
       background: linear-gradient(135deg, rgba(16, 37, 37, 0.75) 0%, rgba(6, 17, 17, 0.85) 100%);
-      border: 1px solid rgba(34, 201, 138, 0.18);
+      border: 1px solid rgba(20, 160, 119, 0.18);
       border-radius: var(--radius-md);
       padding: 3rem 2.5rem;
       backdrop-filter: blur(20px);
@@ -430,7 +430,7 @@
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-bottom: 1.5rem;">
               <div class="form-group admin-form-group">
                 <label for="smtp_enabled" style="font-weight: 600;">Dispatcher State</label>
-                <select id="smtp_enabled" name="smtp_enabled" class="form-control admin-input" style="appearance: none; -webkit-appearance: none; padding: 0.85rem 2.5rem 0.85rem 1rem; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2322C98A%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.65rem auto;">
+                <select id="smtp_enabled" name="smtp_enabled" class="form-control admin-input" style="appearance: none; -webkit-appearance: none; padding: 0.85rem 2.5rem 0.85rem 1rem; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2314a077%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.65rem auto;">
                   <option value="true" <%= config.smtp.enabled === 'true' ? 'selected' : '' %>>ENABLED - Send Dynamic Email Alerts</option>
                   <option value="false" <%= config.smtp.enabled !== 'true' ? 'selected' : '' %>>DISABLED - Quiet/Maintenance Mode</option>
                 </select>
@@ -478,7 +478,7 @@
                   </h4>
                   <p style="margin: 0.25rem 0 0 0; font-size: 0.8rem; color: #a3c2c2;">Verify outbound connectivity and credentials by dispatching a real-time test mail before saving.</p>
                 </div>
-                <button type="button" id="btn-test-smtp" class="btn btn-outline" style="border-color: rgba(34, 201, 138, 0.3); color: var(--color-accent); font-weight: 600; padding: 0.75rem 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                <button type="button" id="btn-test-smtp" class="btn btn-outline" style="border-color: rgba(20, 160, 119, 0.3); color: var(--color-accent); font-weight: 600; padding: 0.75rem 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem;">
                   <i class="fas fa-envelope-circle-check"></i> Dispatch Test Mail
                 </button>
               </div>
@@ -500,7 +500,7 @@
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-bottom: 2.25rem;">
               <div class="form-group admin-form-group">
                 <label for="program_cash_coming_soon" style="font-weight: 600;">Status Mode</label>
-                <select id="program_cash_coming_soon" name="program_cash_coming_soon" class="form-control admin-input" style="appearance: none; -webkit-appearance: none; padding: 0.85rem 2.5rem 0.85rem 1rem; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2322C98A%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.65rem auto;">
+                <select id="program_cash_coming_soon" name="program_cash_coming_soon" class="form-control admin-input" style="appearance: none; -webkit-appearance: none; padding: 0.85rem 2.5rem 0.85rem 1rem; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2314a077%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.65rem auto;">
                   <option value="true" <%= config.programs.cash_coming_soon === 'true' ? 'selected' : '' %>>COMING SOON - Display "Coming Soon" Badge</option>
                   <option value="false" <%= config.programs.cash_coming_soon !== 'true' ? 'selected' : '' %>>ACTIVE - Direct Signup Enabled</option>
                 </select>
@@ -516,7 +516,7 @@
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-bottom: 1.5rem;">
               <div class="form-group admin-form-group">
                 <label for="program_maint_coming_soon" style="font-weight: 600;">Status Mode</label>
-                <select id="program_maint_coming_soon" name="program_maint_coming_soon" class="form-control admin-input" style="appearance: none; -webkit-appearance: none; padding: 0.85rem 2.5rem 0.85rem 1rem; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2322C98A%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.65rem auto;">
+                <select id="program_maint_coming_soon" name="program_maint_coming_soon" class="form-control admin-input" style="appearance: none; -webkit-appearance: none; padding: 0.85rem 2.5rem 0.85rem 1rem; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2314a077%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.65rem auto;">
                   <option value="true" <%= config.programs.maint_coming_soon === 'true' ? 'selected' : '' %>>COMING SOON - Display "Coming Soon" Badge</option>
                   <option value="false" <%= config.programs.maint_coming_soon !== 'true' ? 'selected' : '' %>>ACTIVE - Direct Signup Enabled</option>
                 </select>
@@ -613,7 +613,7 @@
           testBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Dispatched SMTP Validation...';
           
           logConsole.style.display = 'block';
-          logConsole.style.borderColor = 'rgba(34, 201, 138, 0.3)';
+          logConsole.style.borderColor = 'rgba(20, 160, 119, 0.3)';
           logConsole.style.color = '#a3c2c2';
           logConsole.innerHTML = '<span style="color: var(--color-accent);"><i class="fas fa-network-wired"></i> Establishing connection to ' + smtp_host + ':' + smtp_port + '...</span>';
           

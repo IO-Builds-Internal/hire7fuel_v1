@@ -421,8 +421,8 @@ router.post('/settings/test-smtp', async (req, res) => {
       to: smtp_to,
       subject: 'Hire7 Fuel - SMTP Integration Connection Test',
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0f1d1d; border: 1px solid #22c98a; border-radius: 8px; padding: 2rem; color: #e5ebeb;">
-          <h2 style="color: #22c98a; border-bottom: 1px solid rgba(34,201,138,0.2); padding-bottom: 0.5rem; margin-top: 0;">Hire7 Fuel Outgoing Mailer</h2>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0f1d1d; border: 1px solid #14a077; border-radius: 8px; padding: 2rem; color: #e5ebeb;">
+          <h2 style="color: #14a077; border-bottom: 1px solid rgba(20, 160, 119,0.2); padding-bottom: 0.5rem; margin-top: 0;">Hire7 Fuel Outgoing Mailer</h2>
           <p>This is an automated <strong>SMTP Connection Test Email</strong> dispatched from your administrator website customizer dashboard settings page.</p>
           <div style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 1.25rem; margin: 1.5rem 0;">
             <h4 style="margin: 0 0 0.75rem 0; color: #fff;">Connection Verification Log:</h4>
@@ -434,7 +434,7 @@ router.post('/settings/test-smtp', async (req, res) => {
               <li><strong>Recipient Identity ("To"):</strong> ${smtp_to}</li>
             </ul>
           </div>
-          <p style="color: #22c98a; font-weight: bold; margin: 1rem 0;">[✓] Connection established and verification succeeded!</p>
+          <p style="color: #14a077; font-weight: bold; margin: 1rem 0;">[✓] Connection established and verification succeeded!</p>
           <p style="font-size: 0.85rem; color: #6B7280; margin-bottom: 0;">Connection verification timestamp: ${new Date().toLocaleString()}</p>
         </div>
       `

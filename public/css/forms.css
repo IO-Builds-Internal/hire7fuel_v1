@@ -40,7 +40,7 @@
 
 .form-control:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 15px rgba(34, 201, 138, 0.15);
+  box-shadow: 0 0 15px rgba(20, 160, 119, 0.15);
   background-color: rgba(6, 15, 15, 0.7);
 }
 
@@ -146,7 +146,7 @@ form.was-validated .form-control:valid {
   width: 90%;
   max-width: 600px;
   padding: 3rem;
-  box-shadow: var(--shadow-premium), 0 0 50px rgba(34,201,138,0.05);
+  box-shadow: var(--shadow-premium), 0 0 50px rgba(20, 160, 119,0.05);
   position: relative;
   transform: scale(0.95);
   transition: transform var(--transition-normal);

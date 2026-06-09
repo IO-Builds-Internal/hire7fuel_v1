@@ -14,7 +14,7 @@ module.exports = {
   colors: {
     primary: '#0D4F4F',      // Header, hero bg, footer bg
     midTeal: '#1A6B6B',      // Section backgrounds, nav active
-    accent: '#22C98A',       // CTA buttons, hover states, active links (Mint green)
+    accent: '#14a077',       // CTA buttons, hover states, active links (Teal green)
     highlight: '#F5A623',    // Callouts, badges, hero subheading accents
     seafoam: '#3ABFA0',      // Decorative dots, dividers
     white: '#FFFFFF',        // Body text on dark bg

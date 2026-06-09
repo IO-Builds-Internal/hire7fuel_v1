@@ -186,7 +186,7 @@ function initAdminModal() {
                   <i class="far fa-clock" style="margin-right: 0.25rem;"></i> Submitted On: ${submittedDate}
                 </span>
               </div>
-              <i class="fas fa-file-shield" style="font-size: 2.25rem; color: rgba(34, 201, 138, 0.22);"></i>
+              <i class="fas fa-file-shield" style="font-size: 2.25rem; color: rgba(20, 160, 119, 0.22);"></i>
             </div>
 
             <!-- Two-Column Fields Grid -->
@@ -216,7 +216,7 @@ function initAdminModal() {
 
             modalHtml += `
               <div style="background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 6px; padding: 1rem; display: flex; align-items: center; gap: 0.85rem;">
-                <div style="width: 36px; height: 36px; border-radius: 6px; background: rgba(34, 201, 138, 0.08); border: 1px solid rgba(34, 201, 138, 0.15); display: flex; align-items: center; justify-content: center; color: var(--color-accent); font-size: 0.9rem; flex-shrink: 0;">
+                <div style="width: 36px; height: 36px; border-radius: 6px; background: rgba(20, 160, 119, 0.08); border: 1px solid rgba(20, 160, 119, 0.15); display: flex; align-items: center; justify-content: center; color: var(--color-accent); font-size: 0.9rem; flex-shrink: 0;">
                   <i class="fas ${fieldIcon}"></i>
                 </div>
                 <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-grow: 1;">
@@ -231,7 +231,7 @@ function initAdminModal() {
 
           if (messageContent) {
             modalHtml += `
-              <div style="background: rgba(34, 201, 138, 0.02); border: 1px solid rgba(34, 201, 138, 0.12); border-left: 4px solid var(--color-accent); border-radius: 6px; padding: 1.25rem 1.5rem; margin-top: 1rem;">
+              <div style="background: rgba(20, 160, 119, 0.02); border: 1px solid rgba(20, 160, 119, 0.12); border-left: 4px solid var(--color-accent); border-radius: 6px; padding: 1.25rem 1.5rem; margin-top: 1rem;">
                 <span style="display: block; font-size: 0.75rem; color: var(--color-accent); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
                   <i class="fas fa-comment-dots"></i> Message Content
                 </span>
@@ -684,8 +684,8 @@ function initHeroSimulator() {
 
       // Trigger a brief card pulse animation on change
       if (holoCard) {
-        holoCard.style.borderColor = 'rgba(34, 201, 138, 0.8)';
-        holoCard.style.boxShadow = '0 20px 45px rgba(0,0,0,0.6), 0 0 25px rgba(34, 201, 138, 0.4)';
+        holoCard.style.borderColor = 'rgba(20, 160, 119, 0.8)';
+        holoCard.style.boxShadow = '0 20px 45px rgba(0,0,0,0.6), 0 0 25px rgba(20, 160, 119, 0.4)';
         setTimeout(() => {
           holoCard.style.borderColor = '';
           holoCard.style.boxShadow = '';

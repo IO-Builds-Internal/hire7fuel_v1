@@ -12,7 +12,7 @@
 
 .admin-nav {
   background-color: var(--color-near-black);
-  border-bottom: 1px solid rgba(34, 201, 138, 0.15);
+  border-bottom: 1px solid rgba(20, 160, 119, 0.15);
   padding: 1rem 2rem;
 }
 
@@ -41,7 +41,7 @@
 
 .admin-nav-link:hover, .admin-nav-link.active {
   color: var(--color-accent);
-  background-color: rgba(34, 201, 138, 0.08);
+  background-color: rgba(20, 160, 119, 0.08);
 }
 
 .admin-logout {
@@ -101,7 +101,7 @@
   width: 56px;
   height: 56px;
   border-radius: var(--radius-md);
-  background-color: rgba(34, 201, 138, 0.1);
+  background-color: rgba(20, 160, 119, 0.1);
   color: var(--color-accent);
   display: flex;
   align-items: center;
@@ -171,7 +171,7 @@
 }
 
 .badge-contact { background-color: rgba(58, 191, 160, 0.15); color: var(--color-seafoam); }
-.badge-fuelcard { background-color: rgba(34, 201, 138, 0.15); color: var(--color-accent); }
+.badge-fuelcard { background-color: rgba(20, 160, 119, 0.15); color: var(--color-accent); }
 .badge-career { background-color: rgba(245, 166, 35, 0.15); color: var(--color-highlight); }
 
 .admin-action-btn {
@@ -209,7 +209,7 @@
 
 .modal-card {
   background-color: #0f2424;
-  border: 1px solid rgba(34, 201, 138, 0.2);
+  border: 1px solid rgba(20, 160, 119, 0.2);
   border-radius: var(--radius-md);
   padding: 3rem;
   width: 90%;
@@ -267,7 +267,7 @@
 .admin-input:focus {
   background-color: rgba(255,255,255,0.05);
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 4px rgba(34, 201, 138, 0.2);
+  box-shadow: 0 0 0 4px rgba(20, 160, 119, 0.2);
 }
 
 .admin-form-group label {
@@ -379,16 +379,16 @@ input:checked + .toggle-slider:before {
   width: auto;
   object-fit: contain;
   border-radius: var(--radius-sm);
-  border: 1.5px solid rgba(34, 201, 138, 0.45); /* Premium stroke */
+  border: 1.5px solid rgba(20, 160, 119, 0.45); /* Premium stroke */
   padding: 2px 5px;
   background: rgba(13, 79, 79, 0.4);
-  box-shadow: 0 0 10px rgba(34, 201, 138, 0.15);
+  box-shadow: 0 0 10px rgba(20, 160, 119, 0.15);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .logo-link:hover .admin-nav-logo {
   border-color: var(--color-accent);
-  box-shadow: 0 0 15px rgba(34, 201, 138, 0.35);
+  box-shadow: 0 0 15px rgba(20, 160, 119, 0.35);
   transform: scale(1.04);
 }
 
