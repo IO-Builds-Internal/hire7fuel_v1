@@ -1850,8 +1850,8 @@
 }
 
 .carrier-profile-card {
-  background: linear-gradient(135deg, rgba(16, 37, 37, 0.5) 0%, rgba(6, 17, 17, 0.7) 100%);
-  border: 1px solid rgba(20, 160, 119, 0.15);
+  background: #ffffff;
+  border: 1px solid rgba(20, 160, 119, 0.1);
   border-radius: var(--radius-md);
   padding: 2.5rem 2rem;
   position: relative;
@@ -1859,12 +1859,13 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .carrier-profile-card:hover {
-  border-color: rgba(20, 160, 119, 0.4);
+  border-color: rgba(20, 160, 119, 0.3);
   transform: translateY(-4px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 20px rgba(20, 160, 119, 0.08);
+  box-shadow: var(--shadow-md);
 }
 
 .carrier-badge-wrap {
@@ -1884,7 +1885,7 @@
   align-items: center;
   justify-content: center;
   font-size: 1.35rem;
-  box-shadow: 0 0 12px rgba(20, 160, 119, 0.1);
+  box-shadow: 0 0 12px rgba(20, 160, 119, 0.05);
 }
 
 .carrier-size-tag {
@@ -1907,7 +1908,7 @@
 }
 
 .carrier-profile-card p {
-  color: #a3c2c2;
+  color: var(--color-muted);
   font-size: 0.92rem;
   line-height: 1.5;
   margin: 0;
@@ -1927,7 +1928,7 @@
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  color: var(--color-white);
+  color: var(--color-text-off);
   font-size: 0.9rem;
   font-weight: 600;
 }
