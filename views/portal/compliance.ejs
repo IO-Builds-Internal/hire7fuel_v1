@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <!-- Include Portal Navigation Sidebar -->
+    <%- include('../partials/portal_nav') %>
+
+    <!-- Main Dashboard Overview Content -->
+    <div class="portal-dashboard">
+      
+      <% if (success) { %>
+        <div style="background-color: #E6FDF4; border: 1px solid rgba(34,201,138,0.2); color: #03543F; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-weight: 600;">
+          <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i> System update processed successfully.
+        </div>
+      <% } %>
+
+      <!-- Quick Action Cards Grid -->
+      <div class="portal-dashboard-grid">
+        <!-- CVOR Card -->
+        <div class="portal-stat-card">
+          <div class="portal-stat-icon"><i class="fas fa-id-card"></i></div>
+          <div class="portal-stat-info">
+            <h3>CVOR Rating Status</h3>
+            <div class="stat-value">
+              <% if (profile && profile.cvor) { %>
+                <%- include('../partials/expiry_badge', { expiry: profile.cvor_expiry }) %>
+              <% } else { %>
+                <span class="expiry-badge badge-red">Missing CVOR</span>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+        <!-- IFTA Current Quarter Card -->
+        <div class="portal-stat-card">
+          <div class="portal-stat-icon" style="color: #3B82F6; background-color: rgba(59, 130, 246, 0.1);"><i class="fas fa-gas-pump"></i></div>
+          <div class="portal-stat-info">
+            <h3>IFTA (<%= ifta.quarter || 'Current' %>)</h3>
+            <div class="stat-value">
+              <span class="filing-badge filing-<%= (ifta.status || 'PENDING').toLowerCase() %>">
+                <%= ifta.status || 'PENDING' %>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KYU Quarter Card -->
+        <div class="portal-stat-card">
+          <div class="portal-stat-icon" style="color: #F59E0B; background-color: rgba(245, 158, 11, 0.1);"><i class="fas fa-road"></i></div>
+          <div class="portal-stat-info">
+            <h3>KYU (<%= kyu.quarter || 'Current' %>)</h3>
+            <div class="stat-value">
+              <span class="filing-badge filing-<%= (kyu.status || 'PENDING').toLowerCase() %>">
+                <%= kyu.status || 'PENDING' %>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- NY-HUT Status Card -->
+        <div class="portal-stat-card">
+          <div class="portal-stat-icon" style="color: #EF4444; background-color: rgba(239, 68, 68, 0.1);"><i class="fas fa-truck-moving"></i></div>
+          <div class="portal-stat-info">
+            <h3>NY-HUT Status</h3>
+            <div class="stat-value">
+              <span class="filing-badge filing-<%= (nyhut.status || 'PENDING').toLowerCase() %>">
+                <%= nyhut.status || 'PENDING' %>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expiring Actions Alert Panel -->
+      <div class="portal-card" style="border-left: 5px solid var(--color-highlight);">
+        <h2>⚠️ Safety Action Center: Impending Expiries (30 Days)</h2>
+        <p style="color: var(--color-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
+          The safety items and documents listed below require immediate attention before they expire and trigger non-compliance flags.
+        </p>
+
+        <% if (expiries && expiries.length > 0) { %>
+          <div class="portal-table-wrap">
+            <table class="portal-table">
+              <thead>
+                <tr>
+                  <th>Compliance Entity</th>
+                  <th>Regulatory Field</th>
+                  <th>Expiration Date</th>
+                  <th>Status & Alert</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% expiries.forEach(function(e) { %>
+                  <tr>
+                    <td style="font-weight: 600; color: var(--color-white);"><%= e.entity %></td>
+                    <td><%= e.field %></td>
+                    <td><%= e.date %></td>
+                    <td>
+                      <%- include('../partials/expiry_badge', { expiry: e.date }) %>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div style="text-align: center; padding: 2rem; background: var(--color-bg-darker); border-radius: var(--radius-sm); color: var(--color-muted);">
+            <i class="fas fa-shield-alt" style="font-size: 2rem; color: var(--color-accent); margin-bottom: 0.75rem;"></i>
+            <p style="margin: 0; font-weight: 600; color: var(--color-white);">All systems compliant.</p>
+            <p style="margin: 0; font-size: 0.85rem;">No compliance documents or fleet maintenance PMVIs expire within 30 days.</p>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Quick Links Section -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="portal-card">
+          <h2>Filing Shortcuts</h2>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+            <a href="/portal/compliance/ifta" class="portal-btn portal-btn-secondary" style="justify-content: flex-start;">
+              <i class="fas fa-gas-pump text-accent"></i> Manage IFTA Fuel Tax Filings
+            </a>
+            <a href="/portal/compliance/kyu" class="portal-btn portal-btn-secondary" style="justify-content: flex-start;">
+              <i class="fas fa-road text-accent"></i> Manage KYU Weight Filings
+            </a>
+            <a href="/portal/compliance/nyhut" class="portal-btn portal-btn-secondary" style="justify-content: flex-start;">
+              <i class="fas fa-truck-moving text-accent"></i> Manage NY-HUT Highway Permits
+            </a>
+          </div>
+        </div>
+
+        <div class="portal-card">
+          <h2>Fleet Resources</h2>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+            <a href="/portal/drivers/new" class="portal-btn portal-btn-primary" style="justify-content: flex-start;">
+              <i class="fas fa-user-plus"></i> Onboard New Fleet Driver
+            </a>
+            <a href="/portal/trucks/new" class="portal-btn portal-btn-secondary" style="justify-content: flex-start;">
+              <i class="fas fa-plus-circle text-accent"></i> Register Fleet Truck Unit
+            </a>
+            <a href="/portal/trailers/new" class="portal-btn portal-btn-secondary" style="justify-content: flex-start;">
+              <i class="fas fa-plus-circle text-accent"></i> Register Fleet Trailer Unit
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

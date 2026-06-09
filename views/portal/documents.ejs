@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <% if (success) { %>
+        <div style="background-color: #E6FDF4; border: 1px solid rgba(34,201,138,0.2); color: #03543F; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-weight: 600;">
+          <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i> Document synchronized successfully.
+        </div>
+      <% } %>
+      
+      <% if (error) { %>
+        <div style="background-color: #FEF2F2; border: 1px solid rgba(239,68,68,0.2); color: #9B1C1C; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-weight: 600;">
+          <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i> <%= error %>
+        </div>
+      <% } %>
+
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: flex-start;">
+        
+        <!-- Tabbed Document Lists -->
+        <div class="portal-card">
+          <div class="portal-tabs">
+            <button class="portal-tab-btn active" onclick="switchTab(this, 'companyTab')">Company Docs</button>
+            <button class="portal-tab-btn" onclick="switchTab(this, 'trucksTab')">Trucks Docs</button>
+            <button class="portal-tab-btn" onclick="switchTab(this, 'trailersTab')">Trailers Docs</button>
+            <button class="portal-tab-btn" onclick="switchTab(this, 'driversTab')">Drivers Docs</button>
+          </div>
+
+          <!-- Company Documents Tab -->
+          <div id="companyTab" class="portal-tab-content active">
+            <h3>Company Regulatory Files</h3>
+            <div style="margin-top: 1rem;">
+              <%- includeDocumentTable(grouped.company) %>
+            </div>
+          </div>
+
+          <!-- Trucks Documents Tab -->
+          <div id="trucksTab" class="portal-tab-content">
+            <h3>Truck Unit Files</h3>
+            <div style="margin-top: 1rem;">
+              <%- includeDocumentTable(grouped.truck, 'Truck') %>
+            </div>
+          </div>
+
+          <!-- Trailers Documents Tab -->
+          <div id="trailersTab" class="portal-tab-content">
+            <h3>Trailer Unit Files</h3>
+            <div style="margin-top: 1rem;">
+              <%- includeDocumentTable(grouped.trailer, 'Trailer') %>
+            </div>
+          </div>
+
+          <!-- Drivers Documents Tab -->
+          <div id="driversTab" class="portal-tab-content">
+            <h3>Driver Personnel Files</h3>
+            <div style="margin-top: 1rem;">
+              <%- includeDocumentTable(grouped.driver, 'Driver') %>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Upload Document Panel -->
+        <div class="portal-card">
+          <h2>Upload Compliance Document</h2>
+          <p style="color: var(--color-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">
+            Upload files into compliance categories.
+          </p>
+
+          <form action="/portal/documents/upload" method="POST" enctype="multipart/form-data">
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+              
+              <div class="portal-form-group">
+                <label class="portal-label">Entity Library</label>
+                <select name="entity_type" id="entityTypeSelector" class="portal-select" onchange="adjustUploadSelectors()">
+                  <option value="company">Company</option>
+                  <option value="truck">Truck Unit</option>
+                  <option value="trailer">Trailer Unit</option>
+                  <option value="driver">Driver Profile</option>
+                </select>
+              </div>
+
+              <!-- Truck Selector -->
+              <div class="portal-form-group" id="truckSelectorGroup" style="display: none;">
+                <label class="portal-label">Target Truck Unit</label>
+                <select name="entity_id_truck" id="truckEntityId" class="portal-select">
+                  <% trucks.forEach(function(t) { %>
+                    <option value="<%= t.id %>">Unit #<%= t.unit_number %></option>
+                  <% }) %>
+                </select>
+              </div>
+
+              <!-- Trailer Selector -->
+              <div class="portal-form-group" id="trailerSelectorGroup" style="display: none;">
+                <label class="portal-label">Target Trailer Unit</label>
+                <select name="entity_id_trailer" id="trailerEntityId" class="portal-select">
+                  <% trailers.forEach(function(tr) { %>
+                    <option value="<%= tr.id %>">Unit #<%= tr.unit_number %></option>
+                  <% }) %>
+                </select>
+              </div>
+
+              <!-- Driver Selector -->
+              <div class="portal-form-group" id="driverSelectorGroup" style="display: none;">
+                <label class="portal-label">Target Driver</label>
+                <select name="entity_id_driver" id="driverEntityId" class="portal-select">
+                  <% drivers.forEach(function(d) { %>
+                    <option value="<%= d.id %>"><%= d.last_name %>, <%= d.first_name %></option>
+                  <% }) %>
+                </select>
+              </div>
+
+              <div class="portal-form-group">
+                <label class="portal-label">Document Category</label>
+                <select name="doc_category" id="docCategorySelect" class="portal-select" onchange="toggleCustomLabelField()">
+                  <!-- Dynamically populated via JS based on selected entity type -->
+                </select>
+              </div>
+
+              <div class="portal-form-group" id="customLabelGroup" style="display: none;">
+                <label class="portal-label">Custom Document Label</label>
+                <input type="text" name="doc_label" class="portal-input" placeholder="e.g. Q3 Toll Invoices">
+              </div>
+
+              <div class="portal-form-group">
+                <label class="portal-label">Select File</label>
+                <input type="file" name="doc_file" class="portal-input" required>
+              </div>
+
+              <button type="submit" class="portal-btn portal-btn-primary" style="margin-top: 0.5rem;">
+                <i class="fas fa-cloud-upload-alt"></i> Upload Document
+              </button>
+
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <%
+    // Helper function inside EJS to render files table
+    function includeDocumentTable(docs, entityLabel = '') {
+  %>
+    <div class="portal-table-wrap">
+      <table class="portal-table">
+        <thead>
+          <tr>
+            <th>Document Category</th>
+            <% if (entityLabel) { %>
+              <th><%= entityLabel %> Target</th>
+            <% } %>
+            <th>Date Uploaded</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (docs && docs.length > 0) { %>
+            <% docs.forEach(function(d) { %>
+              <tr>
+                <td>
+                  <strong style="color: var(--color-white);"><%= d.doc_category %></strong>
+                  <% if (d.doc_category === 'Other' && d.doc_label) { %>
+                    <br><small style="color: var(--color-muted);"><%= d.doc_label %></small>
+                  <% } %>
+                </td>
+                <% if (entityLabel) { %>
+                  <td>
+                    <% if (d.entity_type === 'truck') { 
+                        const t = trucks.find(tr => tr.id === d.entity_id);
+                    %>
+                      Unit #<%= t ? t.unit_number : d.entity_id %>
+                    <% } else if (d.entity_type === 'trailer') {
+                        const tr = trailers.find(t => t.id === d.entity_id);
+                    %>
+                      Unit #<%= tr ? tr.unit_number : d.entity_id %>
+                    <% } else if (d.entity_type === 'driver') {
+                        const dr = drivers.find(drv => drv.id === d.entity_id);
+                    %>
+                      <%= dr ? dr.last_name + ', ' + dr.first_name : d.entity_id %>
+                    <% } %>
+                  </td>
+                <% } %>
+                <td style="font-size: 0.85rem;"><%= new Date(d.uploaded_at).toLocaleDateString() %></td>
+                <td style="text-align: right; white-space: nowrap;">
+                  <div style="display: inline-flex; gap: 0.5rem; justify-content: flex-end;">
+                    <a href="/portal/documents/download/<%= d.id %>" class="portal-btn portal-btn-secondary" style="padding: 0.35rem 0.7rem; font-size: 0.8rem;">
+                      <i class="fas fa-download"></i> Download
+                    </a>
+                    <form action="/portal/documents/delete/<%= d.id %>" method="POST" onsubmit="return confirm('Delete this file permanently?');" style="margin: 0;">
+                      <button type="submit" class="portal-btn portal-btn-danger" style="padding: 0.35rem 0.7rem; font-size: 0.8rem; background-color: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.15); color: #fca5a5;">
+                        <i class="fas fa-trash"></i> Delete
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="<%= entityLabel ? 4 : 3 %>" style="text-align: center; color: var(--color-muted); padding: 2rem 1rem;">
+                No files uploaded to this library segment.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  <%
+    }
+  %>
+
+  <script>
+    function switchTab(btn, tabId) {
+      document.querySelectorAll('.portal-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.portal-tab-content').forEach(c => c.classList.remove('active'));
+      
+      btn.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    const docCategories = {
+      company: [
+        'Article of Incorporation', 'HST Number', 'MC Certificate', 'CVOR Certificate',
+        'SCAC Code', 'Carrier Code', 'MCS-90', 'IFTA Certificate', 'Schedule 1',
+        'HAZMAT Registration Certificate', 'Quebec Certificate', 'Certificate of Insurance',
+        'Oregon Permit', 'Other'
+      ],
+      truck: [
+        'Ownership', 'Cab Card', 'KYU Certificate', 'NY-HUT Sticker', 'DTOPS Certificate',
+        'Emission Certificate', 'Annual Safety', 'Maintenance Bills', 'Insurance Pink Slip',
+        'Lease Docs', 'Bill of Sale', 'Power of Attorney', 'Other'
+      ],
+      trailer: [
+        'Ownership', 'Annual Safety', 'Maintenance Bills', 'Insurance Pink Slip',
+        'Lease Docs', 'Bill of Sale', 'Power of Attorney', 'Other'
+      ],
+      driver: [
+        'Driver License Copy', 'Medical Certificate', 'FAST Card Copy', 'Passport Copy',
+        'CDRP Copy', 'Visa Copy', 'SIN Card', 'WCB Certificate', 'Other'
+      ]
+    };
+
+    function adjustUploadSelectors() {
+      const type = document.getElementById('entityTypeSelector').value;
+      
+      document.getElementById('truckSelectorGroup').style.display = type === 'truck' ? 'block' : 'none';
+      document.getElementById('trailerSelectorGroup').style.display = type === 'trailer' ? 'block' : 'none';
+      document.getElementById('driverSelectorGroup').style.display = type === 'driver' ? 'block' : 'none';
+
+      // Set target ID input on form submit or modify form name fields
+      const truckId = document.getElementById('truckEntityId');
+      const trailerId = document.getElementById('trailerEntityId');
+      const driverId = document.getElementById('driverEntityId');
+      
+      // We will handle injecting the correct entity_id into the post fields
+      // by setting a hidden entity_id or altering names. Let's make a submit handler!
+      
+      // Update Category Dropdown
+      const categorySelect = document.getElementById('docCategorySelect');
+      categorySelect.innerHTML = '';
+      docCategories[type].forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.innerText = cat;
+        categorySelect.appendChild(opt);
+      });
+
+      toggleCustomLabelField();
+    }
+
+    function toggleCustomLabelField() {
+      const cat = document.getElementById('docCategorySelect').value;
+      document.getElementById('customLabelGroup').style.display = cat === 'Other' ? 'block' : 'none';
+    }
+
+    // Submit intercepts to populate generic entity_id
+    document.querySelector('form').addEventListener('submit', function(e) {
+      const type = document.getElementById('entityTypeSelector').value;
+      let targetId = 0;
+      if (type === 'truck') targetId = document.getElementById('truckEntityId').value;
+      if (type === 'trailer') targetId = document.getElementById('trailerEntityId').value;
+      if (type === 'driver') targetId = document.getElementById('driverEntityId').value;
+      
+      // Inject target ID into a hidden input
+      let hiddenId = document.getElementById('hiddenEntityId');
+      if (!hiddenId) {
+        hiddenId = document.createElement('input');
+        hiddenId.type = 'hidden';
+        hiddenId.name = 'entity_id';
+        hiddenId.id = 'hiddenEntityId';
+        this.appendChild(hiddenId);
+      }
+      hiddenId.value = targetId;
+    });
+
+    window.onload = function() {
+      adjustUploadSelectors();
+    };
+  </script>
+
+</body>
+</html>

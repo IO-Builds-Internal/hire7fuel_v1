@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 2rem;">
+        <a href="/portal/trailers" class="portal-btn portal-btn-secondary" style="padding: 0.5rem 1rem;">
+          <i class="fas fa-arrow-left"></i> Back to Fleet
+        </a>
+        <a href="/portal/trailers/<%= trailer.id %>/edit" class="portal-btn portal-btn-primary" style="padding: 0.5rem 1rem;">
+          <i class="fas fa-edit"></i> Edit Trailer Info
+        </a>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: flex-start;">
+        <!-- Left Column: Specs & Schedules -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          
+          <!-- Specifications Card -->
+          <div class="portal-card">
+            <h2>Trailer Specifications</h2>
+            <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+              <table class="portal-table" style="border: none;">
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 140px;">Unit #</td>
+                    <td style="padding: 0.5rem 0; border: none; font-weight: 700; color: var(--color-white);">#<%= trailer.unit_number %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">VIN</td>
+                    <td style="padding: 0.5rem 0; border: none; font-family: monospace;"><%= trailer.vin %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Make</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.make %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Model</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.model %></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table class="portal-table" style="border: none;">
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 160px;">Year</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.year %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Registration State</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.registration_state %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">GPS Tracker Device</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.gps_tracker || '—' %></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Schedule & Safety Card -->
+          <div class="portal-card">
+            <h2>Inspection Schedules & Maintenance Milestones</h2>
+            <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+              <div>
+                <h3 style="font-size: 0.9rem; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem;">PMVI Servicing</h3>
+                <table class="portal-table" style="border: none;">
+                  <tbody>
+                    <tr>
+                      <td style="font-weight: 600; padding: 0.4rem 0; border: none;">Frequency:</td>
+                      <td style="padding: 0.4rem 0; border: none; text-transform: capitalize;"><%= trailer.pmvi_frequency %></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600; padding: 0.4rem 0; border: none;">Last Inspection:</td>
+                      <td style="padding: 0.4rem 0; border: none;"><%= trailer.pmvi_last_date %></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600; padding: 0.4rem 0; border: none;">Next Due Date:</td>
+                      <td style="padding: 0.4rem 0; border: none;">
+                        <%- include('../../partials/expiry_badge', { expiry: trailer.pmvi_next_date }) %>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div>
+                <h3 style="font-size: 0.9rem; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem;">Safety Inspections</h3>
+                <table class="portal-table" style="border: none;">
+                  <tbody>
+                    <tr>
+                      <td style="font-weight: 600; padding: 0.4rem 0; border: none; width: 140px;">Annual Safety Expiry:</td>
+                      <td style="padding: 0.4rem 0; border: none;">
+                        <%- include('../../partials/expiry_badge', { expiry: trailer.annual_safety_expiry }) %>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Plates History -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          <div class="portal-card">
+            <h2>Plate Registration History</h2>
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+              <% if (platesHistory && platesHistory.length > 0) { %>
+                <% platesHistory.forEach(function(p) { %>
+                  <div style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-family: monospace; font-weight: 700; color: var(--color-white); font-size: 1rem;"><%= p.plate_number %></div>
+                      <div style="font-size: 0.75rem; color: var(--color-muted); margin-top: 0.25rem;">Logged: <%= new Date(p.created_at).toLocaleDateString() %></div>
+                    </div>
+                    <div>
+                      <span class="expiry-badge <%= p.status === 'active' ? 'badge-green' : 'badge-amber' %>" style="font-size: 0.7rem; text-transform: uppercase;">
+                        <%= p.status %>
+                      </span>
+                    </div>
+                  </div>
+                <% }) %>
+              <% } else { %>
+                <p style="color: var(--color-muted); font-size: 0.85rem; text-align: center;">No plate history found.</p>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

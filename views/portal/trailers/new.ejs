@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <% if (error) { %>
+        <div style="background-color: #FEF2F2; border: 1px solid rgba(239,68,68,0.2); color: #9B1C1C; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-weight: 600;">
+          <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i> <%= error %>
+        </div>
+      <% } %>
+
+      <div class="portal-card">
+        <h2>Register New Fleet Trailer</h2>
+        <p style="color: var(--color-muted); margin-bottom: 2rem; font-size: 0.9rem;">
+          Add a trailer unit, register its active plates, and schedule its PMVI servicing frequency.
+        </p>
+
+        <form action="/portal/trailers/new" method="POST">
+          
+          <!-- Section 1: Basic Specifications -->
+          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-bottom: 1.25rem;">Basic Information</h3>
+          <div class="portal-form-grid">
+            <div class="portal-form-group">
+              <label class="portal-label">Unit Number</label>
+              <input type="text" name="unit_number" class="portal-input" required placeholder="e.g. T401">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">VIN (Vehicle Identification Number)</label>
+              <input type="text" name="vin" class="portal-input" required placeholder="17-character VIN">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Make</label>
+              <input type="text" name="make" class="portal-input" required placeholder="e.g. Great Dane, Utility">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Model</label>
+              <input type="text" name="model" class="portal-input" required placeholder="e.g. Dry Van, Reefer">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Year</label>
+              <input type="number" name="year" class="portal-input" required placeholder="e.g. 2024">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Registration State / Province</label>
+              <input type="text" name="registration_state" class="portal-input" required placeholder="e.g. ON, MI">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">GPS Tracker Device ID</label>
+              <input type="text" name="gps_tracker" class="portal-input" placeholder="e.g. Samsara-4820">
+            </div>
+          </div>
+
+          <!-- Section 2: License Plate -->
+          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">License Plate</h3>
+          <div class="portal-form-grid">
+            <div class="portal-form-group">
+              <label class="portal-label">Plate Number</label>
+              <input type="text" name="plate_number" class="portal-input" placeholder="e.g. T-9812-A">
+            </div>
+          </div>
+
+          <!-- Section 3: Maintenance Schedule -->
+          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Compliance Inspections & Preventive Maintenance</h3>
+          <div class="portal-form-grid">
+            <div class="portal-form-group">
+              <label class="portal-label">PMVI: Last Inspection Date</label>
+              <input type="date" name="pmvi_last_date" class="portal-input" required>
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">PMVI Inspection Frequency</label>
+              <select name="pmvi_frequency" class="portal-select">
+                <option value="monthly">Monthly (1 Month Interval)</option>
+                <option value="quarterly">Quarterly (3 Months Interval)</option>
+                <option value="annually" selected>Annually (12 Months Interval)</option>
+              </select>
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Annual Safety Inspection Expiry Date</label>
+              <input type="date" name="annual_safety_expiry" class="portal-input" required>
+            </div>
+          </div>
+
+          <!-- Submit Panel -->
+          <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem; margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+            <a href="/portal/trailers" class="portal-btn portal-btn-secondary">Cancel</a>
+            <button type="submit" class="portal-btn portal-btn-primary"><i class="fas fa-save"></i> Complete Registration</button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

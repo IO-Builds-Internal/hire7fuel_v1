@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <% if (error) { %>
+        <div style="background-color: #FEF2F2; border: 1px solid rgba(239,68,68,0.2); color: #9B1C1C; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-weight: 600;">
+          <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i> <%= error %>
+        </div>
+      <% } %>
+
+      <div class="portal-card">
+        <h2>Register New Fleet Truck</h2>
+        <p style="color: var(--color-muted); margin-bottom: 2rem; font-size: 0.9rem;">
+          Add a truck unit, register its active plates, schedule its PMVI servicing frequency, and allocate tolls transponders.
+        </p>
+
+        <form action="/portal/trucks/new" method="POST">
+          
+          <!-- Section 1: Basic Specifications -->
+          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-bottom: 1.25rem;">Basic Information</h3>
+          <div class="portal-form-grid">
+            <div class="portal-form-group">
+              <label class="portal-label">Unit Number</label>
+              <input type="text" name="unit_number" class="portal-input" required placeholder="e.g. 701">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">VIN (Vehicle Identification Number)</label>
+              <input type="text" name="vin" class="portal-input" required placeholder="17-character VIN">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Make</label>
+              <input type="text" name="make" class="portal-input" required placeholder="e.g. Freightliner, Kenworth">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Model</label>
+              <input type="text" name="model" class="portal-input" required placeholder="e.g. Cascadia, W900">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Year</label>
+              <input type="number" name="year" class="portal-input" required placeholder="e.g. 2024">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">GPS Tracker Device ID</label>
+              <input type="text" name="gps_tracker" class="portal-input" placeholder="e.g. Samsara-9820">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Fuel Card Number</label>
+              <input type="text" name="fuel_card_number" class="portal-input" placeholder="e.g. Comdata / FleetOne #">
+            </div>
+          </div>
+
+          <!-- Section 2: Active License Plate -->
+          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Active License Plate</h3>
+          <div class="portal-form-grid">
+            <div class="portal-form-group">
+              <label class="portal-label">Plate Number</label>
+              <input type="text" name="plate_number" class="portal-input" placeholder="e.g. 982-7XP">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Plate Group</label>
+              <input type="text" name="plate_group" class="portal-input" placeholder="e.g. Apportioned ON">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Weight Group</label>
+              <input type="text" name="weight_group" class="portal-input" placeholder="e.g. 80,000 lbs">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Plate Expiration Date</label>
+              <input type="date" name="plate_expiry" class="portal-input">
+            </div>
+          </div>
+
+          <!-- Section 3: Tolls Configurations -->
+          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Toll Accounts & Transponders</h3>
+          <div class="portal-form-grid">
+            <div class="portal-form-group">
+              <label class="portal-label">EZ-PASS Account / Card #</label>
+              <input type="text" name="tolls_ezpass" class="portal-input">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">HWY 407 Transponder #</label>
+              <input type="text" name="tolls_hwy407" class="portal-input">
+            </div>
+          </div>
+          
+          <!-- Custom Toll networks -->
+          <div style="margin-top: 1rem; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1rem;">
+            <label class="portal-label">Other Toll Network Accounts</label>
+            <div class="dynamic-rows-container" id="tollsContainer">
+              <div class="dynamic-row">
+                <div class="dynamic-row-inputs" style="grid-template-columns: 1fr 1fr;">
+                  <input type="text" name="tolls_other_name" class="portal-input" placeholder="Toll Network Name">
+                  <input type="text" name="tolls_other_number" class="portal-input" placeholder="Transponder Number">
+                </div>
+                <button type="button" class="portal-btn portal-btn-danger" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
+              </div>
+              <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="tollsContainer"><i class="fas fa-plus"></i> Add Toll Network</button>
+            </div>
+          </div>
+
+          <!-- Section 4: Maintenance Frequency -->
+          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Compliance Inspections & Preventive Maintenance</h3>
+          <div class="portal-form-grid">
+            <div class="portal-form-group">
+              <label class="portal-label">PMVI: Last Inspection Date</label>
+              <input type="date" name="pmvi_last_date" class="portal-input" required>
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">PMVI Inspection Frequency</label>
+              <select name="pmvi_frequency" class="portal-select">
+                <option value="monthly">Monthly (1 Month Interval)</option>
+                <option value="quarterly">Quarterly (3 Months Interval)</option>
+                <option value="annually" selected>Annually (12 Months Interval)</option>
+              </select>
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Annual Safety Inspection Expiry Date</label>
+              <input type="date" name="annual_safety_expiry" class="portal-input" required>
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Oil Change: Last Serviced Date</label>
+              <input type="date" name="oil_change_last" class="portal-input" required>
+            </div>
+          </div>
+
+          <!-- Section 5: Border Crossing Transponders -->
+          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Border Bridges Transponders</h3>
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            
+            <!-- D-TOPS Transponder -->
+            <div>
+              <label class="portal-label">D-TOPS Transponders</label>
+              <div class="dynamic-rows-container" id="dtopsContainer">
+                <div class="dynamic-row">
+                  <div class="dynamic-row-inputs" style="grid-template-columns: 1fr 1fr;">
+                    <input type="text" name="dtops_transponder_num" class="portal-input" placeholder="D-TOPS Decal Number">
+                    <select name="dtops_transponder_status" class="portal-select">
+                      <option value="active">Active</option>
+                      <option value="lost">Lost</option>
+                      <option value="deactivated">Deactivated</option>
+                    </select>
+                  </div>
+                  <button type="button" class="portal-btn portal-btn-danger" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
+                </div>
+                <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="dtopsContainer"><i class="fas fa-plus"></i> Add D-TOPS Decal</button>
+              </div>
+            </div>
+
+            <!-- Ambassador Bridge Tag -->
+            <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1rem;">
+                <div class="portal-form-group">
+                  <label class="portal-label">Ambassador Bridge Transponders Expiry</label>
+                  <input type="date" name="ambassador_expiry" class="portal-input">
+                </div>
+              </div>
+              <label class="portal-label">Ambassador Bridge Tags</label>
+              <div class="dynamic-rows-container" id="ambassadorContainer">
+                <div class="dynamic-row">
+                  <div class="dynamic-row-inputs" style="grid-template-columns: 1fr 1fr;">
+                    <input type="text" name="ambassador_tag_num" class="portal-input" placeholder="Tag Number">
+                    <select name="ambassador_tag_status" class="portal-select">
+                      <option value="active">Active</option>
+                      <option value="lost">Lost</option>
+                    </select>
+                  </div>
+                  <button type="button" class="portal-btn portal-btn-danger" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
+                </div>
+                <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="ambassadorContainer"><i class="fas fa-plus"></i> Add Ambassador Tag</button>
+              </div>
+            </div>
+
+            <!-- Blue Water Bridge Tag -->
+            <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1rem;">
+                <div class="portal-form-group">
+                  <label class="portal-label">Blue Water Bridge Transponders Expiry</label>
+                  <input type="date" name="bluewater_expiry" class="portal-input">
+                </div>
+              </div>
+              <label class="portal-label">Blue Water Bridge Tags</label>
+              <div class="dynamic-rows-container" id="bluewaterContainer">
+                <div class="dynamic-row">
+                  <div class="dynamic-row-inputs" style="grid-template-columns: 1fr 1fr;">
+                    <input type="text" name="bluewater_tag_num" class="portal-input" placeholder="Tag Number">
+                    <select name="bluewater_tag_status" class="portal-select">
+                      <option value="active">Active</option>
+                      <option value="lost">Lost</option>
+                    </select>
+                  </div>
+                  <button type="button" class="portal-btn portal-btn-danger" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
+                </div>
+                <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="bluewaterContainer"><i class="fas fa-plus"></i> Add Blue Water Tag</button>
+              </div>
+            </div>
+
+            <!-- Other Bridge Tags -->
+            <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem;">
+              <label class="portal-label">Other Border Bridges/Tolls Transponders</label>
+              <div class="dynamic-rows-container" id="otherTranspondersContainer">
+                <div class="dynamic-row">
+                  <div class="dynamic-row-inputs" style="grid-template-columns: repeat(3, 1fr);">
+                    <input type="text" name="other_transponder_name" class="portal-input" placeholder="Bridge/Toll Name">
+                    <input type="text" name="other_transponder_num" class="portal-input" placeholder="Tag Number">
+                    <select name="other_transponder_status" class="portal-select">
+                      <option value="active">Active</option>
+                      <option value="lost">Lost</option>
+                    </select>
+                  </div>
+                  <button type="button" class="portal-btn portal-btn-danger" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
+                </div>
+                <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="otherTranspondersContainer"><i class="fas fa-plus"></i> Add Transponder</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Submit Panel -->
+          <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem; margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+            <a href="/portal/trucks" class="portal-btn portal-btn-secondary">Cancel</a>
+            <button type="submit" class="portal-btn portal-btn-primary"><i class="fas fa-truck"></i> Complete Registration</button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Dynamic row addition & deletion
+    document.querySelectorAll('.add-row-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const containerId = btn.getAttribute('data-container');
+        const container = document.getElementById(containerId);
+        
+        const row = container.querySelector('.dynamic-row');
+        if (row) {
+          const clone = row.cloneNode(true);
+          clone.querySelectorAll('input').forEach(input => {
+            input.value = '';
+          });
+          container.insertBefore(clone, btn);
+        }
+      });
+    });
+
+    function removeRow(btn) {
+      const row = btn.closest('.dynamic-row');
+      const container = row.parentElement;
+      const allRows = container.querySelectorAll('.dynamic-row');
+      if (allRows.length > 1) {
+        row.remove();
+      } else {
+        row.querySelectorAll('input').forEach(input => {
+          input.value = '';
+        });
+      }
+    }
+  </script>
+</body>
+</html>

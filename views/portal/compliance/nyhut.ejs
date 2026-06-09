@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <div class="portal-card">
+        <div class="portal-card-header">
+          <h2>NY-HUT Filing Records</h2>
+          <div style="font-weight: 600; color: var(--color-accent);">
+            HUT Account: <%= profile.ny_hut_account || 'N/A' %>
+          </div>
+        </div>
+        
+        <p style="color: var(--color-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+          New York Highway Use Tax (HUT) applies to motor carriers operating certain heavy vehicles on New York public highways. A tag sticker is issued for each registered vehicle.
+        </p>
+
+        <div class="portal-table-wrap">
+          <table class="portal-table">
+            <thead>
+              <tr>
+                <th>Filing Year</th>
+                <th>Period</th>
+                <th>Due Date</th>
+                <th>Tag Sticker #</th>
+                <th>Filing Status</th>
+                <th>Date Filed</th>
+                <th>Internal Notes</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (filings && filings.length > 0) { %>
+                <% filings.forEach(function(f) { %>
+                  <tr>
+                    <td style="font-weight: 600; color: var(--color-white);"><%= f.year %></td>
+                    <td><%= f.period %></td>
+                    <td><%= f.due_date %></td>
+                    <td style="font-family: monospace; font-weight: 600;"><%= f.tag_number || '—' %></td>
+                    <td>
+                      <span class="filing-badge filing-<%= f.status.toLowerCase() %>">
+                        <%= f.status %>
+                      </span>
+                    </td>
+                    <td><%= f.filed_date || '—' %></td>
+                    <td style="font-size: 0.85rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><%= f.notes || '—' %></td>
+                    <td style="text-align: right;">
+                      <button type="button" class="portal-btn portal-btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" 
+                              onclick="openUpdateModal('<%= f.id %>', '<%= f.period %>', '<%= f.year %>', '<%= f.status %>', '<%= f.tag_number || '' %>', '<%= f.filed_date || '' %>', '<%= f.notes || '' %>')">
+                        Update Status
+                      </button>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="8" style="text-align: center; color: var(--color-muted); padding: 3rem;">
+                    No NY-HUT filing records found.
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Update Modal Overlay -->
+  <div class="details-modal" id="updateFilingModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+    <div class="portal-card" style="width: 100%; max-width: 500px; margin: 0 1rem;">
+      <div class="portal-card-header">
+        <h2 id="modalFilingTitle">Update NY-HUT Filing</h2>
+        <button type="button" onclick="closeUpdateModal()" style="background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: var(--color-white);">&times;</button>
+      </div>
+
+      <form action="/portal/compliance/nyhut/update" method="POST">
+        <input type="hidden" name="filing_id" id="modalFilingId">
+        
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <div class="portal-form-group">
+            <label class="portal-label">Filing Status</label>
+            <select name="status" id="modalFilingStatus" class="portal-select">
+              <option value="PENDING">PENDING</option>
+              <option value="FILED">FILED</option>
+              <option value="OVERDUE">OVERDUE</option>
+            </select>
+          </div>
+
+          <div class="portal-form-group">
+            <label class="portal-label">Tag Sticker Number</label>
+            <input type="text" name="tag_number" id="modalFilingTag" class="portal-input" placeholder="e.g. NY-STICKER-1234">
+          </div>
+
+          <div class="portal-form-group">
+            <label class="portal-label">Filing Date</label>
+            <input type="date" name="filed_date" id="modalFilingDate" class="portal-input">
+          </div>
+
+          <div class="portal-form-group">
+            <label class="portal-label">Filing Notes</label>
+            <textarea name="notes" id="modalFilingNotes" class="portal-textarea" rows="3" placeholder="Enter registration confirmation numbers or audit records..."></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem;">
+            <button type="button" class="portal-btn portal-btn-secondary" onclick="closeUpdateModal()">Cancel</button>
+            <button type="submit" class="portal-btn portal-btn-primary">Save Changes</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openUpdateModal(id, period, year, status, tag, date, notes) {
+      document.getElementById('modalFilingId').value = id;
+      document.getElementById('modalFilingTitle').innerText = 'Update NY-HUT — ' + period + ' ' + year;
+      document.getElementById('modalFilingStatus').value = status;
+      document.getElementById('modalFilingTag').value = tag;
+      document.getElementById('modalFilingDate').value = date;
+      document.getElementById('modalFilingNotes').value = notes;
+      
+      const modal = document.getElementById('updateFilingModal');
+      modal.style.display = 'flex';
+    }
+
+    function closeUpdateModal() {
+      document.getElementById('updateFilingModal').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>

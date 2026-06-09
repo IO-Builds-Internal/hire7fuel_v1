@@ -53,13 +53,41 @@ app.use(session({
 }));
 
 /**
+ * Session Gatekeeper Middleware for Carrier Portal
+ */
+function requireAuth(req, res, next) {
+  if (req.session && (req.session.isAdmin || req.session.isAuthenticated)) {
+    return next();
+  }
+  res.redirect('/admin/login');
+}
+
+/**
  * Route Mountings
  */
 const publicRoutes = require('./routes/public');
 const adminRoutes = require('./routes/admin');
+const portalRoutes = require('./routes/portal');
 
 app.use('/', publicRoutes);
 app.use('/admin', adminRoutes);
+app.use('/portal', requireAuth, portalRoutes);
+
+/**
+ * Daily Safety & Compliance Expiry Reminder Cron Task
+ */
+const expiryCron = require('./scripts/expiry_cron');
+// Run 5 seconds after server startup
+setTimeout(() => {
+  console.log('Automated Expiry Checker: Initiating boot-up scan...');
+  expiryCron.run().catch(err => console.error('Boot-up compliance scan failed:', err));
+}, 5000);
+// Schedule scan to execute every 24 hours
+setInterval(() => {
+  console.log('Automated Expiry Checker: Initiating daily compliance scan...');
+  expiryCron.run().catch(err => console.error('Daily compliance scan failed:', err));
+}, 1000 * 60 * 60 * 24);
+
 
 /**
  * 404 Route Fallback

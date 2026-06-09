@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <div style="display: flex; gap: 1.5rem; align-items: flex-start; margin-bottom: 2rem;">
+        <a href="/portal/drivers" class="portal-btn portal-btn-secondary" style="padding: 0.5rem 1rem;">
+          <i class="fas fa-arrow-left"></i> Back to Roster
+        </a>
+        <a href="/portal/drivers/<%= driver.id %>/edit" class="portal-btn portal-btn-primary" style="padding: 0.5rem 1rem;">
+          <i class="fas fa-edit"></i> Edit Driver Profile
+        </a>
+      </div>
+
+      <div class="portal-card">
+        <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.05);">
+          <div style="width: 70px; height: 70px; border-radius: 50%; background: rgba(20, 160, 119, 0.1); color: var(--color-accent); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700;">
+            <%= driver.first_name.charAt(0) %><%= driver.last_name.charAt(0) %>
+          </div>
+          <div>
+            <h2 style="margin: 0; font-size: 1.75rem;"><%= driver.first_name %> <%= driver.middle_name || '' %> <%= driver.last_name %></h2>
+            <p style="margin: 0; color: var(--color-muted); font-size: 0.95rem;">
+              Classification: <strong style="color: var(--color-white);"><%= driver.driver_type %></strong> | Status: <strong style="color: var(--color-accent);"><%= driver.status %></strong>
+            </p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem;">
+          <!-- Left Column: Core Info & Contacts -->
+          <div>
+            <h3 style="font-size: 1.1rem; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-bottom: 1rem;">Core Details & Contacts</h3>
+            
+            <table class="portal-table" style="border: none;">
+              <tbody>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 180px;">Email Address:</td>
+                  <td style="padding: 0.5rem 0; border: none;"><%= driver.email || '—' %></td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Canada Phone:</td>
+                  <td style="padding: 0.5rem 0; border: none;">
+                    <%= driver.can_phone || '—' %>
+                    <%= driver.primary_phone === 'CAN' ? '(Primary)' : '' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">USA Phone:</td>
+                  <td style="padding: 0.5rem 0; border: none;">
+                    <%= driver.usa_phone || '—' %>
+                    <%= driver.primary_phone === 'USA' ? '(Primary)' : '' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Assigned Truck:</td>
+                  <td style="padding: 0.5rem 0; border: none;">
+                    <% if (truck) { %>
+                      <a href="/portal/trucks/<%= truck.id %>" style="color: var(--color-accent); font-weight: 600;">Unit #<%= truck.unit_number %> (<%= truck.make %> <%= truck.model %>)</a>
+                    <% } else { %>
+                      <span style="color: var(--color-muted);">No assigned truck unit</span>
+                    <% } %>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Payment Type:</td>
+                  <td style="padding: 0.5rem 0; border: none;"><%= driver.payment_type %></td>
+                </tr>
+                <% if (driver.payment_type === 'Independent Contractor') { %>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Contractor Entity:</td>
+                    <td style="padding: 0.5rem 0; border: none;">
+                      <%= driver.contractor_company_name || '—' %>
+                      <% 
+                        try {
+                          const info = JSON.parse(driver.contractor_info);
+                          if (info && info.hst_number) {
+                            %><br><small style="color: var(--color-muted);">HST: <%= info.hst_number %></small><%
+                          }
+                        } catch(e) {}
+                      %>
+                    </td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Right Column: Compliance Credentials & Dates -->
+          <div>
+            <h3 style="font-size: 1.1rem; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-bottom: 1rem;">Compliance Milestones</h3>
+            
+            <table class="portal-table" style="border: none;">
+              <tbody>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 180px;">DL Issuing Info:</td>
+                  <td style="padding: 0.5rem 0; border: none; font-family: monospace;"><%= driver.dl_number %> (<%= driver.dl_state %>)</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">DL Expiry:</td>
+                  <td style="padding: 0.5rem 0; border: none;">
+                    <%- include('../../partials/expiry_badge', { expiry: driver.dl_expiry }) %>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Medical Certificate:</td>
+                  <td style="padding: 0.5rem 0; border: none;">
+                    <%- include('../../partials/expiry_badge', { expiry: driver.medical_due_date }) %>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">SIN Number:</td>
+                  <td style="padding: 0.5rem 0; border: none; font-family: monospace;"><%= maskNumber(driver.sin_number) %></td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">WCB / WSIB Account:</td>
+                  <td style="padding: 0.5rem 0; border: none;">
+                    <%= driver.wcb_number || '—' %><br>
+                    <% if (driver.wcb_expiry) { %>
+                      <%- include('../../partials/expiry_badge', { expiry: driver.wcb_expiry }) %>
+                    <% } %>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Citizenship:</td>
+                  <td style="padding: 0.5rem 0; border: none;"><%= driver.citizenship %></td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Passport Details:</td>
+                  <td style="padding: 0.5rem 0; border: none;">
+                    <%= driver.passport_number || '—' %><br>
+                    <% if (driver.passport_expiry) { %>
+                      <%- include('../../partials/expiry_badge', { expiry: driver.passport_expiry }) %>
+                    <% } %>
+                  </td>
+                </tr>
+                <% if (driver.fast_card_number) { %>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">FAST Card:</td>
+                    <td style="padding: 0.5rem 0; border: none;">
+                      <%= driver.fast_card_number %><br>
+                      <%- include('../../partials/expiry_badge', { expiry: driver.fast_card_expiry }) %>
+                    </td>
+                  </tr>
+                <% } %>
+                <% if (driver.cdrp_number) { %>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">CDRP Card:</td>
+                    <td style="padding: 0.5rem 0; border: none;">
+                      <%= driver.cdrp_number %><br>
+                      <%- include('../../partials/expiry_badge', { expiry: driver.cdrp_expiry }) %>
+                    </td>
+                  </tr>
+                <% } %>
+                <% if (driver.visa_number) { %>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">US Visa:</td>
+                    <td style="padding: 0.5rem 0; border: none;">
+                      <%= driver.visa_number %><br>
+                      <%- include('../../partials/expiry_badge', { expiry: driver.visa_expiry }) %>
+                    </td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

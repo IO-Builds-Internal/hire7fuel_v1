@@ -198,6 +198,11 @@ const generateId = () => Math.random().toString(36).substring(2, 9) + '-' + Date
 // Exported DB Interface — SQLite Only
 // ============================================================================
 module.exports = {
+  sqliteDb,
+  dbRun,
+  dbGet,
+  dbAll,
+
 
   /**
    * Fetch all site settings, merged over the base config defaults.

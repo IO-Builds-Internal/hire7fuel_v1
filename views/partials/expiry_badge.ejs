@@ -1,0 +1,26 @@
+<% if (!expiry || expiry.toUpperCase() === 'N/A') { %>
+  <span class="expiry-badge badge-green">N/A</span>
+<% } else {
+  // Normalize date string parsing
+  const expDate = new Date(expiry + 'T00:00:00');
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const diffTime = expDate - today;
+  const daysLeft = Math.ceil(diffTime / 86400000);
+  
+  let badgeClass = 'badge-green';
+  let badgeText = `${expiry} (${daysLeft} days left)`;
+  
+  if (daysLeft < 0) {
+    badgeClass = 'badge-red';
+    badgeText = `${expiry} (Expired ${Math.abs(daysLeft)}d ago)`;
+  } else if (daysLeft <= 7) {
+    badgeClass = 'badge-red';
+  } else if (daysLeft <= 30) {
+    badgeClass = 'badge-amber';
+  }
+%>
+<span class="expiry-badge <%= badgeClass %>" title="<%= badgeText %>">
+  <%= badgeText %>
+</span>
+<% } %>

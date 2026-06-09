@@ -567,4 +567,317 @@ router.post('/testimonials/edit/:id', requireAdmin, async (req, res) => {
   }
 });
 
+/**
+ * GET /admin/compliance - Global compliance oversight page
+ */
+router.get('/compliance', async (req, res) => {
+  try {
+    const config = await db.getSettings();
+    const carriers = await db.dbAll("SELECT * FROM carriers WHERE status = 'active'");
+    
+    const expiries = [];
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const sixtyDaysLater = new Date();
+    sixtyDaysLater.setDate(sixtyDaysLater.getDate() + 60);
+
+    for (const c of carriers) {
+      // Profile expiries
+      const profile = await db.dbGet("SELECT * FROM carrier_profiles WHERE carrier_id = ?", [c.id]);
+      if (profile) {
+        const pExps = [
+          { label: 'CVOR Expiry', date: profile.cvor_expiry },
+          { label: 'Carrier Code Expiry', date: profile.carrier_code_expiry },
+          { label: 'SCAC Expiry', date: profile.scac_expiry },
+          { label: 'Canadian Bond Expiry', date: profile.cdn_bond_expiry },
+          { label: 'US Bond Expiry', date: profile.usd_bond_expiry },
+          { label: 'IFTA Expiry', date: profile.ifta_expiry }
+        ];
+        pExps.forEach(e => {
+          if (e.date && e.date.toUpperCase() !== 'N/A') {
+            const expDate = new Date(e.date + 'T00:00:00');
+            const diff = expDate - today;
+            const days = Math.ceil(diff / 86400000);
+            if (days <= 60) {
+              expiries.push({ carrier: c.company_name, entity: 'Company Profile', field: e.label, date: e.date, daysLeft: days });
+            }
+          }
+        });
+      }
+
+      // Drivers expiries
+      const drivers = await db.dbAll("SELECT * FROM drivers WHERE carrier_id = ? AND status = 'active'", [c.id]);
+      drivers.forEach(d => {
+        const dExps = [
+          { label: 'DL Expiry', date: d.dl_expiry },
+          { label: 'WCB Expiry', date: d.wcb_expiry },
+          { label: 'Passport Expiry', date: d.passport_expiry },
+          { label: 'FAST Card Expiry', date: d.fast_card_expiry },
+          { label: 'CDRP Card Expiry', date: d.cdrp_expiry },
+          { label: 'Visa Expiry', date: d.visa_expiry },
+          { label: 'Medical Review', date: d.medical_due_date }
+        ];
+        dExps.forEach(e => {
+          if (e.date && e.date.toUpperCase() !== 'N/A') {
+            const expDate = new Date(e.date + 'T00:00:00');
+            const diff = expDate - today;
+            const days = Math.ceil(diff / 86400000);
+            if (days <= 60) {
+              expiries.push({ carrier: c.company_name, entity: `Driver: ${d.first_name} ${d.last_name}`, field: e.label, date: e.date, daysLeft: days });
+            }
+          }
+        });
+      });
+
+      // Trucks expiries
+      const trucks = await db.dbAll("SELECT * FROM trucks WHERE carrier_id = ? AND status = 'active'", [c.id]);
+      for (const t of trucks) {
+        const tExps = [
+          { label: 'Annual Safety Expiry', date: t.annual_safety_expiry },
+          { label: 'PMVI Due', date: t.pmvi_next_date },
+          { label: 'Oil Change Due', date: t.oil_change_next }
+        ];
+        tExps.forEach(e => {
+          if (e.date && e.date.toUpperCase() !== 'N/A') {
+            const expDate = new Date(e.date + 'T00:00:00');
+            const diff = expDate - today;
+            const days = Math.ceil(diff / 86400000);
+            if (days <= 60) {
+              expiries.push({ carrier: c.company_name, entity: `Truck Unit: #${t.unit_number}`, field: e.label, date: e.date, daysLeft: days });
+            }
+          }
+        });
+        
+        // Active truck plate
+        const plate = await db.dbGet("SELECT * FROM truck_plates WHERE truck_id = ? AND status = 'active'", [t.id]);
+        if (plate && plate.expiry && plate.expiry.toUpperCase() !== 'N/A') {
+          const expDate = new Date(plate.expiry + 'T00:00:00');
+          const diff = expDate - today;
+          const days = Math.ceil(diff / 86400000);
+          if (days <= 60) {
+            expiries.push({ carrier: c.company_name, entity: `Truck Plate: ${plate.plate_number} (#${t.unit_number})`, field: 'Plate Expiry', date: plate.expiry, daysLeft: days });
+          }
+        }
+      }
+
+      // Trailers expiries
+      const trailers = await db.dbAll("SELECT * FROM trailers WHERE carrier_id = ? AND status = 'active'", [c.id]);
+      trailers.forEach(tr => {
+        const trExps = [
+          { label: 'Annual Safety Expiry', date: tr.annual_safety_expiry },
+          { label: 'PMVI Due', date: tr.pmvi_next_date }
+        ];
+        trExps.forEach(e => {
+          if (e.date && e.date.toUpperCase() !== 'N/A') {
+            const expDate = new Date(e.date + 'T00:00:00');
+            const diff = expDate - today;
+            const days = Math.ceil(diff / 86400000);
+            if (days <= 60) {
+              expiries.push({ carrier: c.company_name, entity: `Trailer Unit: #${tr.unit_number}`, field: e.label, date: e.date, daysLeft: days });
+            }
+          }
+        });
+      });
+    }
+
+    // Sort by daysLeft ascending (expired and closest first)
+    expiries.sort((x, y) => x.daysLeft - y.daysLeft);
+
+    res.render('admin/compliance', {
+      config,
+      expiries,
+      page: 'admin-compliance'
+    });
+  } catch (err) {
+    console.error('Failed to load global compliance overview:', err);
+    res.status(500).send('Fatal server error loading compliance overview.');
+  }
+});
+
+/**
+ * GET /admin/compliance/expiry/csv - Export expiries to CSV
+ */
+router.get('/compliance/expiry/csv', async (req, res) => {
+  try {
+    const carriers = await db.dbAll("SELECT * FROM carriers WHERE status = 'active'");
+    
+    const expiries = [];
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    for (const c of carriers) {
+      // Profile expiries
+      const profile = await db.dbGet("SELECT * FROM carrier_profiles WHERE carrier_id = ?", [c.id]);
+      if (profile) {
+        const pExps = [
+          { label: 'CVOR Expiry', date: profile.cvor_expiry },
+          { label: 'Carrier Code Expiry', date: profile.carrier_code_expiry },
+          { label: 'SCAC Expiry', date: profile.scac_expiry },
+          { label: 'Canadian Bond Expiry', date: profile.cdn_bond_expiry },
+          { label: 'US Bond Expiry', date: profile.usd_bond_expiry },
+          { label: 'IFTA Expiry', date: profile.ifta_expiry }
+        ];
+        pExps.forEach(e => {
+          if (e.date && e.date.toUpperCase() !== 'N/A') {
+            const expDate = new Date(e.date + 'T00:00:00');
+            const diff = expDate - today;
+            const days = Math.ceil(diff / 86400000);
+            if (days <= 60) {
+              expiries.push({ carrier: c.company_name, entity: 'Company Profile', field: e.label, date: e.date, daysLeft: days });
+            }
+          }
+        });
+      }
+
+      // Drivers expiries
+      const drivers = await db.dbAll("SELECT * FROM drivers WHERE carrier_id = ? AND status = 'active'", [c.id]);
+      drivers.forEach(d => {
+        const dExps = [
+          { label: 'DL Expiry', date: d.dl_expiry },
+          { label: 'WCB Expiry', date: d.wcb_expiry },
+          { label: 'Passport Expiry', date: d.passport_expiry },
+          { label: 'FAST Card Expiry', date: d.fast_card_expiry },
+          { label: 'CDRP Card Expiry', date: d.cdrp_expiry },
+          { label: 'Visa Expiry', date: d.visa_expiry },
+          { label: 'Medical Review', date: d.medical_due_date }
+        ];
+        dExps.forEach(e => {
+          if (e.date && e.date.toUpperCase() !== 'N/A') {
+            const expDate = new Date(e.date + 'T00:00:00');
+            const diff = expDate - today;
+            const days = Math.ceil(diff / 86400000);
+            if (days <= 60) {
+              expiries.push({ carrier: c.company_name, entity: `Driver: ${d.first_name} ${d.last_name}`, field: e.label, date: e.date, daysLeft: days });
+            }
+          }
+        });
+      });
+
+      // Trucks expiries
+      const trucks = await db.dbAll("SELECT * FROM trucks WHERE carrier_id = ? AND status = 'active'", [c.id]);
+      for (const t of trucks) {
+        const tExps = [
+          { label: 'Annual Safety Expiry', date: t.annual_safety_expiry },
+          { label: 'PMVI Due', date: t.pmvi_next_date },
+          { label: 'Oil Change Due', date: t.oil_change_next }
+        ];
+        tExps.forEach(e => {
+          if (e.date && e.date.toUpperCase() !== 'N/A') {
+            const expDate = new Date(e.date + 'T00:00:00');
+            const diff = expDate - today;
+            const days = Math.ceil(diff / 86400000);
+            if (days <= 60) {
+              expiries.push({ carrier: c.company_name, entity: `Truck Unit: #${t.unit_number}`, field: e.label, date: e.date, daysLeft: days });
+            }
+          }
+        });
+        const plate = await db.dbGet("SELECT * FROM truck_plates WHERE truck_id = ? AND status = 'active'", [t.id]);
+        if (plate && plate.expiry && plate.expiry.toUpperCase() !== 'N/A') {
+          const expDate = new Date(plate.expiry + 'T00:00:00');
+          const diff = expDate - today;
+          const days = Math.ceil(diff / 86400000);
+          if (days <= 60) {
+            expiries.push({ carrier: c.company_name, entity: `Truck Plate: ${plate.plate_number} (#${t.unit_number})`, field: 'Plate Expiry', date: plate.expiry, daysLeft: days });
+          }
+        }
+      }
+
+      // Trailers expiries
+      const trailers = await db.dbAll("SELECT * FROM trailers WHERE carrier_id = ? AND status = 'active'", [c.id]);
+      trailers.forEach(tr => {
+        const trExps = [
+          { label: 'Annual Safety Expiry', date: tr.annual_safety_expiry },
+          { label: 'PMVI Due', date: tr.pmvi_next_date }
+        ];
+        trExps.forEach(e => {
+          if (e.date && e.date.toUpperCase() !== 'N/A') {
+            const expDate = new Date(e.date + 'T00:00:00');
+            const diff = expDate - today;
+            const days = Math.ceil(diff / 86400000);
+            if (days <= 60) {
+              expiries.push({ carrier: c.company_name, entity: `Trailer Unit: #${tr.unit_number}`, field: e.label, date: e.date, daysLeft: days });
+            }
+          }
+        });
+      });
+    }
+
+    expiries.sort((x, y) => x.daysLeft - y.daysLeft);
+
+    let csvContent = 'Carrier,Entity,Document/Field,Expiry Date,Days Left\n';
+    expiries.forEach(e => {
+      const carrier = `"${e.carrier.replace(/"/g, '""')}"`;
+      const entity = `"${e.entity.replace(/"/g, '""')}"`;
+      const field = `"${e.field.replace(/"/g, '""')}"`;
+      csvContent += `${carrier},${entity},${field},${e.date},${e.daysLeft}\n`;
+    });
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename=safety_expiries_report.csv');
+    res.send(csvContent);
+  } catch (err) {
+    console.error('Failed to generate CSV export:', err);
+    res.status(500).send('Failed to generate CSV report.');
+  }
+});
+
+/**
+ * GET /admin/drivers - Unified drivers list across all carriers
+ */
+router.get('/drivers', async (req, res) => {
+  try {
+    const config = await db.getSettings();
+    const drivers = await db.dbAll(`
+      SELECT d.*, c.company_name as carrier_name
+      FROM drivers d
+      JOIN carriers c ON d.carrier_id = c.id
+      WHERE d.status = 'active'
+      ORDER BY c.company_name ASC, d.last_name ASC
+    `);
+
+    res.render('admin/drivers', {
+      config,
+      drivers,
+      page: 'admin-drivers'
+    });
+  } catch (err) {
+    console.error('Failed to load global drivers list:', err);
+    res.status(500).send('Fatal server error loading drivers list.');
+  }
+});
+
+/**
+ * GET /admin/fleet - Unified fleet overview across all carriers
+ */
+router.get('/fleet', async (req, res) => {
+  try {
+    const config = await db.getSettings();
+    const trucks = await db.dbAll(`
+      SELECT t.*, c.company_name as carrier_name
+      FROM trucks t
+      JOIN carriers c ON t.carrier_id = c.id
+      WHERE t.status = 'active'
+      ORDER BY c.company_name ASC, t.unit_number ASC
+    `);
+    
+    const trailers = await db.dbAll(`
+      SELECT tr.*, c.company_name as carrier_name
+      FROM trailers tr
+      JOIN carriers c ON tr.carrier_id = c.id
+      WHERE tr.status = 'active'
+      ORDER BY c.company_name ASC, tr.unit_number ASC
+    `);
+
+    res.render('admin/fleet', {
+      config,
+      trucks,
+      trailers,
+      page: 'admin-fleet'
+    });
+  } catch (err) {
+    console.error('Failed to load global fleet oversight:', err);
+    res.status(500).send('Fatal server error loading fleet oversight.');
+  }
+});
+
 module.exports = router;

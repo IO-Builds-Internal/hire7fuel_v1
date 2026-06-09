@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 2rem;">
+        <a href="/portal/trucks" class="portal-btn portal-btn-secondary" style="padding: 0.5rem 1rem;">
+          <i class="fas fa-arrow-left"></i> Back to Fleet
+        </a>
+        <a href="/portal/trucks/<%= truck.id %>/edit" class="portal-btn portal-btn-primary" style="padding: 0.5rem 1rem;">
+          <i class="fas fa-edit"></i> Edit Truck Basic Info
+        </a>
+        <a href="/portal/trucks/<%= truck.id %>/maintenance" class="portal-btn portal-btn-secondary" style="padding: 0.5rem 1rem; border-color: var(--color-accent); color: var(--color-accent);">
+          <i class="fas fa-wrench"></i> View Maintenance Log
+        </a>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: flex-start;">
+        <!-- Left Column: Specs, Schedules & Transponders -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          
+          <!-- Specifications Card -->
+          <div class="portal-card">
+            <h2>Truck Specifications</h2>
+            <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+              <table class="portal-table" style="border: none;">
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 120px;">Unit #</td>
+                    <td style="padding: 0.5rem 0; border: none; font-weight: 700; color: var(--color-white);">#<%= truck.unit_number %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">VIN</td>
+                    <td style="padding: 0.5rem 0; border: none; font-family: monospace;"><%= truck.vin %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Make</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= truck.make %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Model</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= truck.model %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Year</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= truck.year %></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table class="portal-table" style="border: none;">
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 120px;">GPS Tracker</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= truck.gps_tracker || '—' %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Fuel Card #</td>
+                    <td style="padding: 0.5rem 0; border: none; font-family: monospace;"><%= truck.fuel_card_number || '—' %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">EZ-PASS #</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= truck.tolls_ezpass || '—' %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">HWY 407 #</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= truck.tolls_hwy407 || '—' %></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Other custom tolls -->
+            <% if (tollsOther && tollsOther.length > 0) { %>
+              <h3 style="font-size: 0.95rem; margin-top: 1.5rem; margin-bottom: 0.5rem; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1rem;">Additional Toll Systems</h3>
+              <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                <% tollsOther.forEach(function(t) { %>
+                  <div style="background: var(--color-bg-darker); padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.05);">
+                    <strong><%= t.name %>:</strong> <span style="font-family: monospace;"><%= t.number %></span>
+                  </div>
+                <% }) %>
+              </div>
+            <% } %>
+          </div>
+
+          <!-- Schedule & Safety Card -->
+          <div class="portal-card">
+            <h2>Inspection Schedules & Maintenance Milestones</h2>
+            <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+              <div>
+                <h3 style="font-size: 0.9rem; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem;">PMVI Servicing</h3>
+                <table class="portal-table" style="border: none;">
+                  <tbody>
+                    <tr>
+                      <td style="font-weight: 600; padding: 0.4rem 0; border: none;">Frequency:</td>
+                      <td style="padding: 0.4rem 0; border: none; text-transform: capitalize;"><%= truck.pmvi_frequency %></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600; padding: 0.4rem 0; border: none;">Last Inspection:</td>
+                      <td style="padding: 0.4rem 0; border: none;"><%= truck.pmvi_last_date %></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600; padding: 0.4rem 0; border: none;">Next Due Date:</td>
+                      <td style="padding: 0.4rem 0; border: none;">
+                        <%- include('../../partials/expiry_badge', { expiry: truck.pmvi_next_date }) %>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div>
+                <h3 style="font-size: 0.9rem; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem;">Safety Inspections</h3>
+                <table class="portal-table" style="border: none;">
+                  <tbody>
+                    <tr>
+                      <td style="font-weight: 600; padding: 0.4rem 0; border: none; width: 140px;">Annual Safety Expiry:</td>
+                      <td style="padding: 0.4rem 0; border: none;">
+                        <%- include('../../partials/expiry_badge', { expiry: truck.annual_safety_expiry }) %>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600; padding: 0.4rem 0; border: none;">Last Oil Change:</td>
+                      <td style="padding: 0.4rem 0; border: none;"><%= truck.oil_change_last %></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600; padding: 0.4rem 0; border: none;">Next Oil Change:</td>
+                      <td style="padding: 0.4rem 0; border: none;">
+                        <%- include('../../partials/expiry_badge', { expiry: truck.oil_change_next }) %>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transponders Card -->
+          <div class="portal-card">
+            <h2>Border Crossing Tags & Transponders</h2>
+            <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem;">
+              
+              <div>
+                <h3 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--color-white);">D-TOPS Decals</h3>
+                <% if (dtops && dtops.length > 0) { %>
+                  <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <% dtops.forEach(function(d) { %>
+                      <div style="background: var(--color-bg-darker); padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 0.75rem;">
+                        <strong>Decal:</strong> <span style="font-family: monospace;"><%= d.number %></span>
+                        <span class="expiry-badge <%= d.status === 'active' ? 'badge-green' : 'badge-red' %>" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;"><%= d.status %></span>
+                      </div>
+                    <% }) %>
+                  </div>
+                <% } else { %>
+                  <p style="color: var(--color-muted); font-size: 0.85rem; margin: 0;">No D-TOPS decals registered.</p>
+                <% } %>
+              </div>
+
+              <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1rem;">
+                <h3 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--color-white);">Ambassador Bridge Tags</h3>
+                <% if (ambassador && ambassador.length > 0 && ambassador[0].number) { %>
+                  <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                    <% ambassador.forEach(function(a) { %>
+                      <div style="background: var(--color-bg-darker); padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 0.75rem;">
+                        <strong>Tag:</strong> <span style="font-family: monospace;"><%= a.number %></span>
+                        <span class="expiry-badge <%= a.status === 'active' ? 'badge-green' : 'badge-red' %>" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;"><%= a.status %></span>
+                      </div>
+                    <% }) %>
+                    <% if (truck.ambassador_expiry) { %>
+                      <span style="font-size: 0.85rem; color: var(--color-muted);">Expiry: <%- include('../../partials/expiry_badge', { expiry: truck.ambassador_expiry }) %></span>
+                    <% } %>
+                  </div>
+                <% } else { %>
+                  <p style="color: var(--color-muted); font-size: 0.85rem; margin: 0;">No Ambassador tags registered.</p>
+                <% } %>
+              </div>
+
+              <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1rem;">
+                <h3 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--color-white);">Blue Water Bridge Tags</h3>
+                <% if (bluewater && bluewater.length > 0 && bluewater[0].number) { %>
+                  <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                    <% bluewater.forEach(function(b) { %>
+                      <div style="background: var(--color-bg-darker); padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 0.75rem;">
+                        <strong>Tag:</strong> <span style="font-family: monospace;"><%= b.number %></span>
+                        <span class="expiry-badge <%= b.status === 'active' ? 'badge-green' : 'badge-red' %>" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;"><%= b.status %></span>
+                      </div>
+                    <% }) %>
+                    <% if (truck.bluewater_expiry) { %>
+                      <span style="font-size: 0.85rem; color: var(--color-muted);">Expiry: <%- include('../../partials/expiry_badge', { expiry: truck.bluewater_expiry }) %></span>
+                    <% } %>
+                  </div>
+                <% } else { %>
+                  <p style="color: var(--color-muted); font-size: 0.85rem; margin: 0;">No Blue Water tags registered.</p>
+                <% } %>
+              </div>
+
+              <% if (otherTolls && otherTolls.length > 0 && otherTolls[0].name) { %>
+                <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1rem;">
+                  <h3 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--color-white);">Other Transponders</h3>
+                  <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <% otherTolls.forEach(function(t) { %>
+                      <div style="background: var(--color-bg-darker); padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 0.75rem;">
+                        <strong><%= t.name %>:</strong> <span style="font-family: monospace;"><%= t.number %></span>
+                        <span class="expiry-badge <%= t.status === 'active' ? 'badge-green' : 'badge-red' %>" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;"><%= t.status %></span>
+                      </div>
+                    <% }) %>
+                  </div>
+                </div>
+              <% } %>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Plate Management & Plates History -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          
+          <!-- Add Plate Form -->
+          <div class="portal-card">
+            <h2>Register New License Plate</h2>
+            <p style="color: var(--color-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+              Adding a plate will automatically archive the current active plate.
+            </p>
+            <form action="/portal/trucks/<%= truck.id %>/plates/add" method="POST">
+              <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="portal-form-group">
+                  <label class="portal-label">Plate Number</label>
+                  <input type="text" name="plate_number" class="portal-input" required placeholder="e.g. 123-ABC">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">Plate Group</label>
+                  <input type="text" name="plate_group" class="portal-input" required placeholder="e.g. Apportioned ON">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">Weight Group</label>
+                  <input type="text" name="weight_group" class="portal-input" placeholder="e.g. 80,000 lbs">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">Plate Expiration Date</label>
+                  <input type="date" name="expiry" class="portal-input" required>
+                </div>
+                <button type="submit" class="portal-btn portal-btn-primary" style="margin-top: 0.5rem;"><i class="fas fa-id-badge"></i> Activate New Plate</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Plates History -->
+          <div class="portal-card">
+            <h2>Plate Registration History</h2>
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+              <% if (platesHistory && platesHistory.length > 0) { %>
+                <% platesHistory.forEach(function(p) { %>
+                  <div style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                      <div style="font-family: monospace; font-weight: 700; color: var(--color-white); font-size: 1rem;"><%= p.plate_number %></div>
+                      <div style="font-size: 0.8rem; color: var(--color-muted);"><%= p.plate_group %> | Weight: <%= p.weight_group || 'N/A' %></div>
+                      <div style="font-size: 0.75rem; color: var(--color-muted); margin-top: 0.25rem;">Expires: <%= p.expiry || 'N/A' %></div>
+                    </div>
+                    <div>
+                      <span class="expiry-badge <%= p.status === 'active' ? 'badge-green' : 'badge-amber' %>" style="font-size: 0.7rem; text-transform: uppercase;">
+                        <%= p.status %>
+                      </span>
+                    </div>
+                  </div>
+                <% }) %>
+              <% } else { %>
+                <p style="color: var(--color-muted); font-size: 0.85rem; text-align: center;">No plate history found.</p>
+              <% } %>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

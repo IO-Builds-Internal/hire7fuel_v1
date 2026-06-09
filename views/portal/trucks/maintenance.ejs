@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 2rem;">
+        <a href="/portal/trucks/<%= truck.id %>" class="portal-btn portal-btn-secondary" style="padding: 0.5rem 1rem;">
+          <i class="fas fa-arrow-left"></i> Back to Truck Details
+        </a>
+        <button type="button" class="portal-btn portal-btn-primary" style="padding: 0.5rem 1rem;" onclick="openAddMaintenanceModal()">
+          <i class="fas fa-plus"></i> Add Maintenance Record
+        </button>
+      </div>
+
+      <% if (success) { %>
+        <div style="background-color: #E6FDF4; border: 1px solid rgba(34,201,138,0.2); color: #03543F; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-weight: 600;">
+          <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i> Maintenance record logged successfully.
+        </div>
+      <% } %>
+      
+      <% if (error) { %>
+        <div style="background-color: #FEF2F2; border: 1px solid rgba(239,68,68,0.2); color: #9B1C1C; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-weight: 600;">
+          <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i> <%= error %>
+        </div>
+      <% } %>
+
+      <div class="portal-card">
+        <h2>Maintenance & Repair Logs — Unit #<%= truck.unit_number %></h2>
+        
+        <!-- Grouped Monthly View -->
+        <% if (records && records.length > 0) { %>
+          <div style="display: flex; flex-direction: column; gap: 2.5rem; margin-top: 1.5rem;">
+            
+            <% Object.keys(grouped).sort().reverse().forEach(function(month) { %>
+              <div style="border-left: 3px solid var(--color-accent); padding-left: 1.5rem;">
+                <h3 style="font-size: 1.2rem; color: var(--color-white); margin-bottom: 1rem; text-transform: capitalize;">
+                  <i class="far fa-calendar-alt" style="margin-right: 0.35rem; color: var(--color-accent);"></i> <%= month %>
+                </h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                  <% grouped[month].forEach(function(r) { %>
+                    <div style="background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06); padding: 1.5rem; border-radius: var(--radius-sm); box-shadow: var(--shadow-sm);">
+                      
+                      <% if (r.has_no_history) { %>
+                        <div style="color: var(--color-muted); font-style: italic;">
+                          <strong>No maintenance history recorded for this month:</strong> <%= r.no_history_note || 'Confirmed compliant' %>
+                        </div>
+                      <% } else { %>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                          <div>
+                            <h4 style="font-size: 1.05rem; margin: 0; color: var(--color-white);"><%= r.shop_name %></h4>
+                            <span style="font-size: 0.8rem; color: var(--color-muted);"><%= r.city %>, <%= r.province_state %>, <%= r.country %> | Date: <%= r.repair_date %></span>
+                          </div>
+                          <div style="font-weight: 700; font-size: 1.2rem; color: var(--color-white);">
+                            <%= r.currency %> <%= r.amount ? r.amount.toLocaleString(undefined, {minimumFractionDigits: 2}) : '0.00' %>
+                          </div>
+                        </div>
+
+                        <!-- Repair Types Tags -->
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                          <% 
+                            let types = [];
+                            try { if (r.repair_types) types = JSON.parse(r.repair_types); } catch(e) {}
+                            types.forEach(function(t) {
+                          %>
+                            <span style="font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: var(--radius-sm); background-color: rgba(20, 160, 119, 0.08); color: var(--color-accent); border: 1px solid rgba(20, 160, 119, 0.15);">
+                              <%= t %>
+                            </span>
+                          <% }) %>
+                        </div>
+
+                        <% if (r.notes) { %>
+                          <div style="font-size: 0.9rem; color: var(--color-muted); background: var(--color-bg-darker); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(0,0,0,0.03);">
+                            <%= r.notes %>
+                          </div>
+                        <% } %>
+                      <% } %>
+
+                    </div>
+                  <% }) %>
+                </div>
+              </div>
+            <% }) %>
+
+          </div>
+        <% } else { %>
+          <div style="text-align: center; padding: 4rem 2rem; color: var(--color-muted);">
+            <i class="fas fa-tools" style="font-size: 3rem; color: rgba(20,160,119,0.1); margin-bottom: 1.5rem; display: block;"></i>
+            <h3>No Maintenance History Logged</h3>
+            <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">Click the button below to add repair shop bills, oil changes, or PMVI records.</p>
+            <button type="button" class="portal-btn portal-btn-primary" onclick="openAddMaintenanceModal()"><i class="fas fa-plus"></i> Log First Service</button>
+          </div>
+        <% } %>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Add Maintenance Record Modal -->
+  <div class="details-modal" id="addMaintModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); overflow-y: auto; padding: 2rem 0;">
+    <div class="portal-card" style="width: 100%; max-width: 650px; margin: auto 1rem;">
+      <div class="portal-card-header">
+        <h2>Log Maintenance Record</h2>
+        <button type="button" onclick="closeAddMaintenanceModal()" style="background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: var(--color-white);">&times;</button>
+      </div>
+
+      <form action="/portal/trucks/<%= truck.id %>/maintenance/add" method="POST" enctype="multipart/form-data">
+        
+        <!-- Checklist Toggle for "No History" month -->
+        <div style="background: var(--color-bg-darker); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 1.5rem;">
+          <div class="toggle-switch-wrapper">
+            <label class="toggle-switch">
+              <input type="checkbox" name="has_no_history" value="1" id="noHistoryCheck" onchange="toggleNoHistoryFields(this)">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="portal-label">Mark as "No Maintenance History" for this Month</span>
+          </div>
+          <div class="portal-form-group" id="noHistoryNoteField" style="display: none; margin-top: 0.75rem;">
+            <label class="portal-label">Filing Note / Explanation</label>
+            <input type="text" name="no_history_note" class="portal-input" placeholder="e.g. Unit inactive during this period">
+          </div>
+        </div>
+
+        <div id="maintFormFields">
+          <div class="portal-form-grid">
+            <div class="portal-form-group">
+              <label class="portal-label">Service Shop Name</label>
+              <input type="text" name="shop_name" class="portal-input" required placeholder="e.g. Speed Truck Repair">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Service Date</label>
+              <input type="date" name="repair_date" class="portal-input" required>
+            </div>
+            
+            <div class="portal-form-group">
+              <label class="portal-label">Country</label>
+              <input type="text" name="country" class="portal-input" required placeholder="e.g. Canada">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">City</label>
+              <input type="text" name="city" class="portal-input" required placeholder="e.g. Brampton">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Province / State</label>
+              <input type="text" name="province_state" class="portal-input" required placeholder="e.g. ON, MI">
+            </div>
+            
+            <div class="portal-form-group">
+              <label class="portal-label">Amount Billed</label>
+              <input type="number" step="0.01" name="amount" class="portal-input" required placeholder="0.00">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Currency</label>
+              <select name="currency" class="portal-select">
+                <option value="CAD" selected>CAD</option>
+                <option value="USD">USD</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="portal-form-group" style="margin-bottom: 1.5rem;">
+            <label class="portal-label">Types of Repairs (Select all that apply)</label>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; padding: 0.5rem 0;">
+              <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; color: var(--color-white); cursor: pointer;">
+                <input type="checkbox" name="repair_types" value="PMVI Inspection"> PMVI Inspection
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; color: var(--color-white); cursor: pointer;">
+                <input type="checkbox" name="repair_types" value="Oil Change"> Oil Change
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; color: var(--color-white); cursor: pointer;">
+                <input type="checkbox" name="repair_types" value="Brakes / Drums"> Brakes / Drums
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; color: var(--color-white); cursor: pointer;">
+                <input type="checkbox" name="repair_types" value="Tire Replacement"> Tire Replacement
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; color: var(--color-white); cursor: pointer;">
+                <input type="checkbox" name="repair_types" value="Engine Tuning"> Engine Tuning
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; color: var(--color-white); cursor: pointer;">
+                <input type="checkbox" name="repair_types" value="Electrical Systems"> Electrical Systems
+              </label>
+            </div>
+          </div>
+
+          <div class="portal-form-group" style="margin-bottom: 1.5rem;">
+            <label class="portal-label">Repair / Inspection Notes</label>
+            <textarea name="notes" class="portal-textarea" rows="3" placeholder="Describe servicing in detail..."></textarea>
+          </div>
+
+          <div class="portal-form-group" style="margin-bottom: 1.5rem;">
+            <label class="portal-label">Upload Repair Bill / Safety Slip</label>
+            <input type="file" name="docs" class="portal-input" multiple>
+            <small style="color: var(--color-muted); margin-top: 0.25rem;">Supports standard image, PDF, and doc file uploads.</small>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="portal-btn portal-btn-secondary" onclick="closeAddMaintenanceModal()">Cancel</button>
+          <button type="submit" class="portal-btn portal-btn-primary">Save Repair Record</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openAddMaintenanceModal() {
+      document.getElementById('addMaintModal').style.display = 'flex';
+    }
+
+    function closeAddMaintenanceModal() {
+      document.getElementById('addMaintModal').style.display = 'none';
+    }
+
+    function toggleNoHistoryFields(checkbox) {
+      const noteField = document.getElementById('noHistoryNoteField');
+      const formFields = document.getElementById('maintFormFields');
+      const requiredInputs = formFields.querySelectorAll('input[required]');
+      
+      if (checkbox.checked) {
+        noteField.style.display = 'block';
+        formFields.style.opacity = '0.4';
+        // Remove required constraints temporarily
+        requiredInputs.forEach(input => {
+          input.removeAttribute('required');
+        });
+      } else {
+        noteField.style.display = 'none';
+        formFields.style.opacity = '1';
+        // Restore required constraints
+        requiredInputs.forEach(input => {
+          input.setAttribute('required', 'true');
+        });
+      }
+    }
+  </script>
+</body>
+</html>

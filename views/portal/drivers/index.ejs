@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <div class="portal-card">
+        <div class="portal-card-header">
+          <h2>Active Driver Roster</h2>
+          <a href="/portal/drivers/new" class="portal-btn portal-btn-primary">
+            <i class="fas fa-plus"></i> Onboard Driver
+          </a>
+        </div>
+
+        <p style="color: var(--color-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+          Maintain active driver compliance files. The roster monitors Commercial Driver Licenses (CDL), Medical Examiner Certificates, and travel border documents.
+        </p>
+
+        <div class="portal-table-wrap">
+          <table class="portal-table">
+            <thead>
+              <tr>
+                <th>Driver Name</th>
+                <th>DL Number</th>
+                <th>DL Expiration</th>
+                <th>Medical Review</th>
+                <th>Passport Expiration</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (drivers && drivers.length > 0) { %>
+                <% drivers.forEach(function(d) { %>
+                  <tr>
+                    <td style="font-weight: 600; color: var(--color-white);">
+                      <%= d.last_name %>, <%= d.first_name %> <%= d.middle_name ? d.middle_name.charAt(0) + '.' : '' %>
+                    </td>
+                    <td style="font-family: monospace;"><%= d.dl_number %> (<%= d.dl_state %>)</td>
+                    <td>
+                      <%- include('../../partials/expiry_badge', { expiry: d.dl_expiry }) %>
+                    </td>
+                    <td>
+                      <%- include('../../partials/expiry_badge', { expiry: d.medical_due_date }) %>
+                    </td>
+                    <td>
+                      <%- include('../../partials/expiry_badge', { expiry: d.passport_expiry }) %>
+                    </td>
+                    <td><span style="font-size: 0.85rem;"><%= d.driver_type %></span></td>
+                    <td>
+                      <span class="expiry-badge badge-green"><%= d.status %></span>
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                      <a href="/portal/drivers/<%= d.id %>" class="portal-btn portal-btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-right: 0.25rem;">
+                        <i class="fas fa-eye"></i> View
+                      </a>
+                      <a href="/portal/drivers/<%= d.id %>/edit" class="portal-btn portal-btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; border-color: var(--color-accent); color: var(--color-accent);">
+                        <i class="fas fa-edit"></i> Edit
+                      </a>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="8" style="text-align: center; color: var(--color-muted); padding: 4rem 2rem;">
+                    <i class="fas fa-user-friends" style="font-size: 2.5rem; color: rgba(20,160,119,0.1); margin-bottom: 1rem; display: block;"></i>
+                    <p style="margin: 0; font-weight: 600; color: var(--color-white);">No active drivers registered</p>
+                    <p style="margin: 0; font-size: 0.85rem; margin-bottom: 1rem;">Add drivers to monitor Commercial Driver Licenses and border crossing cards.</p>
+                    <a href="/portal/drivers/new" class="portal-btn portal-btn-primary">Onboard First Driver</a>
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
