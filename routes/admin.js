@@ -149,7 +149,9 @@ router.get('/', async (req, res) => {
       config,
       submissions,
       stats,
-      page: 'admin-dashboard'
+      page: 'admin-dashboard',
+      pageTitle: 'Admin Dashboard Hub',
+      pageDescription: 'Aggregated analytics and operational submission logs.'
     });
   } catch (err) {
     console.error('Failed to load admin dashboard:', err);
@@ -185,7 +187,9 @@ router.get('/settings', async (req, res) => {
       config,
       success: req.query.success === 'true',
       error: req.query.error || null,
-      page: 'admin-settings'
+      page: 'admin-settings',
+      pageTitle: 'Website Brand Customizer',
+      pageDescription: 'Dynamically update coordinates, titles, logos, and SMTP parameters.'
     });
   } catch (err) {
     console.error('Failed to load admin settings:', err);
@@ -275,7 +279,9 @@ router.get('/jobs', async (req, res) => {
       jobs,
       success: req.query.success === 'true',
       error: req.query.error || null,
-      page: 'admin-jobs'
+      page: 'admin-jobs',
+      pageTitle: 'Careers & Jobs Administrator',
+      pageDescription: 'Create, toggle, or delete dynamic job postings.'
     });
   } catch (err) {
     console.error('Failed to load admin careers panel:', err);
@@ -361,7 +367,9 @@ router.get('/jobs/edit/:id', async (req, res) => {
       job,
       success: req.query.success === 'true',
       error: req.query.error || null,
-      page: 'admin-jobs'
+      page: 'admin-jobs',
+      pageTitle: 'Edit Job Posting',
+      pageDescription: `Modify parameters for job posting: ${job.title}`
     });
   } catch (err) {
     console.error('Failed to load job edit page:', err);
@@ -460,7 +468,9 @@ router.get('/testimonials', requireAdmin, async (req, res) => {
       testimonials: testimonials,
       success: req.query.success === 'true',
       error: req.query.error || null,
-      page: 'admin-testimonials'
+      page: 'admin-testimonials',
+      pageTitle: 'Carrier Testimonial Administrator',
+      pageDescription: 'Manage the social proof testimonials and carrier quotes visible on the homepage.'
     });
   } catch (err) {
     console.error('Error fetching testimonials in admin:', err);
@@ -538,7 +548,9 @@ router.get('/testimonials/edit/:id', requireAdmin, async (req, res) => {
       config: settings,
       testimonial: testimonial,
       error: req.query.error || null,
-      page: 'admin-testimonials'
+      page: 'admin-testimonials',
+      pageTitle: 'Edit Carrier Testimonial',
+      pageDescription: `Modify dynamic testimonial attributes for "${testimonial.author}".`
     });
   } catch (err) {
     console.error('Error fetching testimonial edit page:', err);
@@ -688,7 +700,9 @@ router.get('/compliance', async (req, res) => {
     res.render('admin/compliance', {
       config,
       expiries,
-      page: 'admin-compliance'
+      page: 'admin-compliance',
+      pageTitle: 'Safety Compliance Oversight',
+      pageDescription: 'Global tracking of upcoming and past-due driver, fleet, and corporate expiries.'
     });
   } catch (err) {
     console.error('Failed to load global compliance overview:', err);
@@ -840,7 +854,9 @@ router.get('/drivers', async (req, res) => {
     res.render('admin/drivers', {
       config,
       drivers,
-      page: 'admin-drivers'
+      page: 'admin-drivers',
+      pageTitle: 'Unified Drivers Roster',
+      pageDescription: 'Global view of all drivers onboarded across active carriers.'
     });
   } catch (err) {
     console.error('Failed to load global drivers list:', err);
@@ -874,7 +890,9 @@ router.get('/fleet', async (req, res) => {
       config,
       trucks,
       trailers,
-      page: 'admin-fleet'
+      page: 'admin-fleet',
+      pageTitle: 'Unified Fleet Roster',
+      pageDescription: 'Global tracking of active carrier trucks, trailers, plates, and transponders.'
     });
   } catch (err) {
     console.error('Failed to load global fleet oversight:', err);

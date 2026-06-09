@@ -12,14 +12,10 @@
   <div class="portal-layout">
     <%- include('../partials/admin_nav') %>
     
-    <div class="admin-header-wrap">
-      <div>
-        <h1 style="display: flex; align-items: center; gap: 0.75rem;">
-          <a href="/admin/testimonials" style="color: var(--color-muted); font-size: 1.75rem; text-decoration: none;"><i class="fas fa-arrow-left"></i></a>
-          Edit Carrier Testimonial
-        </h1>
-        <p style="color: var(--color-muted); margin-top: 0.25rem; margin-left: 2.5rem;">Modify dynamic testimonial attributes for "<%= testimonial.author %>". Changes propagate instantly.</p>
-      </div>
+    <div style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
+      <a href="/admin/testimonials" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-accent); font-weight: 600; text-decoration: none; font-size: 0.95rem;">
+        <i class="fas fa-arrow-left"></i> Back to Testimonials Admin
+      </a>
     </div>
 
     <!-- Alert notifications -->

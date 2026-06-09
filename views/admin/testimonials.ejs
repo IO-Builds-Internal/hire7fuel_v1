@@ -12,12 +12,7 @@
   <div class="portal-layout">
     <%- include('../partials/admin_nav') %>
     
-    <div class="admin-header-wrap">
-      <div>
-        <h1>Carrier Testimonial Administrator</h1>
-        <p style="color: var(--color-muted); margin-top: 0.25rem;">Manage the social proof testimonials and carrier quotes visible on the public homepage. Toggle visibility instantly.</p>
-      </div>
-    </div>
+    <div style="margin-top: 1.5rem;"></div>
 
     <!-- Alert notifications -->
     <% if (success) { %>
@@ -100,14 +95,16 @@
         <h2 style="border-bottom: 1px solid rgba(0, 0, 0, 0.06); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Add New Testimonial</h2>
         
         <form action="/admin/testimonials/add" method="POST">
-          <div class="form-group admin-form-group">
-            <label for="author">Author Name <span style="color: var(--color-error);">*</span></label>
-            <input type="text" id="author" name="author" class="form-control admin-input" placeholder="e.g. John Doe" required>
-          </div>
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="form-group admin-form-group" style="margin-bottom: 0;">
+              <label for="author">Author Name <span style="color: var(--color-error);">*</span></label>
+              <input type="text" id="author" name="author" class="form-control admin-input" placeholder="e.g. John Doe" required>
+            </div>
 
-          <div class="form-group admin-form-group">
-            <label for="role">Client Role / Company Name <span style="color: var(--color-error);">*</span></label>
-            <input type="text" id="role" name="role" class="form-control admin-input" placeholder="e.g. CEO, Logistics Transit Inc." required>
+            <div class="form-group admin-form-group" style="margin-bottom: 0;">
+              <label for="role">Client Role / Company Name <span style="color: var(--color-error);">*</span></label>
+              <input type="text" id="role" name="role" class="form-control admin-input" placeholder="e.g. CEO, Logistics Transit Inc." required>
+            </div>
           </div>
 
           <div class="form-group admin-form-group">

@@ -13,21 +13,16 @@
   <div class="portal-layout">
     <%- include('../partials/admin_nav') %>
     
-    <div class="admin-header-wrap">
-      <div>
-        <h1>Safety Compliance Oversight</h1>
-        <p style="color: #4a5568; margin-top: 0.25rem;">Monitor compliance documents, upcoming expiries, and filing status across all registered carriers.</p>
-      </div>
-      <div>
+    <div style="margin-top: 1.5rem;"></div>
+
+    <!-- Global Expiries Dashboard Card -->
+    <div class="admin-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(0, 0, 0, 0.06); padding-bottom: 0.75rem;">
+        <h2 style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">Global Expiry Tracker (Next 60 Days)</h2>
         <a href="/admin/compliance/expiry/csv" class="admin-action-btn admin-view-details" style="color: var(--color-accent); border-color: var(--color-accent); background: rgba(20,160,119,0.08); font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
           <i class="fas fa-file-csv"></i> Export Expiries (CSV)
         </a>
       </div>
-    </div>
-
-    <!-- Global Expiries Dashboard Card -->
-    <div class="admin-card">
-      <h2>Global Expiry Tracker (Next 60 Days)</h2>
       
       <div class="admin-table-wrap">
         <table class="admin-table" id="expiriesTable">

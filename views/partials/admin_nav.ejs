@@ -67,7 +67,7 @@
     <div>
       <h1 id="portalPageTitle"><%= typeof pageTitle !== 'undefined' ? pageTitle : 'Admin Panel' %></h1>
       <p style="color: var(--color-muted); font-size: 0.9rem; margin-top: 0.25rem;">
-        Logged in as Administrator
+        <%= typeof pageDescription !== 'undefined' ? pageDescription : 'Logged in as Administrator' %>
       </p>
     </div>
     
