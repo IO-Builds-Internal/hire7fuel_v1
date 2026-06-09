@@ -15,11 +15,11 @@
     /* Premium Interactive Page Custom Styles */
     .app-hero-mesh {
       position: relative;
-      background: radial-gradient(circle at 80% 20%, rgba(34, 201, 138, 0.08) 0%, transparent 50%),
-                  radial-gradient(circle at 10% 80%, rgba(13, 79, 79, 0.3) 0%, transparent 60%);
+      background: radial-gradient(circle at 80% 20%, rgba(20, 160, 119, 0.03) 0%, transparent 50%),
+                  radial-gradient(circle at 10% 80%, rgba(20, 160, 119, 0.02) 0%, transparent 60%);
       padding: 6rem 0;
       overflow: hidden;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(20, 160, 119, 0.1);
     }
 
     .app-hero-glow {
@@ -58,8 +58,9 @@
     }
 
     .app-tab-btn {
-      background: linear-gradient(135deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0.02) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: #ffffff;
+      border: 1px solid rgba(20, 160, 119, 0.08);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.01);
       border-radius: var(--radius-md);
       padding: 1.5rem;
       text-align: left;
@@ -77,15 +78,15 @@
     }
 
     .app-tab-btn:hover {
-      border-color: rgba(34, 201, 138, 0.25);
-      background: rgba(255,255,255,0.03);
+      border-color: rgba(20, 160, 119, 0.25);
+      background: rgba(20, 160, 119, 0.02);
       transform: translateX(4px);
     }
 
     .app-tab-btn.active {
-      background: linear-gradient(135deg, rgba(16, 37, 37, 0.5) 0%, rgba(6, 17, 17, 0.75) 100%);
-      border-color: rgba(34, 201, 138, 0.45);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 15px rgba(34, 201, 138, 0.05);
+      background: rgba(20, 160, 119, 0.04);
+      border-color: rgba(20, 160, 119, 0.35);
+      box-shadow: 0 10px 30px rgba(20, 160, 119, 0.06);
     }
 
     .app-tab-btn.active .app-tab-icon {
@@ -97,15 +98,15 @@
     }
 
     .app-tab-icon {
-      background-color: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background-color: rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(0, 0, 0, 0.06);
       width: 44px;
       height: 44px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #a3c2c2;
+      color: var(--color-text-off);
       font-size: 1.15rem;
       flex-shrink: 0;
       transition: all 0.3s ease;
@@ -119,7 +120,7 @@
     }
 
     .app-tab-info p {
-      color: #a3c2c2;
+      color: var(--color-text-off);
       font-size: 0.9rem;
       margin: 0;
       line-height: 1.5;
@@ -154,14 +155,14 @@
 
     /* Download Banner Cards */
     .app-download-banner {
-      background: linear-gradient(135deg, rgba(16, 37, 37, 0.75) 0%, rgba(6, 17, 17, 0.85) 100%);
-      border: 1px solid rgba(34, 201, 138, 0.2);
+      background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+      border: 1px solid rgba(20, 160, 119, 0.15);
       border-radius: var(--radius-lg);
       padding: 4rem 3rem;
       margin-top: 4rem;
       margin-bottom: 6rem;
       backdrop-filter: blur(20px);
-      box-shadow: var(--shadow-premium);
+      box-shadow: 0 10px 30px rgba(20, 160, 119, 0.04);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -178,7 +179,7 @@
     }
 
     .app-badge-btn {
-      background-color: var(--color-near-black);
+      background-color: #0a2c2c;
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 8px;
       padding: 0.65rem 1.25rem;
@@ -195,7 +196,8 @@
 
     .app-badge-btn:hover {
       border-color: var(--color-accent);
-      background-color: rgba(34, 201, 138, 0.05);
+      background-color: var(--color-accent);
+      color: #ffffff;
       transform: translateY(-1px);
     }
   </style>
@@ -230,8 +232,8 @@
             <!-- Initial Widget Load (Fuel Usage telemetry) -->
             <div class="screen-widget-fade" style="display: flex; flex-direction: column; gap: 1.25rem; height: 100%;">
               <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 0.5rem;">
-                <span style="font-weight: 800; font-size: 0.85rem; color: var(--color-white); display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-gas-pump" style="color: var(--color-accent);"></i> HIRE7 MOBILE</span>
-                <span style="font-size: 0.65rem; background-color: rgba(34,201,138,0.1); border: 1px solid rgba(34,201,138,0.2); color: var(--color-accent); padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;" id="liveBeacon"><i class="fas fa-satellite"></i> LIVE</span>
+                <span style="font-weight: 800; font-size: 0.85rem; color: #ffffff; display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-gas-pump" style="color: var(--color-accent);"></i> HIRE7 MOBILE</span>
+                <span style="font-size: 0.65rem; background-color: rgba(34,201,138,0.1); border: 1px solid rgba(20, 160, 119, 0.15); color: var(--color-accent); padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;" id="liveBeacon"><i class="fas fa-satellite"></i> LIVE</span>
               </div>
 
               <!-- Main telemetry screen stats -->
@@ -243,7 +245,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
                   <div>
                     <span style="font-size: 0.65rem; color: #a3c2c2; display: block;">FUEL DRAW-DOWN</span>
-                    <strong style="font-size: 1.15rem; color: var(--color-white);" id="liveFuelDraw">6.8 Gal/Hr</strong>
+                    <strong style="font-size: 1.15rem; color: #ffffff;" id="liveFuelDraw">6.8 Gal/Hr</strong>
                   </div>
                   
                   <!-- Dynamic sparkline bar chart -->
@@ -275,11 +277,11 @@
                 <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.75rem; margin-top: 0.25rem;">
                   <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem;">
                     <span style="color: #a3c2c2;">Active Fuel Swipes</span>
-                    <strong style="color: var(--color-white);" id="liveFuelSwipes">12 Fills</strong>
+                    <strong style="color: #ffffff;" id="liveFuelSwipes">12 Fills</strong>
                   </div>
                   <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem;">
                     <span style="color: #a3c2c2;">Average Swipe Cost</span>
-                    <strong style="color: var(--color-white); font-weight: 700;">$385.20</strong>
+                    <strong style="color: #ffffff; font-weight: 700;">$385.20</strong>
                   </div>
                   <div style="display: flex; justify-content: space-between;">
                     <span style="color: #a3c2c2;">Total Trip Savings</span>
@@ -292,7 +294,7 @@
                 <div style="display: flex; gap: 0.65rem; align-items: center;">
                   <i class="fas fa-circle-check" style="color: var(--color-accent); font-size: 0.95rem;"></i>
                   <div style="text-align: left;">
-                    <strong style="font-size: 0.75rem; color: var(--color-white); display: block;">Flow Auto-Sync Connected</strong>
+                    <strong style="font-size: 0.75rem; color: #ffffff; display: block;">Flow Auto-Sync Connected</strong>
                     <span style="font-size: 0.65rem; color: #a3c2c2;">Vehicle CAN-bus syncing perfectly.</span>
                   </div>
                 </div>
@@ -359,7 +361,7 @@
           <h2 style="font-size: 1.8rem; font-weight: 700; color: var(--color-white); margin-top: 0; margin-bottom: 0.5rem;">
             Ready to Connect Your Logistics Fleet?
           </h2>
-          <p style="color: #a3c2c2; margin: 0; line-height: 1.5; font-size: 0.95rem;">
+          <p style="color: var(--color-text-off); margin: 0; line-height: 1.5; font-size: 0.95rem;">
             Empower your drivers, slash manual bookkeeping math, and lock down secure pump expenditures. Download the companion app on driver smartphones to initialize wholesale cost-plus pricing links dynamically.
           </p>
         </div>
@@ -367,7 +369,7 @@
           <a href="<%= config.app.appstore || '#' %>" target="_blank" class="app-badge-btn" id="appAppleDownloadBtn">
             <i class="fab fa-apple" style="font-size: 1.4rem; color: var(--color-accent);"></i>
             <div style="text-align: left;">
-              <span style="font-size: 0.65rem; color: #a3c2c2; display: block; font-weight: 500; text-transform: uppercase;">Download on the</span>
+              <span style="font-size: 0.65rem; color: var(--color-text-off); display: block; font-weight: 500; text-transform: uppercase;">Download on the</span>
               <strong style="font-size: 0.9rem; font-weight: 700;">App Store</strong>
             </div>
           </a>
@@ -375,7 +377,7 @@
           <a href="<%= config.app.playstore || '#' %>" target="_blank" class="app-badge-btn" id="appGoogleDownloadBtn">
             <i class="fab fa-google-play" style="font-size: 1.25rem; color: var(--color-highlight);"></i>
             <div style="text-align: left;">
-              <span style="font-size: 0.65rem; color: #a3c2c2; display: block; font-weight: 500; text-transform: uppercase;">Get it on</span>
+              <span style="font-size: 0.65rem; color: var(--color-text-off); display: block; font-weight: 500; text-transform: uppercase;">Get it on</span>
               <strong style="font-size: 0.9rem; font-weight: 700;">Google Play</strong>
             </div>
           </a>
@@ -395,8 +397,8 @@
       telemetry: `
         <div class="screen-widget-fade" style="display: flex; flex-direction: column; gap: 1.25rem; height: 100%;">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 0.5rem;">
-            <span style="font-weight: 800; font-size: 0.85rem; color: var(--color-white); display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-gas-pump" style="color: var(--color-accent);"></i> HIRE7 MOBILE</span>
-            <span style="font-size: 0.65rem; background-color: rgba(34,201,138,0.1); border: 1px solid rgba(34,201,138,0.2); color: var(--color-accent); padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;" id="liveBeacon"><i class="fas fa-satellite"></i> LIVE</span>
+            <span style="font-weight: 800; font-size: 0.85rem; color: #ffffff; display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-gas-pump" style="color: var(--color-accent);"></i> HIRE7 MOBILE</span>
+            <span style="font-size: 0.65rem; background-color: rgba(34,201,138,0.1); border: 1px solid rgba(20, 160, 119, 0.15); color: var(--color-accent); padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;" id="liveBeacon"><i class="fas fa-satellite"></i> LIVE</span>
           </div>
 
           <div class="mobile-widget">
@@ -407,7 +409,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
               <div>
                 <span style="font-size: 0.65rem; color: #a3c2c2; display: block;">FUEL DRAW-DOWN</span>
-                <strong style="font-size: 1.15rem; color: var(--color-white);" id="liveFuelDraw">6.8 Gal/Hr</strong>
+                <strong style="font-size: 1.15rem; color: #ffffff;" id="liveFuelDraw">6.8 Gal/Hr</strong>
               </div>
               
               <!-- Dynamic sparkline bar chart -->
@@ -439,11 +441,11 @@
             <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.75rem; margin-top: 0.25rem;">
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem;">
                 <span style="color: #a3c2c2;">Active Fuel Swipes</span>
-                <strong style="color: var(--color-white);" id="liveFuelSwipes">12 Fills</strong>
+                <strong style="color: #ffffff;" id="liveFuelSwipes">12 Fills</strong>
               </div>
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem;">
                 <span style="color: #a3c2c2;">Average Swipe Cost</span>
-                <strong style="color: var(--color-white); font-weight: 700;">$385.20</strong>
+                <strong style="color: #ffffff; font-weight: 700;">$385.20</strong>
               </div>
               <div style="display: flex; justify-content: space-between;">
                 <span style="color: #a3c2c2;">Total Trip Savings</span>
@@ -456,7 +458,7 @@
             <div style="display: flex; gap: 0.65rem; align-items: center;">
               <i class="fas fa-circle-check" style="color: var(--color-accent); font-size: 0.95rem;"></i>
               <div style="text-align: left;">
-                <strong style="font-size: 0.75rem; color: var(--color-white); display: block;">Flow Auto-Sync Connected</strong>
+                <strong style="font-size: 0.75rem; color: #ffffff; display: block;">Flow Auto-Sync Connected</strong>
                 <span style="font-size: 0.65rem; color: #a3c2c2;">Vehicle CAN-bus syncing perfectly.</span>
               </div>
             </div>
@@ -466,7 +468,7 @@
       gps: `
         <div class="screen-widget-fade" style="display: flex; flex-direction: column; gap: 1.25rem; height: 100%;">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 0.5rem;">
-            <span style="font-weight: 800; font-size: 0.85rem; color: var(--color-white); display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-compass" style="color: var(--color-highlight);"></i> GPS LOCATOR</span>
+            <span style="font-weight: 800; font-size: 0.85rem; color: #ffffff; display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-compass" style="color: var(--color-highlight);"></i> GPS LOCATOR</span>
             <span style="font-size: 0.65rem; background-color: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.2); color: var(--color-highlight); padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;">LOW FUEL</span>
           </div>
 
@@ -480,7 +482,7 @@
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.5rem;">
               <div class="sim-map-marker" style="width: 32px; height: 32px; border-radius: 6px; background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.3); display: flex; align-items: center; justify-content: center; color: var(--color-highlight);"><i class="fas fa-map-pin"></i></div>
               <div style="text-align: left;">
-                <strong style="font-size: 0.75rem; color: var(--color-white); display: block;">Pilot Travel Center #240</strong>
+                <strong style="font-size: 0.75rem; color: #ffffff; display: block;">Pilot Travel Center #240</strong>
                 <span style="font-size: 0.65rem; color: #a3c2c2;">2575 Highway 401, Brampton</span>
               </div>
             </div>
@@ -493,7 +495,7 @@
             <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.7rem; margin-top: 0.25rem; text-align: left;">
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem; align-items: center;">
                 <div>
-                  <strong style="color: var(--color-white); display: block; font-size: 0.75rem;">Pilot #240</strong>
+                  <strong style="color: #ffffff; display: block; font-size: 0.75rem;">Pilot #240</strong>
                   <span style="font-size: 0.65rem; color: #a3c2c2;">Brampton, ON</span>
                 </div>
                 <strong style="color: var(--color-accent); font-size: 0.8rem;">$3.42/Gal</strong>
@@ -501,7 +503,7 @@
               
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem; align-items: center;">
                 <div>
-                  <strong style="color: var(--color-white); display: block; font-size: 0.75rem;">Flying J #92</strong>
+                  <strong style="color: #ffffff; display: block; font-size: 0.75rem;">Flying J #92</strong>
                   <span style="font-size: 0.65rem; color: #a3c2c2;">Mississauga, ON</span>
                 </div>
                 <strong style="color: #a3c2c2; font-size: 0.8rem;">$3.48/Gal</strong>
@@ -509,7 +511,7 @@
 
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                  <strong style="color: var(--color-white); display: block; font-size: 0.75rem;">Legacy Retail pump</strong>
+                  <strong style="color: #ffffff; display: block; font-size: 0.75rem;">Legacy Retail pump</strong>
                   <span style="font-size: 0.65rem; color: #a3c2c2;">Local highway pump</span>
                 </div>
                 <strong style="color: var(--color-error); font-size: 0.8rem;">$3.78/Gal</strong>
@@ -521,7 +523,7 @@
       behaviour: `
         <div class="screen-widget-fade" style="display: flex; flex-direction: column; gap: 1.25rem; height: 100%;">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 0.5rem;">
-            <span style="font-weight: 800; font-size: 0.85rem; color: var(--color-white); display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-gauge" style="color: var(--color-seafoam);"></i> BEHAVIOR HUB</span>
+            <span style="font-weight: 800; font-size: 0.85rem; color: #ffffff; display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-gauge" style="color: var(--color-seafoam);"></i> BEHAVIOR HUB</span>
             <span style="font-size: 0.65rem; background-color: rgba(58,191,160,0.1); border: 1px solid rgba(58,191,160,0.2); color: var(--color-seafoam); padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;">MONITOR</span>
           </div>
 
@@ -534,11 +536,11 @@
             <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.75rem; margin-top: 0.25rem; text-align: left;">
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem;">
                 <span style="color: #a3c2c2;"><i class="fas fa-stopwatch" style="color: var(--color-highlight); margin-right: 0.25rem;"></i> Long Idle Events</span>
-                <strong style="color: var(--color-white);">2 Logs (1.2 hr)</strong>
+                <strong style="color: #ffffff;">2 Logs (1.2 hr)</strong>
               </div>
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 0.25rem;">
                 <span style="color: #a3c2c2;"><i class="fas fa-arrow-trend-up" style="color: var(--color-error); margin-right: 0.25rem;"></i> Harsh Accelerations</span>
-                <strong style="color: var(--color-white);">0 Logs</strong>
+                <strong style="color: #ffffff;">0 Logs</strong>
               </div>
               <div style="margin-top: 0.65rem;">
                 <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: #a3c2c2; margin-bottom: 0.25rem;">
@@ -556,7 +558,7 @@
             <div style="display: flex; gap: 0.65rem; align-items: center; text-align: left;">
               <i class="fas fa-award" style="color: var(--color-accent); font-size: 0.95rem;"></i>
               <div>
-                <strong style="font-size: 0.75rem; color: var(--color-white); display: block;">Trip Efficiency Status</strong>
+                <strong style="font-size: 0.75rem; color: #ffffff; display: block;">Trip Efficiency Status</strong>
                 <span style="font-size: 0.65rem; color: #a3c2c2;">Estimated +6.2% fuel mileage gains.</span>
               </div>
             </div>
@@ -566,7 +568,7 @@
       score: `
         <div class="screen-widget-fade" style="display: flex; flex-direction: column; gap: 1.25rem; height: 100%;">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 0.5rem;">
-            <span style="font-weight: 800; font-size: 0.85rem; color: var(--color-white); display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-trophy" style="color: #60a5fa;"></i> PERFORMANCE</span>
+            <span style="font-weight: 800; font-size: 0.85rem; color: #ffffff; display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-trophy" style="color: #60a5fa;"></i> PERFORMANCE</span>
             <span style="font-size: 0.65rem; background-color: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.2); color: #60a5fa; padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;">DAILY</span>
           </div>
 
@@ -582,7 +584,7 @@
                 <path id="liveScoreCircleStroke" stroke-dasharray="96, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round" style="transition: stroke-dasharray 0.6s cubic-bezier(0.4, 0, 0.2, 1); filter: drop-shadow(0 0 3px var(--color-accent));" />
               </svg>
               <div style="position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                <span id="liveDriverScore" style="font-size: 1.7rem; font-weight: 800; color: var(--color-white); line-height: 1;">96</span>
+                <span id="liveDriverScore" style="font-size: 1.7rem; font-weight: 800; color: #ffffff; line-height: 1;">96</span>
                 <span style="font-size: 0.55rem; color: #a3c2c2; text-transform: uppercase; font-weight: bold; margin-top: 2px;">Score</span>
               </div>
             </div>
@@ -601,8 +603,8 @@
       fraud: `
         <div class="screen-widget-fade" style="display: flex; flex-direction: column; gap: 1.25rem; height: 100%;">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 0.5rem;">
-            <span style="font-weight: 800; font-size: 0.85rem; color: var(--color-white); display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-user-shield" style="color: var(--color-accent);"></i> CARD CONTROLS</span>
-            <span style="font-size: 0.65rem; background-color: rgba(34,201,138,0.1); border: 1px solid rgba(34,201,138,0.2); color: var(--color-accent); padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;">SECURED</span>
+            <span style="font-weight: 800; font-size: 0.85rem; color: #ffffff; display: flex; align-items: center; gap: 0.35rem;"><i class="fas fa-user-shield" style="color: var(--color-accent);"></i> CARD CONTROLS</span>
+            <span style="font-size: 0.65rem; background-color: rgba(34,201,138,0.1); border: 1px solid rgba(20, 160, 119, 0.15); color: var(--color-accent); padding: 0.15rem 0.45rem; border-radius: 10px; font-weight: 700;">SECURED</span>
           </div>
 
           <div class="mobile-widget" style="background: rgba(34, 201, 138, 0.02); border-color: rgba(34, 201, 138, 0.2);">
@@ -613,11 +615,11 @@
             
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; text-align: left;">
               <div>
-                <strong style="font-size: 0.75rem; color: var(--color-white); display: block;">Dynamic Geolock</strong>
+                <strong style="font-size: 0.75rem; color: #ffffff; display: block;">Dynamic Geolock</strong>
                 <span style="font-size: 0.6rem; color: #a3c2c2;">Card geolocked to truck location.</span>
               </div>
               <div style="width: 32px; height: 18px; background-color: var(--color-accent); border-radius: 20px; position: relative; padding: 2px;">
-                <div style="width: 14px; height: 14px; background-color: white; border-radius: 50%; float: right;"></div>
+                <div style="width: 14px; height: 14px; background-color: #ffffff; border-radius: 50%; float: right;"></div>
               </div>
             </div>
           </div>
@@ -626,7 +628,7 @@
             <div class="mobile-widget-header">
               <span>Verification PIN</span>
             </div>
-            <div id="liveVerificationPin" style="text-align: center; padding: 0.45rem; font-family: monospace; font-size: 1.4rem; letter-spacing: 0.25em; color: var(--color-white); font-weight: bold; background-color: rgba(0,0,0,0.3); border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
+            <div id="liveVerificationPin" style="text-align: center; padding: 0.45rem; font-family: monospace; font-size: 1.4rem; letter-spacing: 0.25em; color: #ffffff; font-weight: bold; background-color: rgba(0,0,0,0.3); border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
               8903
             </div>
             <span style="font-size: 0.55rem; color: #6B7280; display: block; margin-top: 0.35rem; text-align: center;">Re-generates in <span id="livePinCountdown" style="font-weight:bold;color:var(--color-accent);">45</span> seconds for checkout protection.</span>
@@ -790,7 +792,7 @@
           // Flash dynamic lock gate visual feedback
           otpPinEl.style.color = 'var(--color-accent)';
           otpPinEl.innerText = simState.otpPin;
-          setTimeout(() => { otpPinEl.style.color = 'var(--color-white)'; }, 800);
+          setTimeout(() => { otpPinEl.style.color = '#ffffff'; }, 800);
 
           // EXPERIMENTAL: Green glow flash on physical outer mobile frame during PIN regeneration
           if (mockupEl) {

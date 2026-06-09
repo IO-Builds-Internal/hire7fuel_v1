@@ -26,16 +26,16 @@
   --color-success: #10B981;         /* Pass success logs */
 
   /* Glow Shadows & Layering */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.6);
-  --shadow-premium: 0 20px 50px rgba(4, 9, 9, 0.9);
-  --shadow-neon-accent: 0 0 15px rgba(20, 160, 119, 0.25);
-  --shadow-neon-highlight: 0 0 15px rgba(245, 166, 35, 0.25);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-premium: 0 20px 40px rgba(0, 0, 0, 0.04);
+  --shadow-neon-accent: 0 0 15px rgba(20, 160, 119, 0.15);
+  --shadow-neon-highlight: 0 0 15px rgba(245, 166, 35, 0.15);
   
   /* Borders & Radius */
-  --border-glass: 1px solid rgba(255, 255, 255, 0.08);
-  --border-glass-glow: 1px solid rgba(20, 160, 119, 0.2);
+  --border-glass: 1px solid rgba(0, 0, 0, 0.06);
+  --border-glass-glow: 1px solid rgba(20, 160, 119, 0.15);
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
@@ -189,8 +189,8 @@ img {
 /* Redefine section-light-teal as alternating sleek dark panels */
 .section-light-teal {
   background-color: var(--color-bg-darker);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(20, 160, 119, 0.08);
+  border-bottom: 1px solid rgba(20, 160, 119, 0.08);
 }
 
 /* 7. Responsive Adjustments */

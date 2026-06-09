@@ -5,7 +5,7 @@
 /* 1. Fleet Savings Calculator */
 .section-dark-interactive {
   background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-bg-darker) 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(20, 160, 119, 0.08);
 }
 
 .calculator-grid {
@@ -222,7 +222,7 @@
   font-weight: 700;
   font-size: 1.15rem;
   letter-spacing: 1px;
-  color: var(--color-white);
+  color: #ffffff;
 }
 
 .card-chip {
@@ -253,14 +253,14 @@
 .card-holder span {
   font-size: 0.65rem;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: rgba(255, 255, 255, 0.65);
   display: block;
 }
 
 .card-holder strong {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--color-white);
+  color: #ffffff;
 }
 
 .card-status-pill {
@@ -355,7 +355,7 @@
   width: 18px;
   left: 3px;
   bottom: 3px;
-  background-color: var(--color-white);
+  background-color: #ffffff;
   transition: .3s;
   border-radius: 50%;
 }
@@ -393,8 +393,8 @@ input:checked + .switch-slider:before {
 }
 
 .geofence-checkbox:hover {
-  background: rgba(255,255,255,0.04);
-  border-color: rgba(255,255,255,0.15);
+  background: rgba(20, 160, 119, 0.04);
+  border-color: rgba(20, 160, 119, 0.2);
 }
 
 .geofence-checkbox input {
@@ -465,19 +465,22 @@ input:checked + .switch-slider:before {
 }
 
 .feed-item {
-  background: rgba(0, 0, 0, 0.01);
-  border-left: 3px solid var(--color-accent);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3.5px solid var(--color-accent);
   padding: 1rem;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-radius: var(--radius-sm);
   animation: logSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .feed-item.blocked {
+  border-color: rgba(239, 68, 68, 0.12);
   border-left-color: var(--color-error);
   background: rgba(239, 68, 68, 0.03);
 }
 
 .feed-item.system {
+  border-color: rgba(245, 166, 35, 0.12);
   border-left-color: var(--color-highlight);
   background: rgba(245, 166, 35, 0.02);
 }
@@ -627,7 +630,7 @@ input:checked + .switch-slider:before {
   font-weight: 800;
   font-size: 1.1rem;
   letter-spacing: 0.05em;
-  color: var(--color-white);
+  color: #ffffff;
   text-shadow: 0 0 8px rgba(255,255,255,0.2);
 }
 
@@ -670,14 +673,14 @@ input:checked + .switch-slider:before {
 .card-holder span {
   display: block;
   font-size: 0.55rem;
-  color: var(--color-muted);
+  color: rgba(255, 255, 255, 0.65);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
 .card-holder strong {
   font-size: 0.8rem;
-  color: var(--color-white);
+  color: #ffffff;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
