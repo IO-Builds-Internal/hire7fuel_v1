@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initIftaSplitPreview();
   initHeroSimulator();
   initCardStack3D();
+  initApplyModal();
 });
 
 /**
@@ -783,5 +784,44 @@ function initCardStack3D() {
       });
     });
   }
+}
+
+/**
+ * 11. Custom Apply/Get Started Options Modal Trigger Hook
+ */
+function initApplyModal() {
+  const modal = document.getElementById('applyOptionModal');
+  const backdrop = document.getElementById('applyModalBackdrop');
+  const closeBtn = document.getElementById('applyModalClose');
+
+  if (!modal) return;
+
+  // Intercept all links targeting '/apply' if we are not already on '/apply'
+  if (window.location.pathname !== '/apply') {
+    const applyLinks = document.querySelectorAll('a[href="/apply"]');
+    applyLinks.forEach(link => {
+      // Exclude any links inside the modal itself so they work normally
+      if (link.closest('#applyOptionModal')) return;
+
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        modal.classList.add('active');
+      });
+    });
+  }
+
+  // Close handles
+  const closeModal = () => {
+    modal.classList.remove('active');
+  };
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (backdrop) backdrop.addEventListener('click', closeModal);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
 }
 

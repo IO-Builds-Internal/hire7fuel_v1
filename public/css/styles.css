@@ -8,3 +8,187 @@
 @import url('./emulator.css');
 @import url('./forms.css');
 @import url('./admin.css');
+
+/* ============================================================================
+   HIRE7 FUEL - SELECTION MODAL STYLES (v1.2)
+   ============================================================================ */
+
+.apply-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.apply-modal.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.apply-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 44, 44, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.apply-modal-content {
+  position: relative;
+  z-index: 2;
+  background: var(--color-primary);
+  border: var(--border-glass-glow);
+  box-shadow: 0 25px 50px -12px rgba(10, 44, 44, 0.25);
+  border-radius: var(--radius-lg);
+  max-width: 800px;
+  width: 90%;
+  padding: 2.5rem;
+  transform: translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.apply-modal.active .apply-modal-content {
+  transform: translateY(0);
+}
+
+.apply-modal-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: var(--color-muted);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+}
+
+.apply-modal-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--color-white);
+}
+
+.apply-modal-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.apply-modal-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.apply-modal-header p {
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.apply-modal-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .apply-modal-options {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .apply-modal-content {
+    padding: 1.75rem;
+  }
+}
+
+.apply-modal-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-darker);
+  border: var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.apply-modal-card:hover {
+  background: var(--color-mid-teal);
+  border-color: var(--color-accent);
+  box-shadow: 0 12px 24px rgba(20, 160, 119, 0.08);
+  transform: translateY(-4px);
+}
+
+.option-icon-glowing {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-sm);
+  background: rgba(20, 160, 119, 0.08);
+  border: 1px solid rgba(20, 160, 119, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  transition: all var(--transition-fast);
+}
+
+.apply-modal-card:hover .option-icon-glowing {
+  background: var(--color-accent);
+  color: var(--color-primary);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 15px rgba(20, 160, 119, 0.3);
+}
+
+.option-info h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 0.5rem;
+}
+
+.option-info p {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.option-btn {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+  transition: all var(--transition-fast);
+}
+
+.apply-modal-card:hover .option-btn {
+  gap: 0.75rem;
+}
