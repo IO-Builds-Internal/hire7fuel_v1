@@ -184,21 +184,36 @@
 }
 
 .emulator-card-render {
-  background: linear-gradient(135deg, #0e1e1e 0%, #050a0a 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: radial-gradient(circle at 80% 20%, rgba(20, 160, 119, 0.18) 0%, transparent 60%),
+              linear-gradient(135deg, #0a1f1f 0%, #030808 100%);
+  border: 1.5px solid rgba(20, 160, 119, 0.35);
   border-radius: var(--radius-md);
   padding: 2rem;
   aspect-ratio: 1.58 / 1;
   position: relative;
   overflow: hidden;
-  box-shadow: var(--shadow-premium), 0 15px 30px rgba(0,0,0,0.8);
+  box-shadow: var(--shadow-premium), 0 15px 35px rgba(0,0,0,0.7);
   transition: all var(--transition-normal);
+}
+
+.emulator-card-render::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(20, 160, 119, 0.12) 45%, rgba(96, 165, 250, 0.08) 50%, rgba(20, 160, 119, 0.12) 55%, transparent 60%);
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
 }
 
 .emulator-card-render.frozen {
   background: linear-gradient(135deg, #1c1c1c 0%, #0c0c0c 100%);
   border-color: rgba(239, 68, 68, 0.2);
   box-shadow: var(--shadow-premium), 0 0 30px rgba(239, 68, 68, 0.1);
+}
+
+.emulator-card-render.frozen::after {
+  opacity: 0.15;
 }
 
 .emulator-card-render.frozen::before {
@@ -226,10 +241,23 @@
 }
 
 .card-chip {
-  width: 40px;
-  height: 30px;
-  background: linear-gradient(135deg, #f5a623 0%, #b3740e 100%);
-  border-radius: 4px;
+  width: 38px;
+  height: 28px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-chip::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: 
+    linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px) 0 0 / 6px 100%,
+    linear-gradient(0deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px) 0 0 / 100% 6px;
 }
 
 .card-number {

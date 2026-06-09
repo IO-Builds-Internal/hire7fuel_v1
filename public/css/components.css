@@ -757,14 +757,14 @@
 }
 
 .footer-logo-img {
-  height: 40px;
+  height: 52px;
   width: auto;
   max-width: 140px;
   object-fit: contain;
   border-radius: var(--radius-sm);
   border: 1.5px solid rgba(20, 160, 119, 0.35); /* Premium stroke */
-  padding: 3px 6px;
-  background: rgba(13, 79, 79, 0.3);
+  padding: 4px 8px;
+  background: #ffffff;
   position: relative;
   z-index: 1;
   box-shadow: 0 0 10px rgba(20, 160, 119, 0.1);
