@@ -26,9 +26,11 @@
         <li>
           <a href="/contact" class="nav-link <%= page === 'contact' ? 'active' : '' %>" id="navContact">Contact</a>
         </li>
+        <% if (page !== 'apply') { %>
         <li>
           <a href="/apply" class="btn btn-primary nav-btn" id="navApply">Apply Now</a>
         </li>
+        <% } %>
       </ul>
 
       <!-- Mobile Menu Hamburger Button -->
