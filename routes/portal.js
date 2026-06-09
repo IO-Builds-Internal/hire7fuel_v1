@@ -135,6 +135,24 @@ router.post('/register', async (req, res) => {
   }
 
   try {
+    // Check for existing carrier to prevent duplicate registration
+    let existing = null;
+    if (usdot) {
+      existing = await dbGet("SELECT id FROM carriers WHERE usdot = ?", [usdot]);
+    }
+    if (!existing && mc_number) {
+      existing = await dbGet("SELECT id FROM carriers WHERE mc_number = ?", [mc_number]);
+    }
+    if (!existing && company_name) {
+      existing = await dbGet("SELECT id FROM carriers WHERE company_name = ? AND email = ?", [company_name, email]);
+    }
+
+    if (existing) {
+      req.session.carrierId = existing.id;
+      req.session.isAuthenticated = true;
+      return res.redirect('/portal/compliance?success=true');
+    }
+
     const result = await dbRun(
       "INSERT INTO carriers (company_name, email, phone, usdot, mc_number, status) VALUES (?, ?, ?, ?, ?, 'active')",
       [company_name, email, phone, usdot, mc_number]
@@ -390,9 +408,16 @@ router.post('/profile/edit', async (req, res) => {
       data.legal_name || data.dba_name, data.primary_email, data.primary_phone, data.usdot, data.mc_number, carrierId
     ]);
 
+    if (req.query.ajax === 'true') {
+      return res.json({ success: true, message: 'Carrier profile autosaved successfully.' });
+    }
+
     res.redirect('/portal/profile?success=true');
   } catch (err) {
     console.error('Failed to update carrier profile:', err);
+    if (req.query.ajax === 'true') {
+      return res.status(500).json({ success: false, message: 'Failed to autosave: ' + err.message });
+    }
     res.redirect(`/portal/profile?error=${encodeURIComponent(err.message)}`);
   }
 });

@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard Command Center | <%= config.brand.name %></title>
   <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
   
   <style>
     /* Ultra-Premium Action Buttons Hover Effects */
     .admin-action-btn.admin-view-details:hover {
-      background: rgba(34, 201, 138, 0.18) !important;
+      background: rgba(20, 160, 119, 0.1) !important;
       border-color: var(--color-accent) !important;
       transform: translateY(-1px);
     }
@@ -20,39 +21,9 @@
       transform: translateY(-1px);
     }
     
-    /* Premium Redesigned Details Modal styling */
     .details-modal {
       backdrop-filter: blur(15px) !important;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .modal-card {
-      background: linear-gradient(135deg, #0e1e1e 0%, #061111 100%) !important;
-      border: 1px solid rgba(34, 201, 138, 0.25) !important;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(34, 201, 138, 0.05) !important;
-      border-radius: 12px !important;
-      padding: 2.5rem !important;
-      max-width: 650px !important;
-      animation: modalSlideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    }
-    
-    @keyframes modalSlideUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.96);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-    
-    .modal-close {
-      color: #a3c2c2 !important;
-      transition: all 0.2s ease !important;
-      font-size: 1.75rem !important;
-      top: 1.25rem !important;
-      right: 1.5rem !important;
     }
     
     .modal-close:hover {
@@ -63,37 +34,13 @@
 </head>
 <body class="admin-body">
 
-  <!-- Admin Navigation -->
-  <nav class="admin-nav">
-    <div class="admin-nav-container">
-      <a href="/admin" class="logo-link" style="font-size: 1.35rem; display: flex; align-items: center; gap: 0.75rem;">
-        <img src="<%= config.brand.logo %>" alt="Logo" class="admin-nav-logo">
-        <span><%= config.brand.name %> Admin</span>
-      </a>
-
-      <ul class="admin-nav-links">
-        <li><a href="/admin" class="admin-nav-link active">Dashboard Hub</a></li>
-        <li><a href="/admin/compliance" class="admin-nav-link">Compliance Overview</a></li>
-        <li><a href="/admin/drivers" class="admin-nav-link">All Drivers</a></li>
-        <li><a href="/admin/fleet" class="admin-nav-link">All Fleet</a></li>
-        <li><a href="/admin/settings" class="admin-nav-link">Site Settings</a></li>
-        <li><a href="/admin/jobs" class="admin-nav-link">Careers Admin</a></li>
-        <li><a href="/admin/testimonials" class="admin-nav-link">Manage Testimonials</a></li>
-      </ul>
-
-      <a href="/admin/logout" class="admin-logout">
-        <i class="fas fa-power-off"></i> Logout
-      </a>
-    </div>
-  </nav>
-
-  <!-- Dashboard Content Container -->
-  <main class="admin-container">
+  <div class="portal-layout">
+    <%- include('../partials/admin_nav') %>
     
     <div class="admin-header-wrap">
       <div>
         <h1>Dashboard Control Hub</h1>
-        <p style="color: #a3c2c2; margin-top: 0.25rem;">Monitor inbound fleet requests, contact inquiries, and statistics in real-time.</p>
+        <p style="color: var(--color-muted); margin-top: 0.25rem;">Monitor inbound fleet requests, contact inquiries, and statistics in real-time.</p>
       </div>
       <div>
         <span style="font-size: 0.9rem; color: var(--color-accent); font-weight: 600; background-color: rgba(34,201,138,0.08); padding: 0.5rem 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(34,201,138,0.2);">
@@ -173,7 +120,7 @@
                   <td style="font-weight: 600; color: var(--color-white);"><%= sub.payload.name %></td>
                   <td>
                     <div style="font-size: 0.9rem;"><%= sub.payload.email %></div>
-                    <div style="font-size: 0.8rem; color: #a3c2c2;"><%= sub.payload.phone %></div>
+                    <div style="font-size: 0.8rem; color: var(--color-muted);"><%= sub.payload.phone %></div>
                   </td>
                   <td><%= sub.payload.company || 'Not Specified' %></td>
                   <td style="text-align: right; white-space: nowrap;">
@@ -192,15 +139,16 @@
           </table>
         </div>
       <% } else { %>
-        <div style="text-align: center; padding: 4rem 2rem; color: #a3c2c2;">
-          <i class="fas fa-folder-open" style="font-size: 3rem; color: rgba(255,255,255,0.05); margin-bottom: 1.5rem;"></i>
+        <div style="text-align: center; padding: 4rem 2rem; color: var(--color-muted);">
+          <i class="fas fa-folder-open" style="font-size: 3rem; color: rgba(0,0,0,0.05); margin-bottom: 1.5rem;"></i>
           <h3>Zero Submissions Found</h3>
           <p style="color: #6B7280; font-size: 0.95rem; max-width: 400px; margin: 0.5rem auto 0 auto;">Submissions from contact forms, talent applications, and card requests will list here dynamically once submitted.</p>
         </div>
       <% } %>
     </div>
 
-  </main>
+    </div>
+  </div>
 
   <!-- Interactive Detail Modal Overlay -->
   <div class="details-modal" id="submissionsModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">

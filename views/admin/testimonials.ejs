@@ -5,54 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carrier Testimonials Admin | <%= config.brand.name %></title>
   <link class="styles" rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
 </head>
 <body class="admin-body">
 
-  <!-- Admin Navigation -->
-  <nav class="admin-nav">
-    <div class="admin-nav-container">
-      <a href="/admin" class="logo-link" style="font-size: 1.35rem; display: flex; align-items: center; gap: 0.75rem;">
-        <img src="<%= config.brand.logo %>" alt="Logo" class="admin-nav-logo">
-        <span><%= config.brand.name %> Admin</span>
-      </a>
-
-      <ul class="admin-nav-links">
-        <li><a href="/admin" class="admin-nav-link">Dashboard Hub</a></li>
-        <li><a href="/admin/compliance" class="admin-nav-link">Compliance Overview</a></li>
-        <li><a href="/admin/drivers" class="admin-nav-link">All Drivers</a></li>
-        <li><a href="/admin/fleet" class="admin-nav-link">All Fleet</a></li>
-        <li><a href="/admin/settings" class="admin-nav-link">Site Settings</a></li>
-        <li><a href="/admin/jobs" class="admin-nav-link">Careers Admin</a></li>
-        <li><a href="/admin/testimonials" class="admin-nav-link active">Manage Testimonials</a></li>
-      </ul>
-
-      <a href="/admin/logout" class="admin-logout">
-        <i class="fas fa-power-off"></i> Logout
-      </a>
-    </div>
-  </nav>
-
-  <!-- Testimonials Administration Grid Container -->
-  <main class="admin-container">
+  <div class="portal-layout">
+    <%- include('../partials/admin_nav') %>
     
     <div class="admin-header-wrap">
       <div>
         <h1>Carrier Testimonial Administrator</h1>
-        <p style="color: #a3c2c2; margin-top: 0.25rem;">Manage the social proof testimonials and carrier quotes visible on the public homepage. Toggle visibility instantly.</p>
+        <p style="color: var(--color-muted); margin-top: 0.25rem;">Manage the social proof testimonials and carrier quotes visible on the public homepage. Toggle visibility instantly.</p>
       </div>
     </div>
 
     <!-- Alert notifications -->
     <% if (success) { %>
-      <div class="alert alert-success" style="background-color: rgba(16, 185, 129, 0.15); border: 1px solid var(--color-success); color: #a7f3d0; margin-bottom: 2rem;">
-        <i class="fas fa-circle-check" style="margin-right: 0.5rem; color: var(--color-success);"></i> 
+      <div class="alert alert-success">
+        <i class="fas fa-circle-check"></i> 
         <strong>Success!</strong> Testimonials database transaction completed successfully.
       </div>
     <% } %>
 
     <% if (error) { %>
-      <div class="alert" style="background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--color-error); color: #fca5a5; margin-bottom: 2rem;">
-        <i class="fas fa-triangle-exclamation" style="margin-right: 0.5rem; color: var(--color-error);"></i> 
+      <div class="alert alert-danger">
+        <i class="fas fa-triangle-exclamation"></i> 
         <strong>Transaction Error:</strong> <%= error %>
       </div>
     <% } %>
@@ -61,7 +38,7 @@
       
       <!-- Left Column: Existing Testimonials -->
       <div class="admin-card">
-        <h2 style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Existing Testimonials</h2>
+        <h2 style="border-bottom: 1px solid rgba(0, 0, 0, 0.06); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Existing Testimonials</h2>
         
         <% if (testimonials && testimonials.length > 0) { %>
           <div style="display: flex; flex-direction: column; gap: 1rem;">
@@ -81,7 +58,7 @@
 
                   <!-- Active status switch toggle -->
                   <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="font-size: 0.8rem; color: #a3c2c2; font-weight: 500;">Active</span>
+                    <span style="font-size: 0.8rem; color: var(--color-muted); font-weight: 500;">Active</span>
                     <label class="toggle-switch">
                       <input type="checkbox" <%= t.active ? 'checked' : '' %> onchange="handleTestimonialToggle('<%= t.id %>', this.checked)">
                       <span class="toggle-slider"></span>
@@ -89,11 +66,11 @@
                   </div>
                 </div>
 
-                <div style="width: 100%; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: var(--radius-sm); padding: 1rem; font-size: 0.9rem; color: var(--color-text-off); font-style: italic; line-height: 1.5;">
+                <div style="width: 100%; background: var(--color-bg-darker); border: 1px solid rgba(0, 0, 0, 0.06); border-radius: var(--radius-sm); padding: 1rem; font-size: 0.9rem; color: var(--color-text-off); font-style: italic; line-height: 1.5;">
                   "<%= t.quote %>"
                 </div>
 
-                <div style="width: 100%; display: flex; justify-content: flex-end; gap: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.75rem;">
+                <div style="width: 100%; display: flex; justify-content: flex-end; gap: 0.5rem; border-top: 1px solid rgba(0, 0, 0, 0.06); padding-top: 0.75rem;">
                   <!-- Edit button -->
                   <a href="/admin/testimonials/edit/<%= t.id %>" class="btn btn-sm btn-outline-dark" style="text-decoration: none; border-color: rgba(245, 166, 35, 0.4); color: #f5a623; display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;">
                     <i class="fas fa-pen-to-square"></i> Edit
@@ -110,8 +87,8 @@
             <% }) %>
           </div>
         <% } else { %>
-          <div style="text-align: center; padding: 4rem 2rem; color: #a3c2c2;">
-            <i class="fas fa-quote-right" style="font-size: 2.5rem; color: rgba(255,255,255,0.05); margin-bottom: 1.5rem;"></i>
+          <div style="text-align: center; padding: 4rem 2rem; color: var(--color-muted);">
+            <i class="fas fa-quote-right" style="font-size: 2.5rem; color: rgba(0, 0, 0, 0.05); margin-bottom: 1.5rem;"></i>
             <h3>No Testimonials Found</h3>
             <p style="color: #6B7280; font-size: 0.9rem; max-width: 300px; margin: 0.5rem auto 0 auto;">Use the right-side form to publish dynamic carrier statements instantly to the home page.</p>
           </div>
@@ -120,7 +97,7 @@
 
       <!-- Right Column: Add New Testimonial Form -->
       <div class="admin-card">
-        <h2 style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Add New Testimonial</h2>
+        <h2 style="border-bottom: 1px solid rgba(0, 0, 0, 0.06); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Add New Testimonial</h2>
         
         <form action="/admin/testimonials/add" method="POST">
           <div class="form-group admin-form-group">
@@ -154,7 +131,8 @@
       </div>
 
     </div>
-  </main>
+    </div>
+  </div>
 
   <!-- Client-side script handling active toggles with dynamic server endpoints -->
   <script>

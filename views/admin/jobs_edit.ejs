@@ -5,56 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Job Opening | <%= config.brand.name %></title>
   <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
 </head>
 <body class="admin-body">
 
-  <!-- Admin Navigation -->
-  <nav class="admin-nav">
-    <div class="admin-nav-container">
-      <a href="/admin" class="logo-link" style="font-size: 1.35rem; display: flex; align-items: center; gap: 0.75rem;">
-        <img src="<%= config.brand.logo %>" alt="Logo" class="admin-nav-logo">
-        <span><%= config.brand.name %> Admin</span>
-      </a>
-
-      <ul class="admin-nav-links">
-        <li><a href="/admin" class="admin-nav-link">Dashboard Hub</a></li>
-        <li><a href="/admin/compliance" class="admin-nav-link">Compliance Overview</a></li>
-        <li><a href="/admin/drivers" class="admin-nav-link">All Drivers</a></li>
-        <li><a href="/admin/fleet" class="admin-nav-link">All Fleet</a></li>
-        <li><a href="/admin/settings" class="admin-nav-link">Site Settings</a></li>
-        <li><a href="/admin/jobs" class="admin-nav-link active">Careers Admin</a></li>
-        <li><a href="/admin/testimonials" class="admin-nav-link">Manage Testimonials</a></li>
-      </ul>
-
-      <a href="/admin/logout" class="admin-logout">
-        <i class="fas fa-power-off"></i> Logout
-      </a>
-    </div>
-  </nav>
-
-  <!-- Edit job layout -->
-  <main class="admin-container" style="max-width: 800px;">
+  <div class="portal-layout">
+    <%- include('../partials/admin_nav') %>
     
     <div class="admin-header-wrap">
       <div>
         <h1 style="display: flex; align-items: center; gap: 0.75rem;">
-          <a href="/admin/jobs" style="color: #a3c2c2; font-size: 1.75rem; text-decoration: none;"><i class="fas fa-arrow-left"></i></a>
+          <a href="/admin/jobs" style="color: var(--color-muted); font-size: 1.75rem; text-decoration: none;"><i class="fas fa-arrow-left"></i></a>
           Edit Job Opening
         </h1>
-        <p style="color: #a3c2c2; margin-top: 0.25rem; margin-left: 2.5rem;">Modify listing details for "<%= job.title %>". Changes propagate instantly.</p>
+        <p style="color: var(--color-muted); margin-top: 0.25rem; margin-left: 2.5rem;">Modify listing details for "<%= job.title %>". Changes propagate instantly.</p>
       </div>
     </div>
 
     <!-- Alert notifications -->
     <% if (error) { %>
-      <div class="alert" style="background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--color-error); color: #fca5a5; margin-bottom: 2rem;">
-        <i class="fas fa-triangle-exclamation" style="margin-right: 0.5rem; color: var(--color-error);"></i> 
+      <div class="alert alert-danger">
+        <i class="fas fa-triangle-exclamation"></i> 
         <strong>Transaction Error:</strong> <%= error %>
       </div>
     <% } %>
 
     <div class="admin-card">
-      <h3 style="color: var(--color-white); font-size: 1.15rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+      <h3 style="color: var(--color-white); font-size: 1.15rem; border-bottom: 1px solid rgba(0, 0, 0, 0.06); padding-bottom: 0.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
         <i class="fas fa-pen-to-square text-accent"></i> Job Parameters
       </h3>
 
@@ -103,7 +80,8 @@
         </div>
       </form>
     </div>
-  </main>
+    </div>
+  </div>
 
   <!-- FontAwesome for standard icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />

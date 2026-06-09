@@ -284,7 +284,9 @@
   gap: 0.4rem;
 }
 
-.portal-form-group.full-width {
+.portal-form-group.full-width,
+.portal-form-grid.full-width,
+.full-width {
   grid-column: 1 / -1;
 }
 

@@ -459,7 +459,8 @@ router.get('/testimonials', requireAdmin, async (req, res) => {
       config: settings,
       testimonials: testimonials,
       success: req.query.success === 'true',
-      error: req.query.error || null
+      error: req.query.error || null,
+      page: 'admin-testimonials'
     });
   } catch (err) {
     console.error('Error fetching testimonials in admin:', err);
@@ -536,7 +537,8 @@ router.get('/testimonials/edit/:id', requireAdmin, async (req, res) => {
     res.render('admin/testimonials_edit', {
       config: settings,
       testimonial: testimonial,
-      error: req.query.error || null
+      error: req.query.error || null,
+      page: 'admin-testimonials'
     });
   } catch (err) {
     console.error('Error fetching testimonial edit page:', err);

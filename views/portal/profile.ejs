@@ -531,9 +531,15 @@
         </div>
 
         <!-- Submit Button Panel Sticky -->
-        <div style="background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); padding: 1.25rem 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-md); display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
-          <a href="/portal/compliance" class="portal-btn portal-btn-secondary">Cancel</a>
-          <button type="submit" class="portal-btn portal-btn-primary"><i class="fas fa-save"></i> Save Profile Parameters</button>
+        <div style="background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); padding: 1.25rem 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-md); display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 2rem; position: sticky; bottom: 1rem; z-index: 100;">
+          <div id="autosave-status" style="font-size: 0.9rem; color: var(--color-muted); display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease;">
+            <i class="fas fa-cloud-upload-alt" style="color: var(--color-accent);"></i>
+            <span>All changes are automatically saved as you type.</span>
+          </div>
+          <div style="display: flex; gap: 1rem;">
+            <a href="/portal/compliance" class="portal-btn portal-btn-secondary">Cancel</a>
+            <button type="submit" class="portal-btn portal-btn-primary"><i class="fas fa-save"></i> Save Profile Parameters</button>
+          </div>
         </div>
       </form>
 
@@ -599,7 +605,69 @@
           input.value = '';
         });
       }
+      // Trigger autosave when a row is removed
+      clearTimeout(autosaveTimeout);
+      triggerAutosave();
     }
+
+    // Autosave functionality
+    const form = document.getElementById('profileForm');
+    const statusDiv = document.getElementById('autosave-status');
+    let autosaveTimeout = null;
+
+    function triggerAutosave() {
+      if (!statusDiv) return;
+      statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: var(--color-accent);"></i> Autosaving changes...';
+      
+      const formData = new URLSearchParams(new FormData(form));
+      
+      fetch('/portal/profile/edit?ajax=true', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          statusDiv.innerHTML = `<i class="fas fa-check-circle" style="color: var(--color-success);"></i> Auto-saved at ${now}`;
+        } else {
+          statusDiv.innerHTML = `<i class="fas fa-exclamation-circle" style="color: var(--color-error);"></i> Error autosaving: ${data.message || 'Server error'}`;
+        }
+      })
+      .catch(err => {
+        console.error('Autosave error:', err);
+        statusDiv.innerHTML = '<i class="fas fa-exclamation-circle" style="color: var(--color-error);"></i> Connection lost. Will retry...';
+      });
+    }
+
+    // Attach listeners to all inputs
+    form.addEventListener('input', () => {
+      clearTimeout(autosaveTimeout);
+      statusDiv.innerHTML = '<i class="fas fa-sync fa-spin" style="color: var(--color-accent);"></i> Typing...';
+      autosaveTimeout = setTimeout(triggerAutosave, 1500); // 1.5 seconds debounce
+    });
+
+    // Save immediately on select or checkbox changes
+    form.addEventListener('change', (e) => {
+      if (e.target.tagName === 'SELECT' || e.target.type === 'checkbox' || e.target.type === 'radio') {
+        clearTimeout(autosaveTimeout);
+        triggerAutosave();
+      }
+    });
+
+    // Also trigger autosave when dynamic rows are added
+    document.querySelectorAll('.add-row-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Delay slightly so clone occurs first
+        setTimeout(() => {
+          clearTimeout(autosaveTimeout);
+          triggerAutosave();
+        }, 100);
+      });
+    });
   </script>
 </body>
 </html>

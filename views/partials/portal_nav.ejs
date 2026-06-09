@@ -63,12 +63,14 @@
       </a>
     </li>
     
+    <% if (session && session.isAdmin) { %>
     <li style="margin-top: auto; border-top: 1px solid rgba(0, 0, 0, 0.05); padding-top: 1rem;">
       <a href="/admin" class="portal-menu-link" style="color: var(--color-muted);">
         <i class="fas fa-cogs"></i>
         <span>Admin Dashboard</span>
       </a>
     </li>
+    <% } %>
   </ul>
 </div>
 

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Website Settings | <%= config.brand.name %></title>
   <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
   
   <style>
     /* Premium settings dashboard layout enhancements */
@@ -26,23 +27,22 @@
     
     /* Left column navigation sidebar */
     .settings-sidebar {
-      background: linear-gradient(135deg, rgba(16, 37, 37, 0.75) 0%, rgba(6, 17, 17, 0.85) 100%);
-      border: 1px solid rgba(20, 160, 119, 0.18);
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
       border-radius: var(--radius-md);
       padding: 1.75rem;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      box-shadow: var(--shadow-sm);
     }
     
     .settings-sidebar-title {
       font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
-      color: #a3c2c2;
+      color: var(--color-muted);
       letter-spacing: 0.08em;
       margin-bottom: 1.25rem;
       padding-bottom: 0.75rem;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
       display: block;
     }
     
@@ -75,7 +75,7 @@
       align-items: center;
       gap: 0.85rem;
       padding: 0.9rem 1.25rem;
-      color: #a3c2c2;
+      color: var(--color-text-off);
       background: transparent;
       border: 1px solid transparent;
       border-radius: 8px;
@@ -96,13 +96,13 @@
     }
     
     .settings-nav-item:hover {
-      color: var(--color-white);
-      background: rgba(255, 255, 255, 0.02);
-      border-color: rgba(255, 255, 255, 0.05);
+      color: var(--color-accent);
+      background: rgba(20, 160, 119, 0.04);
+      border-color: rgba(20, 160, 119, 0.1);
     }
     
     .settings-nav-item.active {
-      color: var(--color-white);
+      color: var(--color-accent);
       background: rgba(20, 160, 119, 0.08);
       border-color: rgba(20, 160, 119, 0.22);
       box-shadow: 0 0 15px rgba(20, 160, 119, 0.04);
@@ -115,12 +115,11 @@
     
     /* Right column configuration workspace panel */
     .settings-content-panel {
-      background: linear-gradient(135deg, rgba(16, 37, 37, 0.75) 0%, rgba(6, 17, 17, 0.85) 100%);
-      border: 1px solid rgba(20, 160, 119, 0.18);
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
       border-radius: var(--radius-md);
       padding: 3rem 2.5rem;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      box-shadow: var(--shadow-sm);
       position: relative;
     }
     
@@ -152,7 +151,7 @@
     
     /* Tab header styles */
     .settings-pane-header {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
       padding-bottom: 1.25rem;
       margin-bottom: 2.25rem;
     }
@@ -172,7 +171,7 @@
     }
     
     .settings-pane-header p {
-      color: #a3c2c2;
+      color: var(--color-muted);
       font-size: 0.9rem;
       margin-top: 0.5rem;
       margin-bottom: 0;
@@ -181,7 +180,7 @@
     
     /* Outlined custom controls footer */
     .settings-control-footer {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
       padding-top: 2rem;
       margin-top: 3rem;
       display: flex;
@@ -200,7 +199,7 @@
     
     .settings-status-box {
       font-size: 0.85rem;
-      color: #a3c2c2;
+      color: var(--color-muted);
       display: flex;
       align-items: center;
       gap: 0.65rem;
@@ -235,51 +234,27 @@
 </head>
 <body class="admin-body">
 
-  <!-- Admin Navigation -->
-  <nav class="admin-nav">
-    <div class="admin-nav-container">
-      <a href="/admin" class="logo-link" style="font-size: 1.35rem; display: flex; align-items: center; gap: 0.75rem;">
-        <img src="<%= config.brand.logo %>" alt="Logo" class="admin-nav-logo">
-        <span><%= config.brand.name %> Admin</span>
-      </a>
-
-      <ul class="admin-nav-links">
-        <li><a href="/admin" class="admin-nav-link">Dashboard Hub</a></li>
-        <li><a href="/admin/compliance" class="admin-nav-link">Compliance Overview</a></li>
-        <li><a href="/admin/drivers" class="admin-nav-link">All Drivers</a></li>
-        <li><a href="/admin/fleet" class="admin-nav-link">All Fleet</a></li>
-        <li><a href="/admin/settings" class="admin-nav-link active">Site Settings</a></li>
-        <li><a href="/admin/jobs" class="admin-nav-link">Careers Admin</a></li>
-        <li><a href="/admin/testimonials" class="admin-nav-link">Manage Testimonials</a></li>
-      </ul>
-
-      <a href="/admin/logout" class="admin-logout">
-        <i class="fas fa-power-off"></i> Logout
-      </a>
-    </div>
-  </nav>
-
-  <!-- Main settings dashboard wrapper -->
-  <main class="admin-container">
+  <div class="portal-layout">
+    <%- include('../partials/admin_nav') %>
     
     <div class="admin-header-wrap">
       <div>
         <h1>Website Brand Customizer</h1>
-        <p style="color: #a3c2c2; margin-top: 0.25rem;">Dynamically update contact coordinates, brand titles, logos, and SMTP alerts across the entire live site.</p>
+        <p style="color: var(--color-muted); margin-top: 0.25rem;">Dynamically update contact coordinates, brand titles, logos, and SMTP alerts across the entire live site.</p>
       </div>
     </div>
 
     <!-- Alert notifications -->
     <% if (success) { %>
-      <div class="alert alert-success" style="background-color: rgba(16, 185, 129, 0.12); border: 1px solid var(--color-success); color: #a7f3d0; margin-bottom: 2.5rem; padding: 1rem 1.25rem; border-radius: var(--radius-sm);">
-        <i class="fas fa-circle-check" style="margin-right: 0.5rem; color: var(--color-success);"></i> 
+      <div class="alert alert-success">
+        <i class="fas fa-circle-check"></i> 
         <strong>Success!</strong> Core configurations updated successfully and propagated instantly to all pages.
       </div>
     <% } %>
 
     <% if (error) { %>
-      <div class="alert" style="background-color: rgba(239, 68, 68, 0.12); border: 1px solid var(--color-error); color: #fca5a5; margin-bottom: 2.5rem; padding: 1rem 1.25rem; border-radius: var(--radius-sm);">
-        <i class="fas fa-triangle-exclamation" style="margin-right: 0.5rem; color: var(--color-error);"></i> 
+      <div class="alert alert-danger">
+        <i class="fas fa-triangle-exclamation"></i> 
         <strong>Error:</strong> <%= error %>
       </div>
     <% } %>
@@ -331,11 +306,10 @@
               <p>Customize primary branding properties, identity names, sub-slogans, and official corporate logos.</p>
             </div>
 
-            <!-- Enhanced Frosted Logo Uplink Card -->
-            <div style="display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center; background: rgba(255, 255, 255, 0.015); border: 1px solid rgba(255, 255, 255, 0.04); padding: 1.75rem 2rem; border-radius: 8px; margin-bottom: 2.25rem;">
+            <div style="display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center; background: var(--color-bg-darker); border: 1px solid rgba(0, 0, 0, 0.06); padding: 1.75rem 2rem; border-radius: 8px; margin-bottom: 2.25rem;">
               <div style="text-align: center;">
-                <span style="display: block; font-size: 0.75rem; color: #a3c2c2; text-transform: uppercase; margin-bottom: 0.65rem; font-weight: 700; letter-spacing: 0.05em;">Current Logo</span>
-                <div style="background-color: var(--color-primary); padding: 1rem; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.06); display: inline-flex; align-items: center; justify-content: center; min-width: 140px; height: 80px; box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);">
+                <span style="display: block; font-size: 0.75rem; color: var(--color-muted); text-transform: uppercase; margin-bottom: 0.65rem; font-weight: 700; letter-spacing: 0.05em;">Current Logo</span>
+                <div style="background-color: #ffffff; padding: 1rem; border-radius: 6px; border: 1px solid rgba(0, 0, 0, 0.08); display: inline-flex; align-items: center; justify-content: center; min-width: 140px; height: 80px; box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.03);">
                   <img src="<%= config.brand.logo %>" alt="Active Logo" style="max-height: 58px; max-width: 120px; object-fit: contain;">
                 </div>
               </div>
@@ -471,14 +445,14 @@
               <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.5rem;">The verified sender address. Must align with authorized domains in your SMTP provider.</span>
             </div>
 
-            <!-- Frosted SMTP Connection Test Card -->
-            <div style="background: rgba(255, 255, 255, 0.015); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 8px; padding: 1.5rem; margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem;">
+            <!-- SMTP Connection Test Card -->
+            <div style="background: var(--color-bg-darker); border: 1px solid rgba(0, 0, 0, 0.06); border-radius: 8px; padding: 1.5rem; margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem;">
               <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
                 <div>
                   <h4 style="margin: 0; font-size: 0.95rem; color: var(--color-white); font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
                     <i class="fas fa-circle-check" style="color: var(--color-accent);"></i> SMTP Credentials Validator
                   </h4>
-                  <p style="margin: 0.25rem 0 0 0; font-size: 0.8rem; color: #a3c2c2;">Verify outbound connectivity and credentials by dispatching a real-time test mail before saving.</p>
+                  <p style="margin: 0.25rem 0 0 0; font-size: 0.8rem; color: var(--color-muted);">Verify outbound connectivity and credentials by dispatching a real-time test mail before saving.</p>
                 </div>
                 <button type="button" id="btn-test-smtp" class="btn btn-outline" style="border-color: rgba(20, 160, 119, 0.3); color: var(--color-accent); font-weight: 600; padding: 0.75rem 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem;">
                   <i class="fas fa-envelope-circle-check"></i> Dispatch Test Mail
@@ -486,7 +460,7 @@
               </div>
               
               <!-- Connection Logs Console -->
-              <div id="smtp-test-result" style="display: none; background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 1.25rem; font-family: monospace; font-size: 0.85rem; line-height: 1.6;">
+              <div id="smtp-test-result" style="display: none; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 6px; padding: 1.25rem; font-family: monospace; font-size: 0.85rem; line-height: 1.6;">
               </div>
             </div>
           </div>
@@ -548,7 +522,8 @@
       
     </form>
 
-  </main>
+    </div>
+  </div>
 
   <!-- Client-Side Settings Tab Switcher Script -->
   <script>
@@ -604,7 +579,7 @@
           if (!smtp_host || !smtp_port || !smtp_from || !smtp_to) {
             logConsole.style.display = 'block';
             logConsole.style.borderColor = 'rgba(239, 68, 68, 0.3)';
-            logConsole.style.color = '#fca5a5';
+            logConsole.style.color = '#991b1b';
             logConsole.innerHTML = '<i class="fas fa-triangle-exclamation" style="color: #ef4444; margin-right: 0.5rem;"></i> <strong>Error:</strong> Missing required fields. Please ensure SMTP Host, Port, Sender Address ("From"), and Alert Recipient ("To") are configured.';
             return;
           }
@@ -616,7 +591,7 @@
           
           logConsole.style.display = 'block';
           logConsole.style.borderColor = 'rgba(20, 160, 119, 0.3)';
-          logConsole.style.color = '#a3c2c2';
+          logConsole.style.color = 'var(--color-text-off)';
           logConsole.innerHTML = '<span style="color: var(--color-accent);"><i class="fas fa-network-wired"></i> Establishing connection to ' + smtp_host + ':' + smtp_port + '...</span>';
           
           fetch('/admin/settings/test-smtp', {
@@ -637,25 +612,25 @@
           .then(({ status, data }) => {
             if (status === 200 && data.success) {
               logConsole.style.borderColor = 'rgba(16, 185, 129, 0.4)';
-              logConsole.style.color = '#a7f3d0';
+              logConsole.style.color = '#065f46';
               logConsole.innerHTML = `
                 <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
                   <i class="fas fa-circle-check" style="color: var(--color-success); font-size: 1.1rem; margin-top: 0.2rem;"></i>
                   <div>
-                    <strong style="color: #fff;">Success: Outbound SMTP dispatch verified!</strong>
-                    <p style="margin: 0.35rem 0 0 0; color: #a3c2c2; font-size: 0.8rem;">${data.message}</p>
+                    <strong style="color: #065f46;">Success: Outbound SMTP dispatch verified!</strong>
+                    <p style="margin: 0.35rem 0 0 0; color: var(--color-muted); font-size: 0.8rem;">${data.message}</p>
                   </div>
                 </div>
               `;
             } else {
               logConsole.style.borderColor = 'rgba(239, 68, 68, 0.4)';
-              logConsole.style.color = '#fca5a5';
+              logConsole.style.color = '#991b1b';
               logConsole.innerHTML = `
                 <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
                   <i class="fas fa-circle-exclamation" style="color: var(--color-error); font-size: 1.1rem; margin-top: 0.2rem;"></i>
                   <div>
-                    <strong style="color: #fff;">SMTP Connection Failed</strong>
-                    <p style="margin: 0.35rem 0 0 0; color: #fca5a5; font-size: 0.85rem;"><strong>Details:</strong> ${data.error || 'Unknown transporter error'}</p>
+                    <strong style="color: #991b1b;">SMTP Connection Failed</strong>
+                    <p style="margin: 0.35rem 0 0 0; color: #991b1b; font-size: 0.85rem;"><strong>Details:</strong> ${data.error || 'Unknown transporter error'}</p>
                     <span style="font-size: 0.75rem; color: #6B7280; display: block; margin-top: 0.5rem;">Tip: Verify your hostname, credentials, port, and security rules (e.g. secure connection requirements on your SMTP console).</span>
                   </div>
                 </div>
@@ -664,13 +639,13 @@
           })
           .catch(err => {
             logConsole.style.borderColor = 'rgba(239, 68, 68, 0.4)';
-            logConsole.style.color = '#fca5a5';
+            logConsole.style.color = '#991b1b';
             logConsole.innerHTML = `
               <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
                 <i class="fas fa-circle-exclamation" style="color: var(--color-error); font-size: 1.1rem; margin-top: 0.2rem;"></i>
                 <div>
-                  <strong style="color: #fff;">Network Error</strong>
-                  <p style="margin: 0.35rem 0 0 0; color: #fca5a5; font-size: 0.8rem;">Failed to dispatch test request to backend settings route.</p>
+                  <strong style="color: #991b1b;">Network Error</strong>
+                  <p style="margin: 0.35rem 0 0 0; color: #991b1b; font-size: 0.8rem;">Failed to dispatch test request to backend settings route.</p>
                 </div>
               </div>
             `;

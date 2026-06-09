@@ -5,54 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dynamic Job Board Admin | <%= config.brand.name %></title>
   <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
 </head>
 <body class="admin-body">
 
-  <!-- Admin Navigation -->
-  <nav class="admin-nav">
-    <div class="admin-nav-container">
-      <a href="/admin" class="logo-link" style="font-size: 1.35rem; display: flex; align-items: center; gap: 0.75rem;">
-        <img src="<%= config.brand.logo %>" alt="Logo" class="admin-nav-logo">
-        <span><%= config.brand.name %> Admin</span>
-      </a>
-
-      <ul class="admin-nav-links">
-        <li><a href="/admin" class="admin-nav-link">Dashboard Hub</a></li>
-        <li><a href="/admin/compliance" class="admin-nav-link">Compliance Overview</a></li>
-        <li><a href="/admin/drivers" class="admin-nav-link">All Drivers</a></li>
-        <li><a href="/admin/fleet" class="admin-nav-link">All Fleet</a></li>
-        <li><a href="/admin/settings" class="admin-nav-link">Site Settings</a></li>
-        <li><a href="/admin/jobs" class="admin-nav-link active">Careers Admin</a></li>
-        <li><a href="/admin/testimonials" class="admin-nav-link">Manage Testimonials</a></li>
-      </ul>
-
-      <a href="/admin/logout" class="admin-logout">
-        <i class="fas fa-power-off"></i> Logout
-      </a>
-    </div>
-  </nav>
-
-  <!-- Careers Administration Grid Container -->
-  <main class="admin-container">
+  <div class="portal-layout">
+    <%- include('../partials/admin_nav') %>
     
     <div class="admin-header-wrap">
       <div>
         <h1>Careers & Jobs Administrator</h1>
-        <p style="color: #a3c2c2; margin-top: 0.25rem;">Create, toggle, or delete dynamic job postings. Changes propagate instantly to the public Careers page.</p>
+        <p style="color: var(--color-muted); margin-top: 0.25rem;">Create, toggle, or delete dynamic job postings. Changes propagate instantly to the public Careers page.</p>
       </div>
     </div>
 
     <!-- Alert notifications -->
     <% if (success) { %>
-      <div class="alert alert-success" style="background-color: rgba(16, 185, 129, 0.15); border: 1px solid var(--color-success); color: #a7f3d0; margin-bottom: 2rem;">
-        <i class="fas fa-circle-check" style="margin-right: 0.5rem; color: var(--color-success);"></i> 
+      <div class="alert alert-success">
+        <i class="fas fa-circle-check"></i> 
         <strong>Success!</strong> Job board database transaction completed successfully.
       </div>
     <% } %>
 
     <% if (error) { %>
-      <div class="alert" style="background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--color-error); color: #fca5a5; margin-bottom: 2rem;">
-        <i class="fas fa-triangle-exclamation" style="margin-right: 0.5rem; color: var(--color-error);"></i> 
+      <div class="alert alert-danger">
+        <i class="fas fa-triangle-exclamation"></i> 
         <strong>Transaction Error:</strong> <%= error %>
       </div>
     <% } %>
@@ -61,7 +38,7 @@
       
       <!-- Left Column: Existing Job Listings -->
       <div class="admin-card">
-        <h2 style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Existing Job Openings</h2>
+        <h2 style="border-bottom: 1px solid rgba(0, 0, 0, 0.06); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Existing Job Openings</h2>
         
         <% if (jobs && jobs.length > 0) { %>
           <div style="display: flex; flex-direction: column; gap: 1rem;">
@@ -69,7 +46,7 @@
               <div class="job-admin-card" id="admin-job-<%= job.id %>">
                 <div class="job-admin-info">
                   <h4><%= job.title %></h4>
-                  <div style="font-size: 0.85rem; color: #a3c2c2; margin-top: 0.25rem;">
+                  <div style="font-size: 0.85rem; color: var(--color-muted); margin-top: 0.25rem;">
                     <span style="margin-right: 0.75rem;"><i class="fas fa-building" style="margin-right: 0.25rem;"></i> <%= job.department %></span>
                     <span style="margin-right: 0.75rem;"><i class="fas fa-location-dot" style="margin-right: 0.25rem;"></i> <%= job.location %></span>
                     <span><i class="fas fa-briefcase" style="margin-right: 0.25rem;"></i> <%= job.type %></span>
@@ -79,7 +56,7 @@
                 <div class="job-admin-actions">
                   <!-- Active status switch toggle (EJS -> Client Fetch) -->
                   <div style="display: flex; align-items: center; gap: 0.5rem; margin-right: 1.5rem;">
-                    <span style="font-size: 0.8rem; color: #a3c2c2; font-weight: 500;">Active</span>
+                    <span style="font-size: 0.8rem; color: var(--color-muted); font-weight: 500;">Active</span>
                     <label class="toggle-switch">
                       <input type="checkbox" <%= job.active ? 'checked' : '' %> onchange="handleJobToggle('<%= job.id %>', this.checked)">
                       <span class="toggle-slider"></span>
@@ -102,8 +79,8 @@
             <% }) %>
           </div>
         <% } else { %>
-          <div style="text-align: center; padding: 4rem 2rem; color: #a3c2c2;">
-            <i class="fas fa-briefcase" style="font-size: 2.5rem; color: rgba(255,255,255,0.05); margin-bottom: 1.5rem;"></i>
+          <div style="text-align: center; padding: 4rem 2rem; color: var(--color-muted);">
+            <i class="fas fa-briefcase" style="font-size: 2.5rem; color: rgba(0, 0, 0, 0.05); margin-bottom: 1.5rem;"></i>
             <h3>No Careers Created Yet</h3>
             <p style="color: #6B7280; font-size: 0.9rem; max-width: 300px; margin: 0.5rem auto 0 auto;">Enter job parameters in the right panel to dynamically populate your Careers page.</p>
           </div>
@@ -112,7 +89,7 @@
 
       <!-- Right Column: Add New Job Posting Form -->
       <div class="admin-card">
-        <h2 style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Add New Career Posting</h2>
+        <h2 style="border-bottom: 1px solid rgba(0, 0, 0, 0.06); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Add New Career Posting</h2>
         
         <form action="/admin/jobs/add" method="POST">
           <div class="form-group admin-form-group">
@@ -157,7 +134,8 @@
       </div>
 
     </div>
-  </main>
+    </div>
+  </div>
 
   <!-- Client-side script handling active toggles with dynamic server endpoints -->
   <script>

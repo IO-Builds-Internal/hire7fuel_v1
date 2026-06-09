@@ -1,18 +1,19 @@
 /* ============================================================================
-   HIRE7 FUEL - STAFF PANEL CONTROL CENTER STYLES
+   HIRE7 FUEL - STAFF PANEL CONTROL CENTER STYLES (LIGHT THEME)
    ============================================================================ */
 
 .admin-body {
-  background-color: #0f1d1d;
-  color: #e5ebeb;
+  background-color: var(--color-bg-darker);
+  color: var(--color-text-off);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+/* Old navbar is unused as we transitioned to clean sidebar nav structure */
 .admin-nav {
-  background-color: var(--color-near-black);
-  border-bottom: 1px solid rgba(20, 160, 119, 0.15);
+  background-color: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   padding: 1rem 2rem;
 }
 
@@ -31,7 +32,7 @@
 }
 
 .admin-nav-link {
-  color: #a3c2c2;
+  color: var(--color-muted);
   font-weight: 500;
   font-size: 0.95rem;
   padding: 0.5rem 0.75rem;
@@ -45,16 +46,18 @@
 }
 
 .admin-logout {
-  color: #f87171;
+  color: #ef4444;
   font-weight: 500;
   font-size: 0.95rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-decoration: none;
+  transition: all var(--transition-fast);
 }
 
 .admin-logout:hover {
-  color: #ef4444;
+  color: #dc2626;
 }
 
 /* Admin layout structures */
@@ -62,7 +65,7 @@
   flex-grow: 1;
   width: 100%;
   max-width: 1400px;
-  margin: 3rem auto;
+  margin: 2rem auto;
   padding: 0 2rem;
 }
 
@@ -71,7 +74,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   padding-bottom: 1.5rem;
 }
 
@@ -88,20 +91,28 @@
 }
 
 .admin-stat-card {
-  background-color: var(--color-near-black);
-  border: 1px solid rgba(255,255,255,0.05);
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: var(--radius-md);
   padding: 1.75rem;
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(20, 160, 119, 0.2);
 }
 
 .admin-stat-icon {
   width: 56px;
   height: 56px;
   border-radius: var(--radius-md);
-  background-color: rgba(20, 160, 119, 0.1);
+  background-color: rgba(20, 160, 119, 0.08);
   color: var(--color-accent);
   display: flex;
   align-items: center;
@@ -111,7 +122,7 @@
 
 .admin-stat-info h3 {
   font-size: 0.9rem;
-  color: #a3c2c2;
+  color: var(--color-muted);
   margin-bottom: 0.25rem;
 }
 
@@ -123,11 +134,12 @@
 
 /* Custom Table in Admin Panel */
 .admin-card {
-  background-color: var(--color-near-black);
-  border: 1px solid rgba(255,255,255,0.05);
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: var(--radius-md);
   padding: 2.5rem;
   margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .admin-card h2 {
@@ -138,6 +150,8 @@
 
 .admin-table-wrap {
   overflow-x: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .admin-table {
@@ -148,18 +162,22 @@
 
 .admin-table th, .admin-table td {
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   font-size: 0.95rem;
 }
 
 .admin-table th {
-  color: #a3c2c2;
+  color: var(--color-white);
   font-weight: 600;
-  background-color: rgba(255,255,255,0.02);
+  background-color: var(--color-bg-darker);
+}
+
+.admin-table td {
+  color: var(--color-text-off);
 }
 
 .admin-table tr:hover td {
-  background-color: rgba(255, 255, 255, 0.01);
+  background-color: rgba(20, 160, 119, 0.01);
 }
 
 .badge-pill {
@@ -170,9 +188,9 @@
   border-radius: var(--radius-full);
 }
 
-.badge-contact { background-color: rgba(58, 191, 160, 0.15); color: var(--color-seafoam); }
-.badge-fuelcard { background-color: rgba(20, 160, 119, 0.15); color: var(--color-accent); }
-.badge-career { background-color: rgba(245, 166, 35, 0.15); color: var(--color-highlight); }
+.badge-contact { background-color: rgba(20, 160, 119, 0.08); color: var(--color-accent); }
+.badge-fuelcard { background-color: rgba(20, 160, 119, 0.12); color: var(--color-accent); }
+.badge-career { background-color: rgba(217, 119, 6, 0.1); color: var(--color-highlight); }
 
 .admin-action-btn {
   background: none;
@@ -180,7 +198,7 @@
   color: var(--color-accent);
   cursor: pointer;
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: underline;
 }
 
@@ -192,12 +210,9 @@
 .details-modal {
   display: none; /* Controlled via JS */
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.85);
-  backdrop-filter: blur(4px);
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(10, 44, 44, 0.4);
+  backdrop-filter: blur(12px);
   z-index: 2000;
   align-items: center;
   justify-content: center;
@@ -208,13 +223,13 @@
 }
 
 .modal-card {
-  background-color: #0f2424;
-  border: 1px solid rgba(20, 160, 119, 0.2);
+  background-color: #ffffff;
+  border: 1px solid rgba(20, 160, 119, 0.15);
   border-radius: var(--radius-md);
   padding: 3rem;
   width: 90%;
   max-width: 600px;
-  box-shadow: var(--shadow-premium);
+  box-shadow: 0 20px 50px rgba(10, 44, 44, 0.15);
   position: relative;
 }
 
@@ -225,7 +240,7 @@
   background: none;
   border: none;
   font-size: 2rem;
-  color: #a3c2c2;
+  color: var(--color-muted);
   cursor: pointer;
 }
 
@@ -239,14 +254,14 @@
 
 .modal-field {
   margin-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
   padding-bottom: 0.5rem;
 }
 
 .modal-field label {
   display: block;
   font-size: 0.8rem;
-  color: #a3c2c2;
+  color: var(--color-muted);
   font-weight: 600;
   text-transform: uppercase;
 }
@@ -259,19 +274,19 @@
 
 /* Admin dynamic forms overrides */
 .admin-input {
-  background-color: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
   color: var(--color-white);
 }
 
 .admin-input:focus {
-  background-color: rgba(255,255,255,0.05);
+  background-color: #ffffff;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 4px rgba(20, 160, 119, 0.2);
+  box-shadow: 0 0 0 4px rgba(20, 160, 119, 0.1);
 }
 
 .admin-form-group label {
-  color: #a3c2c2;
+  color: var(--color-white);
 }
 
 /* Career Admin specifics */
@@ -282,7 +297,7 @@
 }
 
 .job-admin-card {
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   padding: 1.5rem 0;
   display: flex;
   justify-content: space-between;
@@ -310,7 +325,7 @@
 
 .btn-danger {
   background-color: #ef4444;
-  color: var(--color-white);
+  color: #ffffff;
 }
 .btn-danger:hover {
   background-color: #dc2626;
@@ -333,7 +348,7 @@
   position: absolute;
   cursor: pointer;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #374151;
+  background-color: #cbd5e1;
   transition: .4s;
   border-radius: 34px;
 }
@@ -379,16 +394,15 @@ input:checked + .toggle-slider:before {
   width: auto;
   object-fit: contain;
   border-radius: var(--radius-sm);
-  border: 1.5px solid rgba(20, 160, 119, 0.45); /* Premium stroke */
+  border: 1.5px solid rgba(20, 160, 119, 0.45);
   padding: 2px 5px;
-  background: rgba(13, 79, 79, 0.4);
-  box-shadow: 0 0 10px rgba(20, 160, 119, 0.15);
+  background: rgba(20, 160, 119, 0.05);
+  box-shadow: 0 0 10px rgba(20, 160, 119, 0.05);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .logo-link:hover .admin-nav-logo {
   border-color: var(--color-accent);
-  box-shadow: 0 0 15px rgba(20, 160, 119, 0.35);
+  box-shadow: 0 0 15px rgba(20, 160, 119, 0.15);
   transform: scale(1.04);
 }
-

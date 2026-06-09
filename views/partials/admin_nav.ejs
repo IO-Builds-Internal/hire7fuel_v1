@@ -1,0 +1,79 @@
+<div class="portal-sidebar">
+  <div class="portal-sidebar-header">
+    <a href="/admin" class="logo-link" style="font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem; color: var(--color-white); text-decoration: none;">
+      <img src="<%= config.brand.logo %>" alt="Logo" class="admin-nav-logo" style="height: 35px; width: auto;">
+      <span style="font-weight: 700;"><%= config.brand.name %></span>
+    </a>
+    <div style="font-size: 0.75rem; color: var(--color-highlight); font-weight: 600; text-transform: uppercase; margin-top: 0.25rem; letter-spacing: 0.05em;">Admin Command</div>
+  </div>
+
+  <ul class="portal-sidebar-menu">
+    <li>
+      <a href="/admin" class="portal-menu-link <%= (locals.page === 'admin-dashboard') ? 'active' : '' %>">
+        <i class="fas fa-chart-line"></i>
+        <span>Dashboard Hub</span>
+      </a>
+    </li>
+    <li>
+      <a href="/admin/compliance" class="portal-menu-link <%= (locals.page === 'admin-compliance') ? 'active' : '' %>">
+        <i class="fas fa-shield-halved"></i>
+        <span>Compliance Overview</span>
+      </a>
+    </li>
+    <li>
+      <a href="/admin/drivers" class="portal-menu-link <%= (locals.page === 'admin-drivers') ? 'active' : '' %>">
+        <i class="fas fa-users"></i>
+        <span>All Drivers</span>
+      </a>
+    </li>
+    <li>
+      <a href="/admin/fleet" class="portal-menu-link <%= (locals.page === 'admin-fleet') ? 'active' : '' %>">
+        <i class="fas fa-truck"></i>
+        <span>All Fleet</span>
+      </a>
+    </li>
+    <li>
+      <a href="/admin/settings" class="portal-menu-link <%= (locals.page === 'admin-settings') ? 'active' : '' %>">
+        <i class="fas fa-cogs"></i>
+        <span>Site Settings</span>
+      </a>
+    </li>
+    <li>
+      <a href="/admin/jobs" class="portal-menu-link <%= (locals.page === 'admin-jobs') ? 'active' : '' %>">
+        <i class="fas fa-briefcase"></i>
+        <span>Careers Admin</span>
+      </a>
+    </li>
+    <li>
+      <a href="/admin/testimonials" class="portal-menu-link <%= (locals.page === 'admin-testimonials') ? 'active' : '' %>">
+        <i class="fas fa-comment-dots"></i>
+        <span>Manage Testimonials</span>
+      </a>
+    </li>
+    
+    <li style="margin-top: auto; border-top: 1px solid rgba(0, 0, 0, 0.05); padding-top: 1rem;">
+      <a href="/portal/compliance" class="portal-menu-link" style="color: var(--color-muted);">
+        <i class="fas fa-arrow-left"></i>
+        <span>Carrier Portal</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- Main Body Wrapper Start -->
+<div class="portal-main">
+  <!-- Top Portal Header -->
+  <div class="portal-header">
+    <div>
+      <h1 id="portalPageTitle"><%= typeof pageTitle !== 'undefined' ? pageTitle : 'Admin Panel' %></h1>
+      <p style="color: var(--color-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+        Logged in as Administrator
+      </p>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <a href="/admin/logout" class="portal-btn portal-btn-secondary" style="padding: 0.45rem 0.85rem; font-size: 0.85rem;">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </div>

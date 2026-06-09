@@ -5,41 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Global Fleet Assets | Admin Command Center</title>
   <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    .admin-body { background-color: #f9fafb !important; color: #2d3748 !important; }
-    .admin-card { background: #FFFFFF !important; border: 1px solid rgba(0,0,0,0.08) !important; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; }
-    .admin-card h2 { color: #0a2c2c !important; margin-bottom: 1.5rem; }
-    .admin-table th { background-color: #f3f4f6 !important; color: #0a2c2c !important; font-weight: 600; padding: 0.75rem 1rem; border-bottom: 1px solid rgba(0,0,0,0.06); }
-    .admin-table td { color: #2d3748 !important; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 0.75rem 1rem; }
-  </style>
 </head>
 <body class="admin-body">
 
-  <nav class="admin-nav">
-    <div class="admin-nav-container">
-      <a href="/admin" class="logo-link" style="font-size: 1.35rem; display: flex; align-items: center; gap: 0.75rem;">
-        <img src="<%= config.brand.logo %>" alt="Logo" class="admin-nav-logo">
-        <span><%= config.brand.name %> Admin</span>
-      </a>
-
-      <ul class="admin-nav-links">
-        <li><a href="/admin" class="admin-nav-link">Dashboard Hub</a></li>
-        <li><a href="/admin/compliance" class="admin-nav-link">Compliance Overview</a></li>
-        <li><a href="/admin/drivers" class="admin-nav-link">All Drivers</a></li>
-        <li><a href="/admin/fleet" class="admin-nav-link active">All Fleet</a></li>
-        <li><a href="/admin/settings" class="admin-nav-link">Site Settings</a></li>
-        <li><a href="/admin/jobs" class="admin-nav-link">Careers Admin</a></li>
-        <li><a href="/admin/testimonials" class="admin-nav-link">Manage Testimonials</a></li>
-      </ul>
-
-      <a href="/admin/logout" class="admin-logout">
-        <i class="fas fa-power-off"></i> Logout
-      </a>
-    </div>
-  </nav>
-
-  <main class="admin-container">
+  <div class="portal-layout">
+    <%- include('../partials/admin_nav') %>
     
     <div class="admin-header-wrap">
       <div>
@@ -129,10 +101,10 @@
             <% } %>
           </tbody>
         </table>
-      </div>
     </div>
-
-  </main>
+  </div>
+    </div>
+  </div>
 
 </body>
 </html>
