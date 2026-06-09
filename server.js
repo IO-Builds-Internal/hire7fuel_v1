@@ -56,6 +56,9 @@ app.use(session({
  * Session Gatekeeper Middleware for Carrier Portal
  */
 function requireAuth(req, res, next) {
+  if (req.path === '/register' || req.path === '/register/') {
+    return next();
+  }
   if (req.session && (req.session.isAdmin || req.session.isAuthenticated)) {
     return next();
   }
