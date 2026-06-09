@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO METADATA -->
+  <title>Carrier Portal Registration | <%= config.brand.name %></title>
+  <meta name="description" content="Register your carrier account with Hire7 Fuel. Onboard your fleet, manage drivers, vehicles, and automate your IFTA/KYU/NY-HUT filings.">
+  
+  <!-- Open Graph Protocol (OG) -->
+  <meta property="og:title" content="Carrier Portal Registration | <%= config.brand.name %>">
+  <meta property="og:description" content="Onboard your fleet and access our compliance control dashboard, driver records, and automated expiry checkers.">
+  <meta property="og:url" content="https://hire7fuel.com/portal/register">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/logo.png">
+
+  <!-- Style links -->
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  
+  <%- include('../partials/header') %>
+
+  <!-- Page Header -->
+  <section class="hero-mesh" style="padding: 5rem 0 4rem 0;">
+    <div class="container text-center">
+      <h1 class="hero-title" style="font-size: 2.75rem; margin-bottom: 1rem;">Carrier Onboarding Portal</h1>
+      <p class="hero-subtitle" style="margin: 0 auto; max-width: 650px;">
+        Register your carrier coordinates to activate your safety dashboard. Once onboarded, you can build your fleet rosters, assign drivers, and track filing milestones.
+      </p>
+    </div>
+  </section>
+
+  <!-- Registration Form Section -->
+  <section class="section" id="registration-form-section">
+    <div class="container">
+      
+      <div class="apply-layout">
+        <!-- Left Column: Carrier Features Info -->
+        <div style="position: sticky; top: 110px;">
+          <h2 style="font-size: 1.75rem; margin-bottom: 1.5rem; color: var(--color-white);">Safety & Compliance Powerhouse</h2>
+          <p style="color: var(--color-muted); margin-bottom: 2.5rem; font-size: 1.05rem;">
+            Gain full control of your compliance bookkeeping. Maintain active license plate records, D-TOPS transponders, driver licensing alerts, and maintenance logs in one unified control room.
+          </p>
+          
+          <!-- Interactive highlights -->
+          <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
+            <div style="display: flex; gap: 1rem; align-items: flex-start;">
+              <div style="width: 42px; height: 42px; border-radius: 8px; background: rgba(20, 160, 119, 0.08); border: 1px solid rgba(20, 160, 119, 0.15); display: flex; align-items: center; justify-content: center; color: var(--color-accent); flex-shrink: 0;">
+                <i class="fas fa-file-invoice"></i>
+              </div>
+              <div>
+                <h4 style="color: var(--color-white); font-weight: 700; font-size: 1.05rem; margin-bottom: 0.25rem;">Automated Filing Trackers</h4>
+                <span style="color: var(--color-muted); font-size: 0.9rem;">Monitor quarterly IFTA status, KYU reporting, and NY-HUT tag updates.</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; align-items: flex-start;">
+              <div style="width: 42px; height: 42px; border-radius: 8px; background: rgba(20, 160, 119, 0.08); border: 1px solid rgba(20, 160, 119, 0.15); display: flex; align-items: center; justify-content: center; color: var(--color-accent); flex-shrink: 0;">
+                <i class="fas fa-bell"></i>
+              </div>
+              <div>
+                <h4 style="color: var(--color-white); font-weight: 700; font-size: 1.05rem; margin-bottom: 0.25rem;">30/14/7-Day Expiry Warnings</h4>
+                <span style="color: var(--color-muted); font-size: 0.9rem;">Recurrent SMTP email notices warn your dispatchers before driver license and safety cert expiries.</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; align-items: flex-start;">
+              <div style="width: 42px; height: 42px; border-radius: 8px; background: rgba(20, 160, 119, 0.08); border: 1px solid rgba(20, 160, 119, 0.15); display: flex; align-items: center; justify-content: center; color: var(--color-accent); flex-shrink: 0;">
+                <i class="fas fa-shield-halved"></i>
+              </div>
+              <div>
+                <h4 style="color: var(--color-white); font-weight: 700; font-size: 1.05rem; margin-bottom: 0.25rem;">Federal Compliance Masking</h4>
+                <span style="color: var(--color-muted); font-size: 0.9rem;">Store sensitive Federal Business # and driver SIN details fully encrypted/masked for security.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Registration Form -->
+        <div class="form-card" id="register-form">
+          <% if (success) { %>
+            <div class="alert alert-success" role="alert">
+              <i class="fas fa-circle-check" style="margin-right: 0.5rem;"></i>
+              <strong>Registration Received!</strong> Loading your compliance control room...
+            </div>
+          <% } %>
+
+          <form action="/portal/register" method="POST" needs-validation novalidate>
+            <h3 style="font-size: 1.35rem; margin-bottom: 1.5rem; color: var(--color-white); border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem;">Create Carrier Profile</h3>
+
+            <div class="form-group">
+              <label for="company_name">Company Legal Name <span style="color: var(--color-error);">*</span></label>
+              <input type="text" id="company_name" name="company_name" class="form-control" placeholder="E.g., Star Logistics Inc." required minlength="2" aria-required="true">
+            </div>
+
+            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label for="email">Primary Email Address <span style="color: var(--color-error);">*</span></label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="E.g., safety@starlogistics.com" required aria-required="true">
+              </div>
+              <div class="form-group">
+                <label for="phone">Primary Phone Number <span style="color: var(--color-error);">*</span></label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="E.g., (905) 555-0144" required pattern="^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$" aria-required="true">
+              </div>
+            </div>
+
+            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label for="usdot">USDOT Number</label>
+                <input type="text" id="usdot" name="usdot" class="form-control" placeholder="E.g., 1234567">
+              </div>
+              <div class="form-group">
+                <label for="mc_number">MC Number</label>
+                <input type="text" id="mc_number" name="mc_number" class="form-control" placeholder="E.g., MC-998877">
+              </div>
+            </div>
+
+            <div class="form-group checkbox-group" style="margin: 2rem 0;">
+              <input type="checkbox" id="consent" name="consent" required aria-required="true">
+              <label for="consent">
+                I agree to the Terms of Service and authorize setup of my carrier profile. I consent to receiving automated expiration warnings and compliance check alerts. <span style="color: var(--color-error);">*</span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full btn-large">Register Carrier Account</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

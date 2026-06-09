@@ -118,7 +118,7 @@ router.get('/switch-carrier/:id', (req, res) => {
  * GET /portal/register - Public Carrier Onboarding Form (Optional but critical for setting up data)
  */
 router.get('/register', (req, res) => {
-  res.render('apply', {
+  res.render('portal/register', {
     page: 'portal-register',
     success: req.query.success === 'true',
     layout: false
