@@ -7,20 +7,20 @@
 
 /* 2. Core Custom Property Tokens */
 :root {
-  /* Ultra-Premium Dark Theme Color Palette */
-  --color-primary: #060f0f;         /* Deep canvas black-teal */
-  --color-primary-rgb: 6, 15, 15;
-  --color-bg-darker: #040909;        /* Pure void black */
-  --color-mid-teal: #102e2e;        /* Deep panel teal background */
-  --color-mid-teal-rgb: 16, 46, 46;
-  --color-accent: #14a077;          /* Vibrant neon mint for CTAs & active borders */
+  /* Premium Light Theme Color Palette */
+  --color-primary: #FFFFFF;         /* Pure white canvas */
+  --color-primary-rgb: 255, 255, 255;
+  --color-bg-darker: #f9fafb;        /* Soft gray alternate canvas */
+  --color-mid-teal: #f0fdf4;        /* Soft minty light-teal card background */
+  --color-mid-teal-rgb: 240, 253, 244;
+  --color-accent: #14a077;          /* Primary theme brand green */
   --color-accent-rgb: 20, 160, 119;
-  --color-highlight: #F5A623;       /* Warm secure alert amber */
-  --color-seafoam: #3ABFA0;         /* Neon cyan-teal decorative accents */
-  --color-white: #FFFFFF;           /* High-contrast crisp text */
-  --color-text-off: #e5e7eb;        /* Highly readable off-white body text */
-  --color-muted: #a3c2c2;           /* Soft muted teal for captions & labels */
-  --color-muted-dark: #4d7a7a;      /* Darker grey-teal borders */
+  --color-highlight: #d97706;       /* Warm orange/amber for alerts */
+  --color-seafoam: #14a077;         /* Match green theme */
+  --color-white: #0a2c2c;           /* Crisp deep dark green-slate for high contrast text/headings */
+  --color-text-off: #2d3748;        /* Highly readable charcoal body text */
+  --color-muted: #4a5568;           /* Muted text */
+  --color-muted-dark: #cbd5e1;      /* Light border grey */
   
   --color-error: #EF4444;           /* Threat alerts */
   --color-success: #10B981;         /* Pass success logs */
@@ -64,10 +64,10 @@ html {
 body {
   background-color: var(--color-primary);
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(20, 160, 119, 0.04) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(58, 191, 160, 0.04) 0%, transparent 40%),
-    linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.005) 1px, transparent 1px);
+    radial-gradient(circle at 10% 20%, rgba(20, 160, 119, 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(20, 160, 119, 0.02) 0%, transparent 40%),
+    linear-gradient(rgba(20, 160, 119, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 160, 119, 0.018) 1px, transparent 1px);
   background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
   color: var(--color-text-off);
   line-height: 1.6;

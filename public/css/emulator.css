@@ -24,10 +24,11 @@
 }
 
 .input-card-glass {
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #ffffff;
+  border: 1px solid rgba(20, 160, 119, 0.08);
   border-radius: var(--radius-md);
   padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
 }
 
 .slider-header {
@@ -56,7 +57,7 @@
   width: 100%;
   height: 6px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.08);
   outline: none;
   margin-bottom: 0.75rem;
 }
@@ -85,11 +86,11 @@
 }
 
 .calculator-output-card {
-  background: linear-gradient(135deg, rgba(20, 160, 119, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
   border: 1px solid rgba(20, 160, 119, 0.15);
   border-radius: var(--radius-lg);
   padding: 3rem 2.5rem;
-  box-shadow: var(--shadow-premium), 0 0 40px rgba(20, 160, 119, 0.02);
+  box-shadow: 0 10px 30px rgba(20, 160, 119, 0.04);
   position: relative;
   overflow: hidden;
 }
@@ -129,11 +130,12 @@
   text-shadow: 0 0 35px rgba(20, 160, 119, 0.4);
 }
 
+/* Custom premium Range Slider styling */
 .savings-breakdown {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(20, 160, 119, 0.1);
   padding-top: 1.75rem;
   text-align: left;
 }
@@ -301,10 +303,11 @@
 }
 
 .control-card-glass {
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #ffffff;
+  border: 1px solid rgba(20, 160, 119, 0.08);
   border-radius: var(--radius-md);
   padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
 }
 
 .control-row {
@@ -339,8 +342,8 @@
   position: absolute;
   cursor: pointer;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
+  background-color: rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.15);
   transition: .3s;
   border-radius: 34px;
 }
@@ -379,8 +382,8 @@ input:checked + .switch-slider:before {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   padding: 0.5rem 1rem;
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -401,13 +404,13 @@ input:checked + .switch-slider:before {
 
 /* 3. Live scrolling activity stream logs (Shield AI Console style) */
 .activity-feed-panel {
-  background: rgba(4, 9, 9, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #ffffff;
+  border: 1px solid rgba(20, 160, 119, 0.15);
   border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
   height: 480px;
-  box-shadow: var(--shadow-premium);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
   overflow: hidden;
   position: sticky;
   top: 110px;
@@ -415,8 +418,8 @@ input:checked + .switch-slider:before {
 
 .feed-header {
   padding: 1.25rem 1.5rem;
-  background: rgba(6, 15, 15, 0.9);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: #f9fafb;
+  border-bottom: 1px solid rgba(20, 160, 119, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -462,7 +465,7 @@ input:checked + .switch-slider:before {
 }
 
 .feed-item {
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(0, 0, 0, 0.01);
   border-left: 3px solid var(--color-accent);
   padding: 1rem;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
@@ -513,7 +516,7 @@ input:checked + .switch-slider:before {
 /* 4. IFTA State Compliance Splits visual metrics */
 .ifta-state-card {
   border-radius: var(--radius-md);
-  border: 1px solid rgba(255,255,255,0.04);
+  border: 1px solid rgba(20, 160, 119, 0.08);
 }
 
 .state-header {
@@ -531,7 +534,7 @@ input:checked + .switch-slider:before {
 
 .state-bar-track {
   height: 6px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(0, 0, 0, 0.06);
   border-radius: var(--radius-full);
   overflow: hidden;
 }
@@ -546,13 +549,11 @@ input:checked + .switch-slider:before {
 
 /* 5. HERO INTERACTIVE SIMULATOR CARD & HOLOGRAM STYLES */
 .hero-calculator-card {
-  background: rgba(10, 28, 28, 0.45);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid rgba(20, 160, 119, 0.12);
   border-radius: var(--radius-lg);
   padding: 2rem 2.25rem;
-  box-shadow: var(--shadow-premium), 0 0 40px rgba(20, 160, 119, 0.02);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -711,8 +712,8 @@ input:checked + .switch-slider:before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: #f9fafb;
+  border: 1px solid rgba(20, 160, 119, 0.1);
   border-radius: var(--radius-md);
   padding: 1.25rem;
   z-index: 1;
@@ -766,14 +767,14 @@ input:checked + .switch-slider:before {
 
 .sim-slider {
   margin-bottom: 0;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .sim-stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(20, 160, 119, 0.1);
   padding-top: 1.25rem;
   z-index: 1;
 }

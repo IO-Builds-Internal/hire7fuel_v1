@@ -4,13 +4,13 @@
 
 /* 1. Frosted Glowing Forms & Inputs */
 .form-card {
-  background: rgba(255, 255, 255, 0.02);
+  background: #ffffff;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(20, 160, 119, 0.12);
   border-radius: var(--radius-lg);
   padding: 3rem 2.5rem;
-  box-shadow: var(--shadow-premium);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
 }
 
 .form-group {
@@ -30,8 +30,8 @@
   padding: 0.9rem 1.25rem;
   font-size: 0.95rem;
   font-family: inherit;
-  background-color: rgba(6, 15, 15, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
   border-radius: var(--radius-sm);
   color: var(--color-white);
   outline: none;
@@ -41,11 +41,11 @@
 .form-control:focus {
   border-color: var(--color-accent);
   box-shadow: 0 0 15px rgba(20, 160, 119, 0.15);
-  background-color: rgba(6, 15, 15, 0.7);
+  background-color: #ffffff;
 }
 
 .form-control::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: #9ca3af;
 }
 
 select.form-control {
@@ -110,13 +110,13 @@ form.was-validated .form-control:valid {
 .alert-success {
   background-color: rgba(16, 185, 129, 0.1);
   border: 1px solid rgba(16, 185, 129, 0.2);
-  color: #a7f3d0;
+  color: #065f46;
 }
 
 .alert-danger {
   background-color: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.2);
-  color: #fca5a5;
+  color: #991b1b;
 }
 
 /* 3. High-Fidelity Custom Detail Modal Overlay */
@@ -140,13 +140,13 @@ form.was-validated .form-control:valid {
 }
 
 .modal-content {
-  background: linear-gradient(135deg, #0a1717 0%, #050a0a 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid rgba(20, 160, 119, 0.12);
   border-radius: var(--radius-lg);
   width: 90%;
   max-width: 600px;
   padding: 3rem;
-  box-shadow: var(--shadow-premium), 0 0 50px rgba(20, 160, 119,0.05);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
   position: relative;
   transform: scale(0.95);
   transition: transform var(--transition-normal);
@@ -162,8 +162,8 @@ form.was-validated .form-control:valid {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.06);
   width: 36px;
   height: 36px;
   border-radius: var(--radius-full);
@@ -190,8 +190,8 @@ form.was-validated .form-control:valid {
 }
 
 .modal-field {
-  background: rgba(255,255,255,0.015);
-  border: 1px solid rgba(255,255,255,0.04);
+  background: #f9fafb;
+  border: 1px solid #cbd5e1;
   padding: 1.25rem;
   border-radius: var(--radius-md);
 }
