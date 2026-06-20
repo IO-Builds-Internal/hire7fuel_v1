@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="/css/styles.css?v=2.0">
   <link rel="stylesheet" href="/css/portal.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .finance-subform, .border-transponder-form-group {
+      transition: all 0.3s ease;
+    }
+  </style>
 </head>
 <body class="admin-body">
 
@@ -23,14 +28,14 @@
 
       <div class="portal-card">
         <h2>Register New Fleet Truck</h2>
-        <p style="color: var(--color-muted); margin-bottom: 2rem; font-size: 0.9rem;">
-          Add a truck unit, register its active plates, schedule its PMVI servicing frequency, and allocate tolls transponders.
+        <p style="color: var(--color-muted); margin-bottom: 2rem; font-size: 0.95rem;">
+          Add a truck unit, specify its operating region, assign inventory transponders, and record asset financing.
         </p>
 
-        <form action="/portal/trucks/new" method="POST">
+        <form action="/portal/trucks/new" method="POST" id="truckForm">
           
           <!-- Section 1: Basic Specifications -->
-          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-bottom: 1.25rem;">Basic Information</h3>
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-bottom: 1.25rem; color: var(--color-accent);">Basic Specifications</h3>
           <div class="portal-form-grid">
             <div class="portal-form-group">
               <label class="portal-label">Unit Number</label>
@@ -53,77 +58,141 @@
               <input type="number" name="year" class="portal-input" required placeholder="e.g. 2024">
             </div>
             <div class="portal-form-group">
+              <label class="portal-label">Ownership Classification</label>
+              <select name="ownership_type" class="portal-select">
+                <option value="Company Truck">Company Truck</option>
+                <option value="Owner Operator">Owner Operator</option>
+              </select>
+            </div>
+            <div class="portal-form-group">
               <label class="portal-label">GPS Tracker Device ID</label>
               <input type="text" name="gps_tracker" class="portal-input" placeholder="e.g. Samsara-9820">
             </div>
+          </div>
+
+          <!-- Section 2: Operating & Specs Categorization -->
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">Operating Parameters</h3>
+          <div class="portal-form-grid">
             <div class="portal-form-group">
-              <label class="portal-label">Fuel Card Number</label>
-              <input type="text" name="fuel_card_number" class="portal-input" placeholder="e.g. Comdata / FleetOne #">
+              <label class="portal-label">Operating Region</label>
+              <select name="operating_region" id="operatingRegion" class="portal-select" onchange="handleRegionChange(this.value)">
+                <option value="Provincial">Provincial (Canada Only - Basic)</option>
+                <option value="Canada Wide">Canada Wide (IFTA & Canada Tolls)</option>
+                <option value="Cross-Border" selected>Cross-Border (Canada–USA)</option>
+              </select>
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Equipment Type</label>
+              <select name="equipment_type" class="portal-select">
+                <option value="Cargo Van">Cargo Van</option>
+                <option value="Sprinter Van">Sprinter Van</option>
+                <option value="Cube Van">Cube Van</option>
+                <option value="Straight Truck">Straight Truck</option>
+                <option value="Tractor – Day Cab">Tractor – Day Cab</option>
+                <option value="Tractor – Sleeper Cab">Tractor – Sleeper Cab</option>
+              </select>
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Axle Configuration</label>
+              <select name="axle_config" class="portal-select">
+                <option value="Single Axle">Single Axle</option>
+                <option value="Tandem">Tandem</option>
+                <option value="Tr-Axle">Tr-Axle</option>
+                <option value="Quad-Axle">Quad-Axle</option>
+              </select>
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Est KMS per Litre</label>
+              <input type="number" step="0.01" name="est_kms_per_litre" class="portal-input" placeholder="e.g. 2.4">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Calculated KMs/Litre</label>
+              <input type="number" step="0.01" name="calculated_kms_per_litre" class="portal-input" placeholder="e.g. 2.2" readonly>
             </div>
           </div>
 
-          <!-- Section 2: Active License Plate -->
-          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Active License Plate</h3>
+          <!-- Section 3: Dual Currency Fuel Cards -->
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">Fuel Cards Setup</h3>
+          <div class="portal-form-grid">
+            <div class="portal-form-group">
+              <label class="portal-label">CAD Currency Fuel Card</label>
+              <input type="text" name="fuel_card_cad" class="portal-input" placeholder="Comdata CAD Card #">
+            </div>
+            <div class="portal-form-group" id="usdFuelCardGroup">
+              <label class="portal-label">USD Currency Fuel Card</label>
+              <input type="text" name="fuel_card_usd" class="portal-input" placeholder="Comdata USD Card #">
+            </div>
+          </div>
+
+          <!-- Section 4: License Plate -->
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">License Plate & Weight Details</h3>
           <div class="portal-form-grid">
             <div class="portal-form-group">
               <label class="portal-label">Plate Number</label>
               <input type="text" name="plate_number" class="portal-input" placeholder="e.g. 982-7XP">
             </div>
             <div class="portal-form-group">
-              <label class="portal-label">Plate Group</label>
-              <input type="text" name="plate_group" class="portal-input" placeholder="e.g. Apportioned ON">
+              <label class="portal-label">Fleet # (Plate Group)</label>
+              <input type="text" name="plate_group" class="portal-input" placeholder="e.g. Fleet 1">
             </div>
             <div class="portal-form-group">
-              <label class="portal-label">Weight Group</label>
-              <input type="text" name="weight_group" class="portal-input" placeholder="e.g. 80,000 lbs">
+              <label class="portal-label">Registered Weight Group</label>
+              <input type="text" name="weight_group" class="portal-input" placeholder="e.g. Weight Group 1">
             </div>
-            <div class="portal-form-group">
+            <div class="portal-form-group" id="plateExpiryGroup">
               <label class="portal-label">Plate Expiration Date</label>
               <input type="date" name="plate_expiry" class="portal-input">
             </div>
           </div>
 
-          <!-- Section 3: Tolls Configurations -->
-          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Toll Accounts & Transponders</h3>
+          <!-- Section 5: Tolls Configurations & Master Transponders -->
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">Tolls & Transponders</h3>
           <div class="portal-form-grid">
-            <div class="portal-form-group">
-              <label class="portal-label">EZ-PASS Account / Card #</label>
-              <input type="text" name="tolls_ezpass" class="portal-input">
+            <div class="portal-form-group" id="dtopsGroup">
+              <label class="portal-label">D-TOPS Transponder Allocation</label>
+              <select name="dtops_transponder_id" class="portal-select">
+                <option value="">-- Assign Master D-TOPS --</option>
+                <% availableDtops.forEach(function(d) { %>
+                  <option value="<%= d.id %>"><%= d.transponder_number %></option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="portal-form-group" id="bluewaterGroup">
+              <label class="portal-label">Blue Water Bridge Allocation</label>
+              <select name="bluewater_transponder_id" class="portal-select">
+                <option value="">-- Assign Master Blue Water --</option>
+                <% availableBorder.forEach(function(b) { %>
+                  <option value="<%= b.id %>"><%= b.transponder_number %> (<%= b.bridge_name %>)</option>
+                <% }) %>
+              </select>
             </div>
             <div class="portal-form-group">
               <label class="portal-label">HWY 407 Transponder #</label>
               <input type="text" name="tolls_hwy407" class="portal-input">
             </div>
-          </div>
-          
-          <!-- Custom Toll networks -->
-          <div style="margin-top: 1rem; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1rem;">
-            <label class="portal-label">Other Toll Network Accounts</label>
-            <div class="dynamic-rows-container" id="tollsContainer">
-              <div class="dynamic-row">
-                <div class="dynamic-row-inputs" style="grid-template-columns: 1fr 1fr;">
-                  <input type="text" name="tolls_other_name" class="portal-input" placeholder="Toll Network Name">
-                  <input type="text" name="tolls_other_number" class="portal-input" placeholder="Transponder Number">
-                </div>
-                <button type="button" class="portal-btn portal-btn-danger" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
-              </div>
-              <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="tollsContainer"><i class="fas fa-plus"></i> Add Toll Network</button>
+            <div class="portal-form-group" id="iftaDecalGroup">
+              <label class="portal-label">IFTA Decal Number</label>
+              <input type="text" name="ifta_decal" class="portal-input" placeholder="e.g. IFTA-2026-892">
+            </div>
+            <div class="portal-form-group" id="nyhutDecalGroup">
+              <label class="portal-label">NYHUT Decal Number</label>
+              <input type="text" name="nyhut_decal" class="portal-input" placeholder="e.g. NYHUT-8890A">
             </div>
           </div>
 
-          <!-- Section 4: Maintenance Frequency -->
-          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Compliance Inspections & Preventive Maintenance</h3>
+          <!-- Section 6: Inspections -->
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">Preventive Maintenance Inspections</h3>
           <div class="portal-form-grid">
             <div class="portal-form-group">
               <label class="portal-label">PMVI: Last Inspection Date</label>
               <input type="date" name="pmvi_last_date" class="portal-input" required>
             </div>
             <div class="portal-form-group">
-              <label class="portal-label">PMVI Inspection Frequency</label>
+              <label class="portal-label">PMVI Servicing Frequency</label>
               <select name="pmvi_frequency" class="portal-select">
-                <option value="monthly">Monthly (1 Month Interval)</option>
-                <option value="quarterly">Quarterly (3 Months Interval)</option>
-                <option value="annually" selected>Annually (12 Months Interval)</option>
+                <option value="monthly">Monthly</option>
+                <option value="quarterly">Quarterly</option>
+                <option value="annually" selected>Annually</option>
               </select>
             </div>
             <div class="portal-form-group">
@@ -136,100 +205,118 @@
             </div>
           </div>
 
-          <!-- Section 5: Border Crossing Transponders -->
-          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Border Bridges Transponders</h3>
-          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-            
-            <!-- D-TOPS Transponder -->
-            <div>
-              <label class="portal-label">D-TOPS Transponders</label>
-              <div class="dynamic-rows-container" id="dtopsContainer">
-                <div class="dynamic-row">
-                  <div class="dynamic-row-inputs" style="grid-template-columns: 1fr 1fr;">
-                    <input type="text" name="dtops_transponder_num" class="portal-input" placeholder="D-TOPS Decal Number">
-                    <select name="dtops_transponder_status" class="portal-select">
-                      <option value="active">Active</option>
-                      <option value="lost">Lost</option>
-                      <option value="deactivated">Deactivated</option>
-                    </select>
-                  </div>
-                  <button type="button" class="portal-btn portal-btn-danger" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
-                </div>
-                <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="dtopsContainer"><i class="fas fa-plus"></i> Add D-TOPS Decal</button>
+          <!-- Section 7: Asset Finance -->
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">Asset Financing Details</h3>
+          <div style="margin-bottom: 1.5rem;">
+            <label class="portal-label" style="margin-bottom: 0.75rem; display: block;">Finance Model</label>
+            <select name="finance_type" id="financeType" class="portal-select" style="width: 250px;" onchange="handleFinanceChange(this.value)">
+              <option value="Owned">Owned Asset</option>
+              <option value="Leased">Leased Asset</option>
+              <option value="Rented">Rented Asset</option>
+            </select>
+          </div>
+
+          <!-- Sub-forms for financing options -->
+          <!-- Owned Asset Details -->
+          <div id="ownedFinanceForm" class="finance-subform">
+            <div class="portal-form-grid">
+              <div class="portal-form-group">
+                <label class="portal-label">Purchase Date</label>
+                <input type="date" name="purchase_date" class="portal-input">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Purchase Price ($)</label>
+                <input type="number" step="0.01" name="purchase_price" class="portal-input" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Asset Valuation ($)</label>
+                <input type="number" step="0.01" name="valuation" class="portal-input" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">HST Tax Amount ($)</label>
+                <input type="number" step="0.01" name="hst_amount" class="portal-input" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Total Amount Paid ($)</label>
+                <input type="number" step="0.01" name="total_amount" class="portal-input" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">ACH Settled Value ($)</label>
+                <input type="number" step="0.01" name="ach_value" class="portal-input" placeholder="0.00">
               </div>
             </div>
+          </div>
 
-            <!-- Ambassador Bridge Tag -->
-            <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1rem;">
-                <div class="portal-form-group">
-                  <label class="portal-label">Ambassador Bridge Transponders Expiry</label>
-                  <input type="date" name="ambassador_expiry" class="portal-input">
-                </div>
+          <!-- Leased Asset Details -->
+          <div id="leasedFinanceForm" class="finance-subform" style="display: none;">
+            <div class="portal-form-grid">
+              <div class="portal-form-group">
+                <label class="portal-label">Lease Purchase Date</label>
+                <input type="date" name="purchase_date" class="portal-input">
               </div>
-              <label class="portal-label">Ambassador Bridge Tags</label>
-              <div class="dynamic-rows-container" id="ambassadorContainer">
-                <div class="dynamic-row">
-                  <div class="dynamic-row-inputs" style="grid-template-columns: 1fr 1fr;">
-                    <input type="text" name="ambassador_tag_num" class="portal-input" placeholder="Tag Number">
-                    <select name="ambassador_tag_status" class="portal-select">
-                      <option value="active">Active</option>
-                      <option value="lost">Lost</option>
-                    </select>
-                  </div>
-                  <button type="button" class="portal-btn portal-btn-danger" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
-                </div>
-                <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="ambassadorContainer"><i class="fas fa-plus"></i> Add Ambassador Tag</button>
+              <div class="portal-form-group">
+                <label class="portal-label">Lease Value ($)</label>
+                <input type="number" step="0.01" name="valuation" class="portal-input" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">HST Tax Amount ($)</label>
+                <input type="number" step="0.01" name="hst_amount" class="portal-input" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Total Capital cost ($)</label>
+                <input type="number" step="0.01" name="total_amount" class="portal-input" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Lease Term (e.g., 36 Months)</label>
+                <input type="text" name="lease_term" class="portal-input" placeholder="e.g. 48 Months">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Lease Payment Rate ($)</label>
+                <input type="number" step="0.01" name="lease_payment" class="portal-input" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Lease Payment Interval</label>
+                <select name="lease_frequency" class="portal-select">
+                  <option value="Weekly">Weekly payments</option>
+                  <option value="Bi-Monthly">Bi-Monthly payments</option>
+                  <option value="Monthly" selected>Monthly payments</option>
+                </select>
               </div>
             </div>
+          </div>
 
-            <!-- Blue Water Bridge Tag -->
-            <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1rem;">
-                <div class="portal-form-group">
-                  <label class="portal-label">Blue Water Bridge Transponders Expiry</label>
-                  <input type="date" name="bluewater_expiry" class="portal-input">
-                </div>
+          <!-- Rented Asset Details -->
+          <div id="rentedFinanceForm" class="finance-subform" style="display: none;">
+            <div class="portal-form-grid">
+              <div class="portal-form-group">
+                <label class="portal-label">Rental Payment Rate ($)</label>
+                <input type="number" step="0.01" name="rent_payment" class="portal-input" placeholder="0.00">
               </div>
-              <label class="portal-label">Blue Water Bridge Tags</label>
-              <div class="dynamic-rows-container" id="bluewaterContainer">
-                <div class="dynamic-row">
-                  <div class="dynamic-row-inputs" style="grid-template-columns: 1fr 1fr;">
-                    <input type="text" name="bluewater_tag_num" class="portal-input" placeholder="Tag Number">
-                    <select name="bluewater_tag_status" class="portal-select">
-                      <option value="active">Active</option>
-                      <option value="lost">Lost</option>
-                    </select>
-                  </div>
-                  <button type="button" class="portal-btn portal-btn-danger" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
-                </div>
-                <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="bluewaterContainer"><i class="fas fa-plus"></i> Add Blue Water Tag</button>
+              <div class="portal-form-group">
+                <label class="portal-label">Rent Base Amount (Excl. HST) ($)</label>
+                <input type="number" step="0.01" name="rent_amount_exc_hst" class="portal-input" placeholder="0.00">
               </div>
-            </div>
-
-            <!-- Other Bridge Tags -->
-            <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem;">
-              <label class="portal-label">Other Border Bridges/Tolls Transponders</label>
-              <div class="dynamic-rows-container" id="otherTranspondersContainer">
-                <div class="dynamic-row">
-                  <div class="dynamic-row-inputs" style="grid-template-columns: repeat(3, 1fr);">
-                    <input type="text" name="other_transponder_name" class="portal-input" placeholder="Bridge/Toll Name">
-                    <input type="text" name="other_transponder_num" class="portal-input" placeholder="Tag Number">
-                    <select name="other_transponder_status" class="portal-select">
-                      <option value="active">Active</option>
-                      <option value="lost">Lost</option>
-                    </select>
-                  </div>
-                  <button type="button" class="portal-btn portal-btn-danger" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
-                </div>
-                <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="otherTranspondersContainer"><i class="fas fa-plus"></i> Add Transponder</button>
+              <div class="portal-form-group">
+                <label class="portal-label">Rent HST Tax Amount ($)</label>
+                <input type="number" step="0.01" name="rent_hst" class="portal-input" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Total Rent Invoice ($)</label>
+                <input type="number" step="0.01" name="rent_total" class="portal-input" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Rent Invoice Interval</label>
+                <select name="rent_frequency" class="portal-select">
+                  <option value="Weekly">Weekly</option>
+                  <option value="Bi-Monthly">Bi-Monthly</option>
+                  <option value="Monthly" selected>Monthly</option>
+                </select>
               </div>
             </div>
-
           </div>
 
           <!-- Submit Panel -->
-          <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem; margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+          <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem; margin-top: 2.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
             <a href="/portal/trucks" class="portal-btn portal-btn-secondary">Cancel</a>
             <button type="submit" class="portal-btn portal-btn-primary"><i class="fas fa-truck"></i> Complete Registration</button>
           </div>
@@ -241,36 +328,55 @@
   </div>
 
   <script>
-    // Dynamic row addition & deletion
-    document.querySelectorAll('.add-row-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const containerId = btn.getAttribute('data-container');
-        const container = document.getElementById(containerId);
-        
-        const row = container.querySelector('.dynamic-row');
-        if (row) {
-          const clone = row.cloneNode(true);
-          clone.querySelectorAll('input').forEach(input => {
-            input.value = '';
-          });
-          container.insertBefore(clone, btn);
-        }
+    function handleFinanceChange(val) {
+      document.querySelectorAll('.finance-subform').forEach(form => {
+        form.style.display = 'none';
+        form.querySelectorAll('input').forEach(i => i.disabled = true);
       });
-    });
 
-    function removeRow(btn) {
-      const row = btn.closest('.dynamic-row');
-      const container = row.parentElement;
-      const allRows = container.querySelectorAll('.dynamic-row');
-      if (allRows.length > 1) {
-        row.remove();
+      let activeFormId = 'ownedFinanceForm';
+      if (val === 'Leased') activeFormId = 'leasedFinanceForm';
+      else if (val === 'Rented') activeFormId = 'rentedFinanceForm';
+
+      const activeForm = document.getElementById(activeFormId);
+      activeForm.style.display = 'block';
+      activeForm.querySelectorAll('input').forEach(i => i.disabled = false);
+    }
+
+    function handleRegionChange(val) {
+      const usdFuelCard = document.getElementById('usdFuelCardGroup');
+      const dtopsGroup = document.getElementById('dtopsGroup');
+      const bluewaterGroup = document.getElementById('bluewaterGroup');
+      const iftaDecal = document.getElementById('iftaDecalGroup');
+      const nyhutDecal = document.getElementById('nyhutDecalGroup');
+
+      if (val === 'Provincial') {
+        // Provincial: basic information, 407 transponder. No border, no dtops.
+        usdFuelCard.style.display = 'none';
+        dtopsGroup.style.display = 'none';
+        bluewaterGroup.style.display = 'none';
+        iftaDecal.style.display = 'none';
+        nyhutDecal.style.display = 'none';
+      } else if (val === 'Canada Wide') {
+        // Canada wide: basic info, 407, ifta. No border, no dtops, no usd card.
+        usdFuelCard.style.display = 'none';
+        dtopsGroup.style.display = 'none';
+        bluewaterGroup.style.display = 'none';
+        iftaDecal.style.display = 'block';
+        nyhutDecal.style.display = 'none';
       } else {
-        row.querySelectorAll('input').forEach(input => {
-          input.value = '';
-        });
+        // Cross border: everything
+        usdFuelCard.style.display = 'block';
+        dtopsGroup.style.display = 'block';
+        bluewaterGroup.style.display = 'block';
+        iftaDecal.style.display = 'block';
+        nyhutDecal.style.display = 'block';
       }
     }
+
+    // Set initial form states
+    handleFinanceChange('Owned');
+    handleRegionChange('Cross-Border');
   </script>
 </body>
 </html>

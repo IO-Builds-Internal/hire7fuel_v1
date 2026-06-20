@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .transponder-section {
+      margin-bottom: 3rem;
+    }
+    .flex-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 0.75rem;
+    }
+    .flex-header h3 {
+      margin: 0;
+      color: var(--color-white);
+      font-weight: 600;
+      font-size: 1.35rem;
+    }
+    .modal-trigger-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+    .status-form {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .status-select {
+      background: rgba(10, 28, 28, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--color-white);
+      padding: 0.35rem 0.65rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+    .status-input-text {
+      background: rgba(10, 28, 28, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--color-white);
+      padding: 0.35rem 0.65rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      width: 150px;
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <div class="portal-card" style="margin-bottom: 2rem;">
+        <div class="portal-card-header">
+          <h2>Transponder Inventory Panel</h2>
+        </div>
+        <p style="color: var(--color-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+          Add and manage master inventory for D-TOPS and Blue Water Bridge transponders. Track assignments and document transition states/reassignment remarks.
+        </p>
+
+        <% if (success) { %>
+          <div class="expiry-badge badge-green" style="padding: 0.75rem 1.5rem; border-radius: 6px; margin-bottom: 1.5rem; display: block; font-weight: 600; text-align: center;">
+            <i class="fas fa-check-circle"></i> Transponder details updated successfully!
+          </div>
+        <% } %>
+
+        <% if (error) { %>
+          <div class="expiry-badge badge-red" style="padding: 0.75rem 1.5rem; border-radius: 6px; margin-bottom: 1.5rem; display: block; font-weight: 600; text-align: center;">
+            <i class="fas fa-exclamation-triangle"></i> <%= error %>
+          </div>
+        <% } %>
+
+        <!-- Registration Form -->
+        <div style="background: rgba(10, 28, 28, 0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+          <h4 style="margin: 0 0 1rem 0; color: var(--color-accent);">Register New Transponder Device</h4>
+          <form action="/portal/transponders/new" method="POST" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; align-items: flex-end;">
+            <div>
+              <label style="display: block; font-size: 0.8rem; color: var(--color-muted); margin-bottom: 0.25rem;">TRANSPONDER #</label>
+              <input type="text" name="transponder_number" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box;" placeholder="e.g. DT-99201" required>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; color: var(--color-muted); margin-bottom: 0.25rem;">TYPE</label>
+              <select name="type" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box;">
+                <option value="D-TOPS">D-TOPS Transponder</option>
+                <option value="Blue Water">Blue Water Bridge</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; color: var(--color-muted); margin-bottom: 0.25rem;">NOTES / LOCATION</label>
+              <input type="text" name="comments" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box;" placeholder="e.g. Shelf B, Brampton Yard">
+            </div>
+            <button type="submit" class="portal-btn portal-btn-primary" style="padding: 0.6rem; height: 38px;">
+              <i class="fas fa-plus"></i> Add Device
+            </button>
+          </form>
+        </div>
+
+        <!-- D-TOPS Section -->
+        <div class="transponder-section">
+          <div class="flex-header">
+            <h3>D-TOPS Transponders Master</h3>
+          </div>
+          
+          <div class="portal-table-wrap">
+            <table class="portal-table">
+              <thead>
+                <tr>
+                  <th>Transponder #</th>
+                  <th>Assigned Truck</th>
+                  <th>Status</th>
+                  <th>Transition Remarks / Comments</th>
+                  <th style="text-align: right;">Update Assignment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (dtops && dtops.length > 0) { %>
+                  <% dtops.forEach(function(d) { %>
+                    <tr>
+                      <td style="font-weight: 700; color: var(--color-white);"><%= d.transponder_number %></td>
+                      <td>
+                        <% if (d.truck_unit) { %>
+                          <span style="font-weight: 600; color: var(--color-accent);">Truck #<%= d.truck_unit %></span>
+                        <% } else { %>
+                          <span style="color: var(--color-muted);">Unassigned</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <span class="expiry-badge <%= d.status === 'active' ? 'badge-green' : 'badge-red' %>">
+                          <%= d.status %>
+                        </span>
+                      </td>
+                      <td style="font-size: 0.85rem; color: var(--color-muted); max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        <%= d.comments || '—' %>
+                      </td>
+                      <td>
+                        <form action="/portal/transponders/dtops/<%= d.id %>/update" method="POST" class="status-form" style="justify-content: flex-end;">
+                          <select name="assigned_truck_id" class="status-select">
+                            <option value="">-- Unassign --</option>
+                            <% trucks.forEach(function(t) { %>
+                              <option value="<%= t.id %>" <%= d.assigned_truck_id === t.id ? 'selected' : '' %>>Truck #<%= t.unit_number %></option>
+                            <% }) %>
+                          </select>
+                          <select name="status" class="status-select">
+                            <option value="active" <%= d.status === 'active' ? 'selected' : '' %>>Active</option>
+                            <option value="inactive" <%= d.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+                            <option value="transferred" <%= d.status === 'transferred' ? 'selected' : '' %>>Transferred</option>
+                            <option value="replaced" <%= d.status === 'replaced' ? 'selected' : '' %>>Replaced</option>
+                          </select>
+                          <input type="text" name="comment" class="status-input-text" placeholder="Reason/Remarks" value="<%= d.comments %>">
+                          <button type="submit" class="portal-btn portal-btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.8rem;">
+                            Save
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                  <% }) %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="5" style="text-align: center; color: var(--color-muted); padding: 2rem;">No D-TOPS transponders registered.</td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Blue Water Section -->
+        <div class="transponder-section">
+          <div class="flex-header">
+            <h3>Blue Water Bridge Transponders Master</h3>
+          </div>
+          
+          <div class="portal-table-wrap">
+            <table class="portal-table">
+              <thead>
+                <tr>
+                  <th>Transponder #</th>
+                  <th>Assigned Truck</th>
+                  <th>Status</th>
+                  <th>Transition Remarks / Comments</th>
+                  <th style="text-align: right;">Update Assignment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (border && border.length > 0) { %>
+                  <% border.forEach(function(b) { %>
+                    <tr>
+                      <td style="font-weight: 700; color: var(--color-white);"><%= b.transponder_number %></td>
+                      <td>
+                        <% if (b.truck_unit) { %>
+                          <span style="font-weight: 600; color: var(--color-accent);">Truck #<%= b.truck_unit %></span>
+                        <% } else { %>
+                          <span style="color: var(--color-muted);">Unassigned</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <span class="expiry-badge <%= b.status === 'active' ? 'badge-green' : 'badge-red' %>">
+                          <%= b.status %>
+                        </span>
+                      </td>
+                      <td style="font-size: 0.85rem; color: var(--color-muted); max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        <%= b.comments || '—' %>
+                      </td>
+                      <td>
+                        <form action="/portal/transponders/border/<%= b.id %>/update" method="POST" class="status-form" style="justify-content: flex-end;">
+                          <select name="assigned_truck_id" class="status-select">
+                            <option value="">-- Unassign --</option>
+                            <% trucks.forEach(function(t) { %>
+                              <option value="<%= t.id %>" <%= b.assigned_truck_id === t.id ? 'selected' : '' %>>Truck #<%= t.unit_number %></option>
+                            <% }) %>
+                          </select>
+                          <select name="status" class="status-select">
+                            <option value="active" <%= b.status === 'active' ? 'selected' : '' %>>Active</option>
+                            <option value="inactive" <%= b.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+                            <option value="transferred" <%= b.status === 'transferred' ? 'selected' : '' %>>Transferred</option>
+                            <option value="replaced" <%= b.status === 'replaced' ? 'selected' : '' %>>Replaced</option>
+                          </select>
+                          <input type="text" name="comment" class="status-input-text" placeholder="Reason/Remarks" value="<%= b.comments %>">
+                          <button type="submit" class="portal-btn portal-btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.8rem;">
+                            Save
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                  <% }) %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="5" style="text-align: center; color: var(--color-muted); padding: 2rem;">No Blue Water transponders registered.</td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

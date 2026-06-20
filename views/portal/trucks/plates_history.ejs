@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <div class="portal-btn-row" style="margin-bottom: 1.5rem;">
+        <a href="/portal/trucks/<%= truck.id %>" class="portal-btn portal-btn-secondary">
+          <i class="fas fa-arrow-left"></i> Back to Truck Details
+        </a>
+      </div>
+
+      <div class="portal-card" style="margin-bottom: 2.5rem;">
+        <div class="portal-card-header">
+          <h2>Plate Attachment History</h2>
+          <span style="font-weight: 600; color: var(--color-accent); font-size: 1.1rem;">Truck #<%= truck.unit_number %></span>
+        </div>
+        
+        <p style="color: var(--color-muted); font-size: 0.95rem; margin-bottom: 2rem;">
+          View historical active, lost, or returned license plates associated with this vehicle.
+        </p>
+
+        <!-- Replace Plate Form -->
+        <div style="background: rgba(10, 28, 28, 0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+          <h4 style="margin: 0 0 1.25rem 0; color: var(--color-accent);">Attach / Replace Active License Plate</h4>
+          <form action="/portal/trucks/<%= truck.id %>/plates-history/replace" method="POST" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; align-items: flex-end;">
+            <div>
+              <label style="display: block; font-size: 0.8rem; color: var(--color-muted); margin-bottom: 0.25rem;">NEW PLATE #</label>
+              <input type="text" name="plate_number" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box;" placeholder="e.g. M1892K" required>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; color: var(--color-muted); margin-bottom: 0.25rem;">FLEET # (PLATE GROUP)</label>
+              <input type="text" name="plate_group" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box;" placeholder="e.g. 1" required>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; color: var(--color-muted); margin-bottom: 0.25rem;">WEIGHT GROUP</label>
+              <input type="text" name="weight_group" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box;" placeholder="e.g. 2" required>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; color: var(--color-muted); margin-bottom: 0.25rem;">EXPIRY DATE</label>
+              <input type="date" name="expiry" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box;" required>
+            </div>
+            <div style="grid-column: span 2;">
+              <label style="display: block; font-size: 0.8rem; color: var(--color-muted); margin-bottom: 0.25rem;">PREVIOUS PLATE TRANSITION</label>
+              <select name="status_reason" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box;">
+                <option value="returned">Returned to MTO / Ministry</option>
+                <option value="lost">Lost / Stolen Plate</option>
+                <option value="replaced">Damaged / Replaced Plate</option>
+              </select>
+            </div>
+            <div style="grid-column: span 2;">
+              <label style="display: block; font-size: 0.8rem; color: var(--color-muted); margin-bottom: 0.25rem;">TRANSITION COMMENTS / REASONS</label>
+              <input type="text" name="comment" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box;" placeholder="e.g. Reassigned to O/O, plate returned to office" required>
+            </div>
+            <div style="grid-column: span 4; text-align: right; margin-top: 0.5rem;">
+              <button type="submit" class="portal-btn portal-btn-primary" style="padding: 0.6rem 1.5rem;">
+                <i class="fas fa-exchange-alt"></i> Apply New Plate
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- History Table -->
+        <div class="portal-table-wrap">
+          <table class="portal-table">
+            <thead>
+              <tr>
+                <th>Plate Number</th>
+                <th>Fleet # (Group)</th>
+                <th>Weight Group</th>
+                <th>Expiration Date</th>
+                <th>Status</th>
+                <th>Deactivation Reason / Remarks</th>
+                <th>Registered At</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (plates && plates.length > 0) { %>
+                <% plates.forEach(function(p) { %>
+                  <tr>
+                    <td style="font-weight: 700; color: var(--color-white); font-family: monospace;"><%= p.plate_number %></td>
+                    <td><%= p.plate_group || '—' %></td>
+                    <td><%= p.weight_group || '—' %></td>
+                    <td><%= p.expiry || '—' %></td>
+                    <td>
+                      <span class="expiry-badge <%= p.status === 'active' ? 'badge-green' : 'badge-red' %>">
+                        <%= p.status %>
+                      </span>
+                    </td>
+                    <td style="font-size: 0.85rem; color: var(--color-muted);">
+                      <%= p.reason || '—' %>
+                    </td>
+                    <td style="font-size: 0.85rem; color: var(--color-muted);">
+                      <%= new Date(p.created_at).toLocaleDateString() %>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="7" style="text-align: center; color: var(--color-muted); padding: 2rem;">No plates history logged.</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

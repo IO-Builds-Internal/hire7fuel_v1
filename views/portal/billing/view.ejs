@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .invoice-box {
+      background: rgba(26, 107, 107, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      color: var(--color-white);
+    }
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 2px solid rgba(255,255,255,0.05);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .invoice-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-accent);
+      margin: 0;
+    }
+    .invoice-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .invoice-meta-col strong {
+      color: var(--color-white);
+    }
+    .invoice-meta-col span {
+      display: block;
+      color: var(--color-muted);
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+    }
+    .invoice-totals {
+      text-align: right;
+      margin-top: 2rem;
+      font-size: 1.05rem;
+    }
+    .invoice-totals div {
+      margin-bottom: 0.5rem;
+    }
+    .invoice-totals .grand-total {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--color-accent);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .adjustment-input-row {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <div class="portal-btn-row" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <a href="/portal/billing" class="portal-btn portal-btn-secondary">
+          <i class="fas fa-arrow-left"></i> Back to Invoices
+        </a>
+        <span class="expiry-badge <%= invoice.status === 'Paid' ? 'badge-green' : (invoice.status === 'Pending Approval' ? 'badge-yellow' : 'badge-blue') %>" style="font-size: 1rem; padding: 0.5rem 1rem;">
+          Status: <%= invoice.status %>
+        </span>
+      </div>
+
+      <% if (success) { %>
+        <div class="expiry-badge badge-green" style="padding: 0.75rem 1.5rem; border-radius: 6px; margin-bottom: 1.5rem; display: block; font-weight: 600; text-align: center;">
+          <i class="fas fa-check-circle"></i> Invoice operations completed successfully!
+        </div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="expiry-badge badge-red" style="padding: 0.75rem 1.5rem; border-radius: 6px; margin-bottom: 1.5rem; display: block; font-weight: 600; text-align: center;">
+          <i class="fas fa-exclamation-triangle"></i> <%= error %>
+        </div>
+      <% } %>
+
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+        
+        <!-- Premium Invoice Sheet -->
+        <div>
+          <div class="invoice-box">
+            <div class="invoice-header">
+              <div>
+                <h1 class="invoice-title">INVOICE</h1>
+                <span style="color: var(--color-muted); font-size: 0.9rem;">Invoice Number: <strong><%= invoice.invoice_number %></strong></span>
+              </div>
+              <div style="text-align: right;">
+                <h3 style="margin: 0; color: var(--color-white); font-weight: 700;"><%= config.brand.name %></h3>
+                <span style="color: var(--color-muted); font-size: 0.85rem; display: block;"><%= config.contact.address %></span>
+                <span style="color: var(--color-muted); font-size: 0.85rem; display: block;">Email: <%= config.contact.email %></span>
+              </div>
+            </div>
+
+            <div class="invoice-meta-grid">
+              <div class="invoice-meta-col">
+                <span>BILLED TO:</span>
+                <strong><%= profile.legal_name || 'Carrier Partner' %></strong>
+                <% if (profile.dba_name) { %>
+                  <span style="margin: 0; font-size: 0.85rem;">DBA: <%= profile.dba_name %></span>
+                <% } %>
+                <span style="margin: 0.25rem 0 0 0; font-size: 0.85rem;"><%= profile.main_address || 'No registered address' %></span>
+              </div>
+              <div class="invoice-meta-col" style="text-align: right;">
+                <span>INVOICE DATE:</span>
+                <strong><%= new Date(invoice.created_at).toLocaleDateString() %></strong>
+                <span style="margin-top: 0.75rem;">PAYMENT DUE DATE:</span>
+                <strong style="color: var(--color-highlight);"><%= invoice.due_date %></strong>
+              </div>
+            </div>
+
+            <!-- Items Table -->
+            <div class="portal-table-wrap" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; overflow: hidden;">
+              <table class="portal-table" style="background: none;">
+                <thead>
+                  <tr style="background: rgba(255,255,255,0.02);">
+                    <th>Description</th>
+                    <th style="text-align: center;">Qty</th>
+                    <th style="text-align: right;">Rate</th>
+                    <th style="text-align: right;">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% items.forEach(function(item) { %>
+                    <tr>
+                      <td style="font-weight: 600;"><%= item.description %></td>
+                      <td style="text-align: center;"><%= item.quantity %></td>
+                      <td style="text-align: right;">$<%= item.rate.toFixed(2) %> CAD</td>
+                      <td style="text-align: right; font-weight: 700; color: var(--color-white);">$<%= item.amount.toFixed(2) %> CAD</td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Totals -->
+            <div class="invoice-totals">
+              <div>Subtotal: <strong>$<%= invoice.total_before_tax.toFixed(2) %> CAD</strong></div>
+              <div>HST / Tax: <strong>$<%= invoice.tax_amount.toFixed(2) %> CAD</strong></div>
+              <div class="grand-total">Total Amount Due: <span>$<%= invoice.total_amount.toFixed(2) %> CAD</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Adjustments / Approval Control Panel -->
+        <div>
+          <% if (invoice.status === 'Pending Approval' || invoice.status === 'Draft') { %>
+            <!-- Adjustments Card -->
+            <div class="portal-card" style="margin-bottom: 2rem;">
+              <h3 style="margin-top: 0; color: var(--color-accent); font-weight: 600; font-size: 1.15rem; margin-bottom: 1.25rem;">Adjust Invoice Line Items</h3>
+              
+              <form action="/portal/billing/invoices/<%= invoice.id %>/adjust" method="POST">
+                <div id="adjustmentItemsWrap">
+                  <% items.forEach(function(item, idx) { %>
+                    <div class="adjustment-input-row">
+                      <input type="text" name="item_desc" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box; font-size: 0.8rem;" value="<%= item.description %>" placeholder="Item Description" required>
+                      <input type="number" step="any" name="item_qty" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box; font-size: 0.8rem; text-align: center;" value="<%= item.quantity %>" placeholder="Qty" required>
+                      <input type="number" step="any" name="item_rate" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box; font-size: 0.8rem; text-align: right;" value="<%= item.rate %>" placeholder="Rate" required>
+                    </div>
+                  <% }) %>
+                </div>
+
+                <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
+                  <button type="button" class="portal-btn portal-btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="addAdjustmentRow()">
+                    <i class="fas fa-plus"></i> Add Item
+                  </button>
+                  <button type="submit" class="portal-btn portal-btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">
+                    <i class="fas fa-save"></i> Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          <% } %>
+
+          <!-- Approval Workflow Card -->
+          <div class="portal-card">
+            <h3 style="margin-top: 0; color: var(--color-white); font-weight: 600; font-size: 1.15rem; margin-bottom: 1.25rem;">Billing Approvals</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <% if (invoice.status === 'Pending Approval' || invoice.status === 'Draft') { %>
+                <form action="/portal/billing/invoices/<%= invoice.id %>/approve" method="POST">
+                  <button type="submit" class="portal-btn portal-btn-primary" style="width: 100%; justify-content: center;">
+                    <i class="fas fa-check-double" style="margin-right: 0.5rem;"></i> Approve & Dispatch Invoice
+                  </button>
+                </form>
+              <% } else if (invoice.status === 'Approved') { %>
+                <form action="/portal/billing/invoices/<%= invoice.id %>/pay" method="POST">
+                  <button type="submit" class="portal-btn portal-btn-primary" style="width: 100%; justify-content: center; background: var(--color-accent);">
+                    <i class="fas fa-hand-holding-usd" style="margin-right: 0.5rem;"></i> Mark Invoice as Paid
+                  </button>
+                </form>
+              <% } else if (invoice.status === 'Paid') { %>
+                <div style="text-align: center; padding: 1.5rem 0; border: 1px dashed rgba(34, 201, 138, 0.4); border-radius: 6px; background: rgba(34, 201, 138, 0.05);">
+                  <i class="fas fa-check-circle" style="font-size: 2rem; color: var(--color-accent); margin-bottom: 0.5rem;"></i>
+                  <div style="font-weight: 700; color: var(--color-accent); font-size: 1.1rem;">Paid in Full</div>
+                  <span style="font-size: 0.8rem; color: var(--color-muted);">Transaction successfully settled</span>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function addAdjustmentRow() {
+      const wrap = document.getElementById('adjustmentItemsWrap');
+      const row = document.createElement('div');
+      row.className = 'adjustment-input-row';
+      row.innerHTML = `
+        <input type="text" name="item_desc" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box; font-size: 0.8rem;" placeholder="Item Description" required>
+        <input type="number" step="any" name="item_qty" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box; font-size: 0.8rem; text-align: center;" placeholder="Qty" required>
+        <input type="number" step="any" name="item_rate" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box; font-size: 0.8rem; text-align: right;" placeholder="Rate" required>
+      `;
+      wrap.appendChild(row);
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body.public-body {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-near-black) 100%);
+      color: var(--color-white);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem;
+      margin: 0;
+    }
+    .ref-container {
+      width: 100%;
+      max-width: 650px;
+      background: rgba(26, 107, 107, 0.15);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(34, 201, 138, 0.25);
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+    .ref-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .ref-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-accent);
+      margin: 0 0 0.5rem 0;
+    }
+    .ref-header p {
+      color: var(--color-muted);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+    .driver-details-card {
+      background: rgba(10, 28, 28, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .driver-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      font-size: 0.9rem;
+    }
+    .driver-details-grid div strong {
+      color: var(--color-accent);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--color-white);
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(10, 28, 28, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      color: var(--color-white);
+      font-size: 0.95rem;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .rating-group {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 0.25rem;
+    }
+    .rating-option {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+    }
+    .rating-option input[type="radio"] {
+      accent-color: var(--color-accent);
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--color-accent);
+      color: var(--color-white);
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+    .success-panel {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    .success-icon {
+      font-size: 4rem;
+      color: var(--color-accent);
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body class="public-body">
+
+  <div class="ref-container">
+    <% if (success) { %>
+      <div class="success-panel">
+        <i class="fas fa-check-circle success-icon"></i>
+        <h2>Verification Complete</h2>
+        <p style="color: var(--color-muted); margin-bottom: 2rem; line-height: 1.6;">
+          Thank you. Your reference verification feedback for <strong><%= driver.first_name %> <%= driver.last_name %></strong> has been securely submitted to <%= config.brand.name %> operations.
+        </p>
+        <span style="font-size: 0.85rem; color: var(--color-accent); font-weight: 600; text-transform: uppercase;">Secure Transmission Verified</span>
+      </div>
+    <% } else { %>
+      <div class="ref-header">
+        <h1>Reference Verification</h1>
+        <p>Confirming employment details for the applicant below</p>
+      </div>
+
+      <% if (error) { %>
+        <div class="expiry-badge badge-red" style="padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; display: block; font-size: 0.9rem; font-weight: 500; text-align: center;">
+          <i class="fas fa-exclamation-triangle"></i> <%= error %>
+        </div>
+      <% } %>
+
+      <div class="driver-details-card">
+        <div class="driver-details-grid">
+          <div>
+            <span style="font-size: 0.8rem; color: var(--color-muted); display: block;">APPLICANT NAME</span>
+            <strong><%= driver.first_name %> <%= driver.last_name %></strong>
+          </div>
+          <div>
+            <span style="font-size: 0.8rem; color: var(--color-muted); display: block;">POSITION APPLIED</span>
+            <strong><%= driver.driver_type || 'Commercial Fleet Driver' %></strong>
+          </div>
+        </div>
+      </div>
+
+      <form action="/public/ref-check/<%= driver.id %>/submit" method="POST">
+        <div class="form-group">
+          <label for="ref_relation">Professional Relationship / How do you know this applicant?</label>
+          <input type="text" id="ref_relation" name="ref_relation" class="form-control" placeholder="e.g. Previous Operations Manager at GTA Freightways" required>
+        </div>
+
+        <div class="form-group">
+          <label>Overall Professional Rating</label>
+          <div class="rating-group">
+            <label class="rating-option">
+              <input type="radio" name="ref_performance" value="5" checked>
+              <span>5 Stars (Excellent)</span>
+            </label>
+            <label class="rating-option">
+              <input type="radio" name="ref_performance" value="4">
+              <span>4 Stars (Good)</span>
+            </label>
+            <label class="rating-option">
+              <input type="radio" name="ref_performance" value="3">
+              <span>3 Stars (Average)</span>
+            </label>
+            <label class="rating-option">
+              <input type="radio" name="ref_performance" value="2">
+              <span>2 Stars (Below Avg)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Would you recommend rehiring this driver?</label>
+          <div class="rating-group">
+            <label class="rating-option">
+              <input type="radio" name="ref_rehire" value="Yes" checked>
+              <span>Yes, without hesitation</span>
+            </label>
+            <label class="rating-option">
+              <input type="radio" name="ref_rehire" value="No">
+              <span>No</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="ref_comments">Additional Comments / Performance Feedback</label>
+          <textarea id="ref_comments" name="ref_comments" class="form-control" placeholder="Please provide any additional comments on the candidate's safety record, punctuality, and professionalism..." required></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-paper-plane"></i> Submit Reference Review
+        </button>
+      </form>
+    <% } %>
+  </div>
+
+</body>
+</html>

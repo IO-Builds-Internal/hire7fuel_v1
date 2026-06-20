@@ -16,8 +16,8 @@
     <div class="portal-dashboard">
       
       <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 2rem;">
-        <a href="/portal/trucks/<%= truck.id %>" class="portal-btn portal-btn-secondary" style="padding: 0.5rem 1rem;">
-          <i class="fas fa-arrow-left"></i> Back to Truck Details
+        <a href="/portal/trailers/<%= trailer.id %>" class="portal-btn portal-btn-secondary" style="padding: 0.5rem 1rem;">
+          <i class="fas fa-arrow-left"></i> Back to Trailer Details
         </a>
         <button type="button" class="portal-btn portal-btn-primary" style="padding: 0.5rem 1rem;" onclick="openAddMaintenanceModal()">
           <i class="fas fa-plus"></i> Add Maintenance Record
@@ -37,7 +37,7 @@
       <% } %>
 
       <div class="portal-card">
-        <h2>Maintenance & Repair Logs — Unit #<%= truck.unit_number %></h2>
+        <h2>Maintenance & Repair Logs — Trailer Unit #<%= trailer.unit_number %></h2>
         
         <!-- Grouped Monthly View -->
         <% if (records && records.length > 0) { %>
@@ -106,7 +106,7 @@
           <div style="text-align: center; padding: 4rem 2rem; color: var(--color-muted);">
             <i class="fas fa-tools" style="font-size: 3rem; color: rgba(20,160,119,0.1); margin-bottom: 1.5rem; display: block;"></i>
             <h3>No Maintenance History Logged</h3>
-            <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">Click the button below to add repair shop bills, oil changes, or PMVI records.</p>
+            <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">Click the button below to add repair shop bills or PMVI records.</p>
             <button type="button" class="portal-btn portal-btn-primary" onclick="openAddMaintenanceModal()"><i class="fas fa-plus"></i> Log First Service</button>
           </div>
         <% } %>
@@ -119,11 +119,11 @@
   <div class="details-modal" id="addMaintModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); overflow-y: auto; padding: 2rem 0;">
     <div class="portal-card" style="width: 100%; max-width: 650px; margin: auto 1rem;">
       <div class="portal-card-header">
-        <h2>Log Maintenance Record</h2>
+        <h2>Log Trailer Maintenance Record</h2>
         <button type="button" onclick="closeAddMaintenanceModal()" style="background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: var(--color-white);">&times;</button>
       </div>
 
-      <form action="/portal/trucks/<%= truck.id %>/maintenance/add" method="POST" enctype="multipart/form-data">
+      <form action="/portal/trailers/<%= trailer.id %>/maintenance/add" method="POST" enctype="multipart/form-data">
         
         <!-- Checklist Toggle for "No History" month -->
         <div style="background: var(--color-bg-darker); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 1.5rem;">
@@ -144,7 +144,7 @@
           <div class="portal-form-grid">
             <div class="portal-form-group">
               <label class="portal-label">Service Shop Name</label>
-              <input type="text" name="shop_name" class="portal-input" required placeholder="e.g. Speed Truck Repair">
+              <input type="text" name="shop_name" class="portal-input" required placeholder="e.g. Speed Trailer Shop">
             </div>
             <div class="portal-form-group">
               <label class="portal-label">Service Date</label>
@@ -196,19 +196,16 @@
                 <input type="checkbox" name="repair_types" value="PMVI Inspection"> PMVI Inspection
               </label>
               <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; color: var(--color-white); cursor: pointer;">
-                <input type="checkbox" name="repair_types" value="Oil Change"> Oil Change
+                <input type="checkbox" name="repair_types" value="Tire Replacement"> Tire Replacement
               </label>
               <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; color: var(--color-white); cursor: pointer;">
                 <input type="checkbox" name="repair_types" value="Brakes / Drums"> Brakes / Drums
               </label>
               <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; color: var(--color-white); cursor: pointer;">
-                <input type="checkbox" name="repair_types" value="Tire Replacement"> Tire Replacement
+                <input type="checkbox" name="repair_types" value="Electrical / Lights"> Electrical / Lights
               </label>
               <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; color: var(--color-white); cursor: pointer;">
-                <input type="checkbox" name="repair_types" value="Engine Tuning"> Engine Tuning
-              </label>
-              <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.9rem; color: var(--color-white); cursor: pointer;">
-                <input type="checkbox" name="repair_types" value="Electrical Systems"> Electrical Systems
+                <input type="checkbox" name="repair_types" value="Structural / Body"> Structural / Body
               </label>
             </div>
           </div>
@@ -240,6 +237,7 @@
       document.getElementById('addMaintModal').style.display = 'flex';
     }
 
+    // Modal Close
     function closeAddMaintenanceModal() {
       document.getElementById('addMaintModal').style.display = 'none';
     }
@@ -252,14 +250,12 @@
       if (checkbox.checked) {
         noteField.style.display = 'block';
         formFields.style.opacity = '0.4';
-        // Remove required constraints temporarily
         requiredInputs.forEach(input => {
           input.removeAttribute('required');
         });
       } else {
         noteField.style.display = 'none';
         formFields.style.opacity = '1';
-        // Restore required constraints
         requiredInputs.forEach(input => {
           input.setAttribute('required', 'true');
         });

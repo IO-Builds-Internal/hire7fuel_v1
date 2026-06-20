@@ -63,6 +63,10 @@
                   </td>
                 </tr>
                 <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Emergency Contact:</td>
+                  <td style="padding: 0.5rem 0; border: none;"><%= driver.emergency_contact_phone || '—' %></td>
+                </tr>
+                <tr>
                   <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Assigned Truck:</td>
                   <td style="padding: 0.5rem 0; border: none;">
                     <% if (truck) { %>
@@ -75,6 +79,10 @@
                 <tr>
                   <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Payment Type:</td>
                   <td style="padding: 0.5rem 0; border: none;"><%= driver.payment_type %></td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Payment Class:</td>
+                  <td style="padding: 0.5rem 0; border: none;"><%= driver.payment_classification || 'Payroll' %></td>
                 </tr>
                 <% if (driver.payment_type === 'Independent Contractor') { %>
                   <tr>
@@ -110,6 +118,16 @@
                   <td style="font-weight: 600; padding: 0.5rem 0; border: none;">DL Expiry:</td>
                   <td style="padding: 0.5rem 0; border: none;">
                     <%- include('../../partials/expiry_badge', { expiry: driver.dl_expiry }) %>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Hazmat (TDG) Status:</td>
+                  <td style="padding: 0.5rem 0; border: none;">
+                    <% if (driver.hazmat_tdg === 1) { %>
+                      <span class="expiry-badge badge-green" style="background: rgba(34, 201, 138, 0.1); color: var(--color-accent); padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem;">Certified</span>
+                    <% } else { %>
+                      <span style="background: rgba(255,255,255,0.05); color: var(--color-muted); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">Not Certified</span>
+                    <% } %>
                   </td>
                 </tr>
                 <tr>
@@ -177,6 +195,215 @@
         </div>
 
       </div>
+
+      <!-- Incorporation Details Card (Conditional) -->
+      <% if (driver.payment_classification === 'In-Corporation') { %>
+        <div class="portal-card" style="margin-top: 2rem;">
+          <h2 style="font-size: 1.25rem; color: var(--color-accent); border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+            <i class="fas fa-building" style="margin-right: 0.5rem;"></i> Incorporation Details
+          </h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem;">
+            <div>
+              <table class="portal-table" style="border: none;">
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 180px;">Corporate Name:</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= driver.inc_name || '—' %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">DBA Name:</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= driver.inc_dba || '—' %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">GST/HST Number:</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= driver.inc_gst_hst || '—' %></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <table class="portal-table" style="border: none;">
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 180px;">Corporate Phone:</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= driver.inc_phone || '—' %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Corporate Email:</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= driver.inc_email || '—' %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Corporate Address:</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= driver.inc_address || '—' %></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      <% } %>
+
+      <!-- ELD & Fuel API Integrations Card -->
+      <div class="portal-card" style="margin-top: 2rem;">
+        <h2 style="font-size: 1.25rem; color: var(--color-accent); border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+          <i class="fas fa-network-wired" style="margin-right: 0.5rem;"></i> ELD & Fuel API Integrations
+        </h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem;">
+          <div>
+            <h3 style="font-size: 1rem; color: var(--color-white); margin-bottom: 0.5rem;">ELD Provider Integration</h3>
+            <table class="portal-table" style="border: none;">
+              <tbody>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 180px;">Company Name:</td>
+                  <td style="padding: 0.5rem 0; border: none;"><%= driver.eld_company_name || 'Not Configured' %></td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">API Access Token:</td>
+                  <td style="padding: 0.5rem 0; border: none; font-family: monospace;">
+                    <%= driver.eld_api_key ? '••••••••••••••••' : 'Not Configured' %>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h3 style="font-size: 1rem; color: var(--color-white); margin-bottom: 0.5rem;">Fuel API Integration</h3>
+            <table class="portal-table" style="border: none;">
+              <tbody>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 180px;">Company Name:</td>
+                  <td style="padding: 0.5rem 0; border: none;"><%= driver.fuel_company_name || 'Not Configured' %></td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding: 0.5rem 0; border: none;">API Key / Secret:</td>
+                  <td style="padding: 0.5rem 0; border: none; font-family: monospace;">
+                    <%= driver.fuel_api_key ? '••••••••••••••••' : 'Not Configured' %>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reference Verification Panel -->
+      <div class="portal-card" style="margin-top: 2rem; margin-bottom: 3rem;">
+        <h2 style="font-size: 1.25rem; color: var(--color-accent); border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+          <i class="fas fa-user-check" style="margin-right: 0.5rem;"></i> Employment Reference Verification Check
+        </h2>
+
+        <%
+          let recipient = null;
+          try {
+            if (driver.ref_check_recipient_info) {
+              recipient = JSON.parse(driver.ref_check_recipient_info);
+            }
+          } catch (e) {}
+
+          let refDriverInfo = null;
+          try {
+            if (driver.ref_check_driver_info) {
+              refDriverInfo = JSON.parse(driver.ref_check_driver_info);
+            }
+          } catch (e) {}
+        %>
+
+        <% if (recipient) { %>
+          <div style="background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.05); padding: 1.25rem; border-radius: 6px; margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+              <h3 style="font-size: 1.05rem; margin: 0; color: var(--color-white);">Active Reference Check Details</h3>
+              <span class="expiry-badge <%= driver.ref_check_status === 'Completed' ? 'badge-green' : 'badge-amber' %>" style="font-size: 0.85rem; font-weight: 600; padding: 0.3rem 0.6rem; border-radius: 4px;">
+                <%= driver.ref_check_status === 'Completed' ? 'Completed' : 'Pending Response' %>
+              </span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-size: 0.95rem; margin-bottom: 1rem;">
+              <div>
+                <div><strong>Reference Name:</strong> <%= recipient.name %></div>
+                <div><strong>Reference Email:</strong> <%= recipient.email %></div>
+                <div><strong>Reference Phone:</strong> <%= recipient.phone || '—' %></div>
+              </div>
+              <div>
+                <% if (refDriverInfo) { %>
+                  <div><strong>Position Applied:</strong> <%= refDriverInfo.position %></div>
+                <% } %>
+                <div><strong>Follow-up Reminders Sent:</strong> <%= driver.ref_check_followup_count %> / 3</div>
+                <% if (driver.ref_check_status !== 'Completed') { %>
+                  <div style="margin-top: 0.25rem;">
+                    <strong>Verification URL:</strong> 
+                    <a href="/public/ref-check/<%= driver.id %>" target="_blank" style="color: var(--color-accent); font-weight: 600;">View Live Form</a>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+
+            <% if (driver.ref_check_status === 'Completed' && recipient.responses) { %>
+              <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; margin-top: 1rem;">
+                <h4 style="color: var(--color-accent); font-size: 0.95rem; margin-top: 0; margin-bottom: 0.75rem;">Verification Response Summary</h4>
+                <div style="display: grid; grid-template-columns: 1fr; gap: 0.75rem; font-size: 0.9rem; background: rgba(0,0,0,0.1); padding: 1rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.02);">
+                  <div><strong>1. Relationship / Professional Role:</strong> <%= recipient.responses.relationship %></div>
+                  <div><strong>2. Performance Rating:</strong> <%= recipient.responses.performance_rating %> / 5 Stars</div>
+                  <div><strong>3. Recommend for Rehire?</strong> <%= recipient.responses.eligible_for_rehire %></div>
+                  <div><strong>4. Comments / Feedback:</strong> <%= recipient.responses.comments || 'No comment provided' %></div>
+                  <div style="font-size: 0.8rem; color: var(--color-muted); text-align: right; margin-top: 0.5rem;">
+                    Submitted: <%= new Date(recipient.responses.submitted_at).toLocaleString() %>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+
+            <div style="margin-top: 1.25rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+              <% if (driver.ref_check_status === 'Completed' && driver.ref_check_pdf_path) { %>
+                <a href="<%= driver.ref_check_pdf_path %>" target="_blank" class="portal-btn portal-btn-primary" style="padding: 0.5rem 1rem;">
+                  <i class="fas fa-file-pdf"></i> View & Download PDF Report
+                </a>
+              <% } else if (driver.ref_check_status !== 'Completed') { %>
+                <form action="/portal/drivers/<%= driver.id %>/ref-check/followup" method="POST" style="display: inline;">
+                  <button type="submit" class="portal-btn portal-btn-primary" style="padding: 0.5rem 1rem;" <%= driver.ref_check_followup_count >= 3 ? 'disabled' : '' %>>
+                    <i class="fas fa-envelope"></i> Send Follow-Up Reminder (<%= driver.ref_check_followup_count %>/3)
+                  </button>
+                </form>
+                <button onclick="navigator.clipboard.writeText('http://localhost:3000/public/ref-check/<%= driver.id %>'); alert('Access Link copied to clipboard!');" class="portal-btn portal-btn-secondary" style="padding: 0.5rem 1rem;">
+                  <i class="fas fa-copy"></i> Copy Public Form Link
+                </button>
+              <% } %>
+              <button onclick="document.getElementById('reinitiateSection').style.display='block'; this.style.display='none';" class="portal-btn portal-btn-secondary" style="padding: 0.5rem 1rem;">
+                <i class="fas fa-redo"></i> Start New Reference Check
+              </button>
+            </div>
+          </div>
+        <% } %>
+
+        <div id="reinitiateSection" style="display: <%= recipient ? 'none' : 'block' %>;">
+          <h3 style="font-size: 1rem; color: var(--color-white); margin-bottom: 1.25rem;">
+            <%= recipient ? 'Initiate a New Reference Check' : 'No reference check initiated yet. Start a reference verification:' %>
+          </h3>
+          <form action="/portal/drivers/<%= driver.id %>/ref-check" method="POST">
+            <div class="portal-form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+              <div class="portal-form-group">
+                <label class="portal-label">Reference Contact Name</label>
+                <input type="text" name="ref_name" class="portal-input" placeholder="e.g. John Smith" required>
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Reference Contact Email</label>
+                <input type="email" name="ref_email" class="portal-input" placeholder="john.smith@company.com" required>
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Reference Contact Phone</label>
+                <input type="text" name="ref_phone" class="portal-input" placeholder="e.g. (555) 019-2831">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Position Applied</label>
+                <input type="text" name="position_applied" class="portal-input" value="<%= driver.driver_type || 'Commercial Driver' %>" required>
+              </div>
+            </div>
+            <button type="submit" class="portal-btn portal-btn-primary" style="margin-top: 1.25rem; padding: 0.6rem 1.25rem;">
+              <i class="fas fa-play"></i> Send Reference Request
+            </button>
+          </form>
+        </div>
+      </div>
+
 
     </div>
   </div>

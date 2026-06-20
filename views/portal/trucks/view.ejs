@@ -38,7 +38,7 @@
               <table class="portal-table" style="border: none;">
                 <tbody>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 120px;">Unit #</td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 150px;">Unit #</td>
                     <td style="padding: 0.5rem 0; border: none; font-weight: 700; color: var(--color-white);">#<%= truck.unit_number %></td>
                   </tr>
                   <tr>
@@ -46,16 +46,20 @@
                     <td style="padding: 0.5rem 0; border: none; font-family: monospace;"><%= truck.vin %></td>
                   </tr>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Make</td>
-                    <td style="padding: 0.5rem 0; border: none;"><%= truck.make %></td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Make / Model / Year</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= truck.make %> <%= truck.model %> (<%= truck.year %>)</td>
                   </tr>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Model</td>
-                    <td style="padding: 0.5rem 0; border: none;"><%= truck.model %></td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Operating Region</td>
+                    <td style="padding: 0.5rem 0; border: none;"><span class="expiry-badge badge-green"><%= truck.operating_region || 'N/A' %></span></td>
                   </tr>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Year</td>
-                    <td style="padding: 0.5rem 0; border: none;"><%= truck.year %></td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Equipment Type</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= truck.equipment_type || 'N/A' %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Axle Config</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= truck.axle_config || 'N/A' %></td>
                   </tr>
                 </tbody>
               </table>
@@ -63,23 +67,68 @@
               <table class="portal-table" style="border: none;">
                 <tbody>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 120px;">GPS Tracker</td>
-                    <td style="padding: 0.5rem 0; border: none;"><%= truck.gps_tracker || '—' %></td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 160px;">Ownership Class</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= truck.ownership_type || 'Company Truck' %></td>
                   </tr>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Fuel Card #</td>
-                    <td style="padding: 0.5rem 0; border: none; font-family: monospace;"><%= truck.fuel_card_number || '—' %></td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">GPS Tracker</td>
+                    <td style="padding: 0.5rem 0; border: none; font-family: monospace;"><%= truck.gps_tracker || '—' %></td>
                   </tr>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">EZ-PASS #</td>
-                    <td style="padding: 0.5rem 0; border: none;"><%= truck.tolls_ezpass || '—' %></td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Est KMS per Litre</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= truck.est_kms_per_litre ? truck.est_kms_per_litre + ' KMs/L' : '—' %></td>
                   </tr>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">HWY 407 #</td>
-                    <td style="padding: 0.5rem 0; border: none;"><%= truck.tolls_hwy407 || '—' %></td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Calculated KMs/Litre</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= truck.calculated_kms_per_litre ? truck.calculated_kms_per_litre + ' KMs/L' : '—' %></td>
                   </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Fuel Card (CAD)</td>
+                    <td style="padding: 0.5rem 0; border: none; font-family: monospace;"><%= truck.fuel_card_cad || '—' %></td>
+                  </tr>
+                  <% if (truck.operating_region === 'Cross-Border') { %>
+                    <tr>
+                      <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Fuel Card (USD)</td>
+                      <td style="padding: 0.5rem 0; border: none; font-family: monospace;"><%= truck.fuel_card_usd || '—' %></td>
+                    </tr>
+                  <% } %>
                 </tbody>
               </table>
+            </div>
+
+            <!-- Financing Sub-Card -->
+            <div style="margin-top: 1.5rem; background: rgba(0, 0, 0, 0.15); padding: 1.25rem; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.03);">
+              <h3 style="font-size: 1rem; color: var(--color-accent); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-coins"></i> Asset Financing Details (<%= truck.finance_type || 'Owned' %>)
+              </h3>
+              
+              <% if (truck.finance_type === 'Leased') { %>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                  <div><strong>Purchase Date:</strong> <%= truck.purchase_date || '—' %></div>
+                  <div><strong>Lease Value:</strong> $<%= truck.valuation ? truck.valuation.toLocaleString() : '0.00' %></div>
+                  <div><strong>HST Tax:</strong> $<%= truck.hst_amount ? truck.hst_amount.toLocaleString() : '0.00' %></div>
+                  <div><strong>Total Capital Cost:</strong> $<%= truck.total_amount ? truck.total_amount.toLocaleString() : '0.00' %></div>
+                  <div><strong>Lease Term:</strong> <%= truck.lease_term || '—' %></div>
+                  <div><strong>Lease Payment:</strong> $<%= truck.lease_payment ? truck.lease_payment.toLocaleString() : '0.00' %> (<%= truck.lease_frequency %>)</div>
+                </div>
+              <% } else if (truck.finance_type === 'Rented') { %>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                  <div><strong>Rent Payment Rate:</strong> $<%= truck.rent_payment ? truck.rent_payment.toLocaleString() : '0.00' %> (<%= truck.rent_frequency %>)</div>
+                  <div><strong>Rent Base Amount (Excl. HST):</strong> $<%= truck.rent_amount_exc_hst ? truck.rent_amount_exc_hst.toLocaleString() : '0.00' %></div>
+                  <div><strong>Rent HST Tax:</strong> $<%= truck.rent_hst ? truck.rent_hst.toLocaleString() : '0.00' %></div>
+                  <div><strong>Total Rent Invoice:</strong> $<%= truck.rent_total ? truck.rent_total.toLocaleString() : '0.00' %></div>
+                </div>
+              <% } else { %>
+                <!-- Owned -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                  <div><strong>Purchase Date:</strong> <%= truck.purchase_date || '—' %></div>
+                  <div><strong>Purchase Price:</strong> $<%= truck.purchase_price ? truck.purchase_price.toLocaleString() : '0.00' %></div>
+                  <div><strong>Asset Valuation:</strong> $<%= truck.valuation ? truck.valuation.toLocaleString() : '0.00' %></div>
+                  <div><strong>HST Tax:</strong> $<%= truck.hst_amount ? truck.hst_amount.toLocaleString() : '0.00' %></div>
+                  <div><strong>Total Paid:</strong> $<%= truck.total_amount ? truck.total_amount.toLocaleString() : '0.00' %></div>
+                  <div><strong>ACH Settled Value:</strong> $<%= truck.ach_value ? truck.ach_value.toLocaleString() : '0.00' %></div>
+                </div>
+              <% } %>
             </div>
 
             <!-- Other custom tolls -->

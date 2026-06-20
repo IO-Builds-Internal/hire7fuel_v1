@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/portal_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <div class="portal-card" style="margin-bottom: 2rem;">
+        <div class="portal-card-header">
+          <h2>Billing & Accounting Dashboard</h2>
+          <div style="display: flex; gap: 0.5rem;">
+            <a href="/portal/billing/rates" class="portal-btn portal-btn-secondary">
+              <i class="fas fa-cog"></i> Config Task Rates
+            </a>
+          </div>
+        </div>
+        <p style="color: var(--color-muted); font-size: 0.95rem; margin-bottom: 2rem;">
+          Track monthly active vehicle licensing fees ($85 per active truck) and completed billable work order charges. Approve invoice drafts before they are dispatched to carriers.
+        </p>
+
+        <% if (success) { %>
+          <div class="expiry-badge badge-green" style="padding: 0.75rem 1.5rem; border-radius: 6px; margin-bottom: 1.5rem; display: block; font-weight: 600; text-align: center;">
+            <i class="fas fa-check-circle"></i> Invoicing operations executed successfully!
+          </div>
+        <% } %>
+
+        <% if (error) { %>
+          <div class="expiry-badge badge-red" style="padding: 0.75rem 1.5rem; border-radius: 6px; margin-bottom: 1.5rem; display: block; font-weight: 600; text-align: center;">
+            <i class="fas fa-exclamation-triangle"></i> <%= error %>
+          </div>
+        <% } %>
+
+        <!-- Actions and Filters Grid -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2.5rem;">
+          
+          <!-- Monthly Generator Form -->
+          <div style="background: rgba(10, 28, 28, 0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 1.5rem;">
+            <h4 style="margin: 0 0 1rem 0; color: var(--color-accent);">Generate / Run Monthly Carrier Billing</h4>
+            <form action="/portal/billing/invoices/generate-monthly" method="POST" style="display: flex; gap: 1rem; align-items: flex-end;">
+              <div style="flex-grow: 1;">
+                <label style="display: block; font-size: 0.8rem; color: var(--color-muted); margin-bottom: 0.25rem;">BILLING MONTH (YYYY-MM)</label>
+                <% 
+                  const d = new Date();
+                  const curMonth = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+                %>
+                <input type="text" name="month" class="carrier-switcher-select" style="width: 100%; box-sizing: border-box;" value="<%= curMonth %>" placeholder="e.g. 2026-06" required>
+              </div>
+              <button type="submit" class="portal-btn portal-btn-primary" style="height: 38px; padding: 0.5rem 1.5rem;">
+                <i class="fas fa-calculator"></i> Run Billing
+              </button>
+            </form>
+          </div>
+
+          <!-- Quick Filters Card -->
+          <div style="background: rgba(10, 28, 28, 0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 1.5rem;">
+            <h4 style="margin: 0 0 1rem 0; color: var(--color-white);">Filters</h4>
+            <form action="/portal/billing" method="GET" style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <select name="status" class="carrier-switcher-select" style="width: 100%;" onchange="this.form.submit()">
+                <option value="">-- All Statuses --</option>
+                <option value="Pending Approval" <%= statusFilter === 'Pending Approval' ? 'selected' : '' %>>Pending Approval</option>
+                <option value="Approved" <%= statusFilter === 'Approved' ? 'selected' : '' %>>Approved</option>
+                <option value="Paid" <%= statusFilter === 'Paid' ? 'selected' : '' %>>Paid</option>
+              </select>
+              <select name="month" class="carrier-switcher-select" style="width: 100%;" onchange="this.form.submit()">
+                <option value="">-- All Months --</option>
+                <% if (typeof months !== 'undefined') { %>
+                  <% months.forEach(function(m) { %>
+                    <option value="<%= m.month %>" <%= monthFilter === m.month ? 'selected' : '' %>><%= m.month %></option>
+                  <% }) %>
+                <% } %>
+              </select>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- Invoices List -->
+        <div class="portal-table-wrap">
+          <table class="portal-table">
+            <thead>
+              <tr>
+                <th>Invoice #</th>
+                <th>Billing Period</th>
+                <th>Amount Before Tax</th>
+                <th>HST / Tax</th>
+                <th>Total Amount</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (invoices && invoices.length > 0) { %>
+                <% invoices.forEach(function(inv) { %>
+                  <tr>
+                    <td style="font-weight: 700; color: var(--color-white);"><%= inv.invoice_number %></td>
+                    <td><%= inv.month %></td>
+                    <td>$<%= inv.total_before_tax.toFixed(2) %> CAD</td>
+                    <td>$<%= inv.tax_amount.toFixed(2) %> CAD</td>
+                    <td style="font-weight: 700; color: var(--color-accent);">$<%= inv.total_amount.toFixed(2) %> CAD</td>
+                    <td><%= inv.due_date %></td>
+                    <td>
+                      <span class="expiry-badge <%= inv.status === 'Paid' ? 'badge-green' : (inv.status === 'Pending Approval' ? 'badge-yellow' : 'badge-blue') %>">
+                        <%= inv.status %>
+                      </span>
+                    </td>
+                    <td style="text-align: right;">
+                      <a href="/portal/billing/invoices/<%= inv.id %>" class="portal-btn portal-btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+                        <i class="fas fa-file-invoice"></i> View Invoice
+                      </a>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="8" style="text-align: center; color: var(--color-muted); padding: 4rem 2rem;">
+                    <i class="fas fa-file-invoice-dollar" style="font-size: 2.5rem; color: rgba(20,160,119,0.1); margin-bottom: 1rem; display: block;"></i>
+                    <p style="margin: 0; font-weight: 600; color: var(--color-white);">No invoices generated</p>
+                    <p style="margin: 0; font-size: 0.85rem;">Run the monthly carrier billing above to generate invoice drafts.</p>
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

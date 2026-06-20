@@ -23,14 +23,14 @@
 
       <div class="portal-card">
         <h2>Onboard New Driver Profile</h2>
-        <p style="color: var(--color-muted); margin-bottom: 2rem; font-size: 0.9rem;">
-          Provide the required driver credentials, contacts, and expiration milestones to sync into the safety compliance center.
+        <p style="color: var(--color-muted); margin-bottom: 2rem; font-size: 0.95rem;">
+          Provide the required driver credentials, contacts, emergency contacts, tax classification, and API keys.
         </p>
 
         <form action="/portal/drivers/new" method="POST">
           
           <!-- Section 1: Personal Coordinates -->
-          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-bottom: 1.25rem;">Personal Details & Licensing</h3>
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-bottom: 1.25rem; color: var(--color-accent);">Personal Details & Licensing</h3>
           <div class="portal-form-grid">
             <div class="portal-form-group">
               <label class="portal-label">First Name</label>
@@ -44,7 +44,6 @@
               <label class="portal-label">Last Name</label>
               <input type="text" name="last_name" class="portal-input" required>
             </div>
-            
             <div class="portal-form-group">
               <label class="portal-label">Email Address</label>
               <input type="email" name="email" class="portal-input">
@@ -57,7 +56,6 @@
               <label class="portal-label">USA Phone</label>
               <input type="text" name="usa_phone" class="portal-input">
             </div>
-            
             <div class="portal-form-group">
               <label class="portal-label">Primary Phone Contact</label>
               <div style="display: flex; gap: 1.5rem; align-items: center; padding: 0.5rem 0;">
@@ -69,7 +67,10 @@
                 </label>
               </div>
             </div>
-
+            <div class="portal-form-group">
+              <label class="portal-label">Emergency Contact Phone #</label>
+              <input type="text" name="emergency_contact_phone" class="portal-input" placeholder="e.g. (555) 019-9283">
+            </div>
             <div class="portal-form-group">
               <label class="portal-label">Driver License #</label>
               <input type="text" name="dl_number" class="portal-input" required placeholder="e.g. D1234-56789-01234">
@@ -82,10 +83,23 @@
               <label class="portal-label">DL Expiration Date</label>
               <input type="date" name="dl_expiry" class="portal-input" required>
             </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Status</label>
+              <select name="status" class="portal-select">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="hold">Hold</option>
+              </select>
+            </div>
+            <div class="portal-form-group" style="grid-column: span 3; margin-top: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--color-white); font-size: 0.95rem; cursor: pointer;">
+                <input type="checkbox" name="hazmat_tdg" value="1"> Has Hazmat Certificate (TDG)
+              </label>
+            </div>
           </div>
 
           <!-- Section 2: Driver Classification & Truck Assignment -->
-          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Employment & Logistics</h3>
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">Employment & Logistics</h3>
           <div class="portal-form-grid">
             <div class="portal-form-group">
               <label class="portal-label">Driver Type</label>
@@ -113,8 +127,8 @@
             </div>
           </div>
 
-          <!-- Section 3: Citizenship, Payment & Core Identifiers -->
-          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Citizenship, Taxes & Border Permits</h3>
+          <!-- Section 3: Citizenship, Tax Classification -->
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">Citizenship, Taxes & Incorporation</h3>
           <div class="portal-form-grid">
             <div class="portal-form-group">
               <label class="portal-label">Citizenship</label>
@@ -129,7 +143,7 @@
               <label class="portal-label">Payment Method</label>
               <select name="payment_type" id="paymentTypeSelect" class="portal-select" onchange="togglePaymentTypeFields(this)">
                 <option value="Payroll">Payroll (W2 / T4)</option>
-                <option value="Independent Contractor">Independent Contractor (1099 / Incorporated)</option>
+                <option value="Independent Contractor">Independent Contractor (1099)</option>
               </select>
             </div>
 
@@ -141,6 +155,14 @@
             <div class="portal-form-group" id="contractorHstGroup" style="display: none;">
               <label class="portal-label">Contractor HST / Business Number</label>
               <input type="text" name="contractor_hst" class="portal-input" placeholder="HST #">
+            </div>
+
+            <div class="portal-form-group">
+              <label class="portal-label">Payment Classification</label>
+              <select name="payment_classification" id="paymentClassification" class="portal-select" onchange="handlePaymentClassChange(this.value)">
+                <option value="Payroll">Payroll</option>
+                <option value="In-Corporation">In-Corporation</option>
+              </select>
             </div>
 
             <div class="portal-form-group">
@@ -167,10 +189,41 @@
             </div>
           </div>
 
+          <!-- Incorporation Details (Conditional on payment_classification === 'In-Corporation') -->
+          <div id="incorporationSection" style="display: none; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem; margin-top: 1.5rem;">
+            <h3 style="font-size: 1rem; color: var(--color-accent); margin-bottom: 1rem;">Incorporation Details</h3>
+            <div class="portal-form-grid">
+              <div class="portal-form-group">
+                <label class="portal-label">Corporate Name</label>
+                <input type="text" name="inc_name" class="portal-input" placeholder="e.g. Acme Trucking Inc.">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">DBA (Doing Business As)</label>
+                <input type="text" name="inc_dba" class="portal-input" placeholder="e.g. Acme Logistics">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Corporate Address</label>
+                <input type="text" name="inc_address" class="portal-input" placeholder="Street, City, Province, Postal Code">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Corporate Phone #</label>
+                <input type="text" name="inc_phone" class="portal-input" placeholder="(555) 000-0000">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Corporate E-Mail</label>
+                <input type="email" name="inc_email" class="portal-input" placeholder="corporate@email.com">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">GST/HST Number</label>
+                <input type="text" name="inc_gst_hst" class="portal-input" placeholder="e.g. 123456789 RT 0001">
+              </div>
+            </div>
+          </div>
+
           <!-- Section 4: Border Crossing Credentials (Conditional based on Citizenship) -->
           <div id="borderDocsSection" style="margin-top: 1.5rem;">
-            <!-- FAST Card Option (visible if Canadian/US citizen) -->
-            <div id="fastCardWrapper" style="display: block; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- FAST Card Option -->
+            <div id="fastCardWrapper" style="display: block; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem; margin-bottom: 1.5rem;">
               <div class="toggle-switch-wrapper" style="margin-bottom: 1rem;">
                 <label class="toggle-switch">
                   <input type="checkbox" id="hasFastCard" onchange="toggleSubDocFields(this, 'fastCardInputs')">
@@ -190,8 +243,8 @@
               </div>
             </div>
 
-            <!-- CDRP Card Option (visible if Canadian citizen) -->
-            <div id="cdrpCardWrapper" style="display: block; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- CDRP Card Option -->
+            <div id="cdrpCardWrapper" style="display: block; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem; margin-bottom: 1.5rem;">
               <div class="toggle-switch-wrapper" style="margin-bottom: 1rem;">
                 <label class="toggle-switch">
                   <input type="checkbox" id="hasCdrpCard" onchange="toggleSubDocFields(this, 'cdrpCardInputs')">
@@ -211,8 +264,8 @@
               </div>
             </div>
 
-            <!-- Visa Option (visible if NOT Canadian/US citizen) -->
-            <div id="visaWrapper" style="display: none; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- Visa Option -->
+            <div id="visaWrapper" style="display: none; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem; margin-bottom: 1.5rem;">
               <div class="portal-form-grid">
                 <div class="portal-form-group">
                   <label class="portal-label">Work / Travel Visa Number</label>
@@ -227,7 +280,7 @@
           </div>
 
           <!-- Section 5: Medical Milestones -->
-          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Medical Reviews</h3>
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">Medical Reviews</h3>
           <div class="portal-form-grid">
             <div class="portal-form-group">
               <label class="portal-label">Medical Examiners Certificate Review Due Date</label>
@@ -235,8 +288,29 @@
             </div>
           </div>
 
+          <!-- Section 6: API Keys & Integrations -->
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">ELD & Fuel API Integrations</h3>
+          <div class="portal-form-grid">
+            <div class="portal-form-group">
+              <label class="portal-label">ELD Provider Company</label>
+              <input type="text" name="eld_company_name" class="portal-input" placeholder="e.g. Samsara, KeepTruckin">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">ELD API Key / Token</label>
+              <input type="password" name="eld_api_key" class="portal-input" placeholder="Paste ELD API credentials">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Fuel Integration Provider</label>
+              <input type="text" name="fuel_company_name" class="portal-input" placeholder="e.g. Comdata, Fleetcor">
+            </div>
+            <div class="portal-form-group">
+              <label class="portal-label">Fuel API Key / Account ID</label>
+              <input type="password" name="fuel_api_key" class="portal-input" placeholder="Paste Fuel Card API credentials">
+            </div>
+          </div>
+
           <!-- Form Buttons -->
-          <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem; margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+          <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem; margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
             <a href="/portal/drivers" class="portal-btn portal-btn-secondary">Cancel</a>
             <button type="submit" class="portal-btn portal-btn-primary"><i class="fas fa-user-plus"></i> Complete Onboarding</button>
           </div>
@@ -249,22 +323,23 @@
 
   <script>
     function toggleDriverTypeFields(radio) {
-      // Owner operator can assign a truck
       const assignField = document.getElementById('truckAssignmentField');
-      if (radio.value === 'Owner Operator') {
-        assignField.style.display = 'block';
-      } else {
-        // Standard company driver could also have a truck but requested explicitly: "If Owner Operator -> option to assign a truck"
-        // Let's keep it visible or hide based on spec. The spec says "If Owner Operator -> option to assign a truck from fleet dropdown"
-        // We'll keep it visible only for Owner Operators, or visible for all but required/focused. Let's make it conditional!
-        assignField.style.display = 'block';
-      }
+      assignField.style.display = 'block';
     }
 
     function togglePaymentTypeFields(select) {
       const isContractor = select.value === 'Independent Contractor';
       document.getElementById('contractorCompanyGroup').style.display = isContractor ? 'block' : 'none';
       document.getElementById('contractorHstGroup').style.display = isContractor ? 'block' : 'none';
+    }
+
+    function handlePaymentClassChange(val) {
+      const incSec = document.getElementById('incorporationSection');
+      if (val === 'In-Corporation') {
+        incSec.style.display = 'block';
+      } else {
+        incSec.style.display = 'none';
+      }
     }
 
     function toggleCitizenshipFields(select) {
@@ -282,7 +357,6 @@
         fastWrapper.style.display = 'block';
         visaWrapper.style.display = 'none';
       } else {
-        // Non-Canadian, non-US: Needs Visa
         cdrpWrapper.style.display = 'none';
         fastWrapper.style.display = 'none';
         visaWrapper.style.display = 'block';
@@ -298,6 +372,7 @@
     window.onload = function() {
       toggleCitizenshipFields(document.getElementById('citizenshipSelect'));
       togglePaymentTypeFields(document.getElementById('paymentTypeSelect'));
+      handlePaymentClassChange(document.getElementById('paymentClassification').value);
     };
   </script>
 </body>

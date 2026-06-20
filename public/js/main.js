@@ -143,6 +143,19 @@ function initFormValidation() {
 }
 
 /**
+ * HTML Escaping Utility to prevent Stored XSS Injection
+ */
+function escapeHtml(str) {
+  if (typeof str !== 'string') return str === null || str === undefined ? '' : String(str);
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/**
  * 5. Administrative Dashboards & Detail Modals
  */
 function initAdminModal() {
@@ -221,8 +234,8 @@ function initAdminModal() {
                   <i class="fas ${fieldIcon}"></i>
                 </div>
                 <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-grow: 1;">
-                  <span style="display: block; font-size: 0.75rem; color: #a3c2c2; text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">${field.key}</span>
-                  <span style="font-size: 0.95rem; font-weight: 600; color: var(--color-white);" title="${field.val}">${field.val || '—'}</span>
+                  <span style="display: block; font-size: 0.75rem; color: #a3c2c2; text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">${escapeHtml(field.key)}</span>
+                  <span style="font-size: 0.95rem; font-weight: 600; color: var(--color-white);" title="${escapeHtml(field.val)}">${escapeHtml(field.val || '—')}</span>
                 </div>
               </div>
             `;
@@ -236,7 +249,7 @@ function initAdminModal() {
                 <span style="display: block; font-size: 0.75rem; color: var(--color-accent); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
                   <i class="fas fa-comment-dots"></i> Message Content
                 </span>
-                <p style="margin: 0; font-size: 0.95rem; color: #e5ebeb; line-height: 1.6; white-space: pre-wrap; font-style: italic;">${messageContent}</p>
+                <p style="margin: 0; font-size: 0.95rem; color: #e5ebeb; line-height: 1.6; white-space: pre-wrap; font-style: italic;">${escapeHtml(messageContent)}</p>
               </div>
             `;
           }

@@ -1,7 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
+const crypto = require('crypto');
 const baseConfig = require('../config');
+
+// Secure password hashing and verification functions (using native Node.js crypto scrypt)
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(password, salt, 64).toString('hex');
+  return `${salt}:${hash}`;
+}
+
+function verifyPassword(password, storedPassword) {
+  if (!storedPassword || !storedPassword.includes(':')) return false;
+  const [salt, hash] = storedPassword.split(':');
+  const verifyHash = crypto.scryptSync(password, salt, 64).toString('hex');
+  return hash === verifyHash;
+}
 
 // Load environment variables if available
 require('dotenv').config();
@@ -183,6 +198,30 @@ function initSqliteTables() {
       )
     `);
 
+    // 5a. API Users Table (UAT)
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS api_users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        email_id TEXT NOT NULL,
+        address TEXT,
+        api_token TEXT,
+        role TEXT NOT NULL DEFAULT 'Client',
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        client_id TEXT NOT NULL,
+        user_status INTEGER DEFAULT 1,
+        phone_no TEXT NOT NULL,
+        name TEXT NOT NULL,
+        reset_token TEXT,
+        reset_token_expiry TEXT,
+        currency TEXT,
+        broker_id TEXT,
+        client_active INTEGER DEFAULT 1,
+        carrier_id INTEGER REFERENCES carriers(id) ON DELETE SET NULL
+      )
+    `);
+
     // 6. carrier_profiles
     sqliteDb.run(`
       CREATE TABLE IF NOT EXISTS carrier_profiles (
@@ -323,6 +362,24 @@ function initSqliteTables() {
         medical_due_date TEXT,
         assigned_truck_id INTEGER,
         status TEXT DEFAULT 'active',
+        emergency_contact_phone TEXT,
+        hazmat_tdg INTEGER DEFAULT 0,
+        payment_classification TEXT, -- 'Payroll' or 'In-Corporation'
+        inc_name TEXT,
+        inc_dba TEXT,
+        inc_address TEXT,
+        inc_phone TEXT,
+        inc_email TEXT,
+        inc_gst_hst TEXT,
+        eld_company_name TEXT,
+        eld_api_key TEXT,
+        fuel_company_name TEXT,
+        fuel_api_key TEXT,
+        ref_check_driver_info TEXT,
+        ref_check_recipient_info TEXT,
+        ref_check_status TEXT DEFAULT 'Pending',
+        ref_check_pdf_path TEXT,
+        ref_check_followup_count INTEGER DEFAULT 0,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
@@ -354,6 +411,33 @@ function initSqliteTables() {
         bluewater_transponders TEXT,  -- JSON array {number, status}
         other_toll_transponders TEXT, -- JSON array {name, number, status}
         status TEXT DEFAULT 'active',
+        operating_region TEXT,     -- 'Provincial', 'Canada Wide', 'Cross-Border'
+        equipment_type TEXT,       -- 'Cargo Van', 'Sprinter Van', 'Cube Van', 'Straight Truck', 'Tractor – Day Cab', 'Tractor – Sleeper Cab'
+        axle_config TEXT,          -- 'Single Axle', 'Tandem', etc.
+        est_kms_per_litre REAL,
+        calculated_kms_per_litre REAL,
+        ownership_type TEXT,       -- 'Company Truck' or 'Owner Operator'
+        fuel_card_cad TEXT,
+        fuel_card_usd TEXT,
+        fleet_number TEXT,         -- plate group / Fleet #
+        weight_group TEXT,
+        ifta_decal TEXT,
+        nyhut_decal TEXT,
+        finance_type TEXT,         -- 'Owned', 'Leased', 'Rented'
+        purchase_date TEXT,
+        purchase_price REAL,
+        valuation REAL,
+        hst_amount REAL,
+        total_amount REAL,
+        ach_value REAL,
+        lease_term TEXT,
+        lease_payment REAL,
+        lease_frequency TEXT,      -- 'Monthly', 'Bi-Monthly', 'Weekly'
+        rent_payment REAL,
+        rent_amount_exc_hst REAL,
+        rent_hst REAL,
+        rent_total REAL,
+        rent_frequency TEXT,       -- 'Monthly', 'Bi-Monthly', 'Weekly'
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
@@ -369,6 +453,7 @@ function initSqliteTables() {
         weight_group TEXT,
         expiry TEXT,
         status TEXT,           -- 'active', 'lost', 'returned'
+        reason TEXT,           -- comments for plate replacement
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -389,6 +474,9 @@ function initSqliteTables() {
         currency TEXT,         -- 'CAD' or 'USD'
         notes TEXT,
         month TEXT,            -- YYYY-MM for monthly grouping
+        technician TEXT,
+        mop TEXT,
+        bank TEXT,
         has_no_history INTEGER DEFAULT 0,
         no_history_note TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -412,8 +500,56 @@ function initSqliteTables() {
         pmvi_frequency TEXT,
         annual_safety_expiry TEXT,
         status TEXT DEFAULT 'active',
+        trailer_type TEXT,      -- 'Dry Van', 'Reefer', etc.
+        axle_config TEXT,       -- 'Single Axle', 'Tandem', 'Tr-Axle', etc.
+        vented_status TEXT,     -- 'Vented' or 'Non-Vented'
+        high_cube INTEGER DEFAULT 0,
+        plated_status TEXT,     -- 'Plated' or 'Non-Plated'
+        horizontal_e_tracks INTEGER DEFAULT 0,
+        vertical_e_track_2ft INTEGER DEFAULT 0,
+        vertical_e_track_4ft INTEGER DEFAULT 0,
+        finance_type TEXT,      -- 'Owned', 'Leased', 'Rented'
+        purchase_date TEXT,
+        purchase_price REAL,
+        valuation REAL,
+        hst_amount REAL,
+        total_amount REAL,
+        ach_value REAL,
+        lease_term TEXT,
+        lease_payment REAL,
+        lease_frequency TEXT,
+        rent_payment REAL,
+        rent_amount_exc_hst REAL,
+        rent_hst REAL,
+        rent_total REAL,
+        rent_frequency TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // 14a. trailer_maintenance
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS trailer_maintenance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        trailer_id INTEGER REFERENCES trailers(id) ON DELETE CASCADE,
+        carrier_id INTEGER REFERENCES carriers(id) ON DELETE CASCADE,
+        shop_name TEXT,
+        country TEXT,
+        city TEXT,
+        province_state TEXT,
+        repair_types TEXT,     -- JSON array of repair type strings
+        repair_date TEXT,
+        amount REAL,
+        currency TEXT,         -- 'CAD' or 'USD'
+        notes TEXT,
+        month TEXT,            -- YYYY-MM for monthly grouping
+        technician TEXT,
+        mop TEXT,
+        bank TEXT,
+        has_no_history INTEGER DEFAULT 0,
+        no_history_note TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
@@ -440,6 +576,31 @@ function initSqliteTables() {
         transponder_number TEXT,
         expiry TEXT,
         status TEXT,           -- 'active', 'lost', 'deactivated'
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // 16a. dtops_transponders_master
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS dtops_transponders_master (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        transponder_number TEXT UNIQUE NOT NULL,
+        status TEXT DEFAULT 'active', -- 'active', 'inactive', 'transferred', 'replaced'
+        assigned_truck_id INTEGER REFERENCES trucks(id) ON DELETE SET NULL,
+        comments TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // 16b. border_transponders_master
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS border_transponders_master (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        transponder_number TEXT UNIQUE NOT NULL,
+        bridge_name TEXT DEFAULT 'Blue Water', -- 'Blue Water' or 'Ambassador'
+        status TEXT DEFAULT 'active', -- 'active', 'inactive', 'transferred', 'replaced'
+        assigned_truck_id INTEGER REFERENCES trucks(id) ON DELETE SET NULL,
+        comments TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -475,6 +636,70 @@ function initSqliteTables() {
       )
     `);
 
+    // 19. task_rates
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS task_rates (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        task_type TEXT UNIQUE NOT NULL,
+        default_rate REAL NOT NULL,
+        currency TEXT DEFAULT 'CAD',
+        tax_applicable INTEGER DEFAULT 1,
+        active INTEGER DEFAULT 1,
+        effective_date TEXT
+      )
+    `);
+
+    // 20. tasks (work orders)
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS tasks (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        carrier_id INTEGER REFERENCES carriers(id) ON DELETE CASCADE,
+        task_type TEXT NOT NULL,
+        status TEXT DEFAULT 'Pending', -- 'Pending', 'Assigned', 'Progressing', 'Completed', 'Cancelled'
+        assigned_to TEXT,
+        checklist_items TEXT,          -- JSON array of {name, received (1/0), file_path}
+        missing_docs_email_sent INTEGER DEFAULT 0,
+        is_billable INTEGER DEFAULT 1,
+        amount REAL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        completed_at DATETIME
+      )
+    `);
+
+    // 21. invoices
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS invoices (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        carrier_id INTEGER REFERENCES carriers(id) ON DELETE CASCADE,
+        invoice_number TEXT UNIQUE NOT NULL,
+        month TEXT NOT NULL,           -- YYYY-MM
+        status TEXT DEFAULT 'Pending Approval', -- 'Draft', 'Pending Approval', 'Approved', 'Sent', 'Paid', 'Partially Paid', 'Overdue', 'Cancelled'
+        total_before_tax REAL DEFAULT 0.0,
+        tax_amount REAL DEFAULT 0.0,
+        total_amount REAL DEFAULT 0.0,
+        due_date TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        approved_at DATETIME,
+        sent_at DATETIME
+      )
+    `);
+
+    // 22. invoice_items
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS invoice_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        invoice_id INTEGER REFERENCES invoices(id) ON DELETE CASCADE,
+        description TEXT NOT NULL,
+        quantity REAL NOT NULL,
+        rate REAL NOT NULL,
+        amount REAL NOT NULL,
+        item_type TEXT,                -- 'active_truck_fee', 'billable_task', 'custom'
+        reference_id INTEGER,          -- references task_id if item_type is 'billable_task'
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+
     // Seed default carrier if database is empty
     sqliteDb.get("SELECT COUNT(*) as count FROM carriers", (err, row) => {
       if (!err && row && row.count === 0) {
@@ -506,6 +731,14 @@ function initSqliteTables() {
               )
             `, [carrierId, yardAddresses], (err) => {
               if (!err) {
+                // Seed default API User linked to this default carrier (hashing the password)
+                console.log('SQLite Client: Seeding baseline API user linked to default carrier...');
+                const hashedPass = hashPassword('Abcd@1234');
+                sqliteDb.run(`
+                  INSERT INTO api_users (username, password, email_id, address, api_token, role, client_id, user_status, phone_no, name, currency, client_active, carrier_id)
+                  VALUES ('clientuser126', ?, 'clientuser126@ksgfuel.com', '2575 Steeles Ave E, Unit 1, Brampton, ON', 'uat_token_session_99812', 'Client', 'clientID_99812', 1, '(905) 965-0308', 'Client User 126', 'CAD', 1, ?)
+                `, [hashedPass, carrierId]);
+
                 const currentYear = new Date().getFullYear();
                 const quarters = [
                   { q: 'Q1', due: `${currentYear}-04-30` },
@@ -537,6 +770,41 @@ function initSqliteTables() {
             });
           }
         });
+      }
+    });
+
+    // Seed default task rates if empty
+    sqliteDb.get("SELECT COUNT(*) as count FROM task_rates", (err, row) => {
+      if (!err && row && row.count === 0) {
+        console.log('SQLite Client: Seeding baseline task rates...');
+        const stmt = sqliteDb.prepare("INSERT INTO task_rates (task_type, default_rate, currency, tax_applicable, active, effective_date) VALUES (?, ?, ?, ?, 1, ?)");
+        stmt.run('Annual Safety Renewal', 50.00, 'CAD', 1, '2026-01-01');
+        stmt.run('Driver Document Follow-Up', 20.00, 'CAD', 1, '2026-01-01');
+        stmt.run('IFTA Filing Audit', 120.00, 'CAD', 1, '2026-01-01');
+        stmt.finalize();
+      }
+    });
+
+    // Seed master transponders if empty
+    sqliteDb.get("SELECT COUNT(*) as count FROM dtops_transponders_master", (err, row) => {
+      if (!err && row && row.count === 0) {
+        console.log('SQLite Client: Seeding master D-TOPS transponders...');
+        const stmt = sqliteDb.prepare("INSERT INTO dtops_transponders_master (transponder_number, status, comments) VALUES (?, 'active', ?)");
+        stmt.run('D-100201', 'Unassigned inventory');
+        stmt.run('D-100202', 'Unassigned inventory');
+        stmt.run('D-100203', 'Unassigned inventory');
+        stmt.finalize();
+      }
+    });
+
+    sqliteDb.get("SELECT COUNT(*) as count FROM border_transponders_master", (err, row) => {
+      if (!err && row && row.count === 0) {
+        console.log('SQLite Client: Seeding master Blue Water transponders...');
+        const stmt = sqliteDb.prepare("INSERT INTO border_transponders_master (transponder_number, bridge_name, status, comments) VALUES (?, 'Blue Water', 'active', ?)");
+        stmt.run('B-200301', 'Unassigned inventory');
+        stmt.run('B-200302', 'Unassigned inventory');
+        stmt.run('B-200303', 'Unassigned inventory');
+        stmt.finalize();
       }
     });
 
@@ -596,6 +864,8 @@ module.exports = {
   dbRun,
   dbGet,
   dbAll,
+  hashPassword,
+  verifyPassword,
 
 
   /**

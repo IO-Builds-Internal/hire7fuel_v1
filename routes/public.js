@@ -171,4 +171,114 @@ router.post('/submit-career', async (req, res) => {
   }
 });
 
+/**
+ * GET /public/ref-check/:id - Public Reference Check Form
+ */
+router.get('/public/ref-check/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const driver = await db.dbGet("SELECT * FROM drivers WHERE id = ?", [id]);
+    if (!driver) {
+      return res.status(404).send('Driver reference check not found.');
+    }
+
+    let driverInfo = {};
+    let recipientInfo = {};
+    try { if (driver.ref_check_driver_info) driverInfo = JSON.parse(driver.ref_check_driver_info); } catch (e) {}
+    try { if (driver.ref_check_recipient_info) recipientInfo = JSON.parse(driver.ref_check_recipient_info); } catch (e) {}
+
+    res.render('portal/drivers/ref_check', {
+      page: 'ref-check-form',
+      pageTitle: 'Employment Reference Verification',
+      driver: driver,
+      driverInfo: driverInfo,
+      recipientInfo: recipientInfo,
+      layout: false,
+      success: req.query.success === 'true',
+      error: req.query.error || null
+    });
+  } catch (err) {
+    console.error('Error loading public reference check form:', err);
+    res.status(500).send(err.message);
+  }
+});
+
+/**
+ * POST /public/ref-check/:id/submit - Submit Public Reference Check Form
+ */
+router.post('/public/ref-check/:id/submit', async (req, res) => {
+  const { id } = req.params;
+  const { ref_relation, ref_performance, ref_rehire, ref_comments } = req.body;
+
+  try {
+    const driver = await db.dbGet("SELECT * FROM drivers WHERE id = ?", [id]);
+    if (!driver) {
+      return res.status(404).send('Driver reference check not found.');
+    }
+
+    let recipientInfo = {};
+    try { if (driver.ref_check_recipient_info) recipientInfo = JSON.parse(driver.ref_check_recipient_info); } catch (e) {}
+
+    // Store responses inside recipientInfo
+    recipientInfo.responses = {
+      relationship: ref_relation,
+      performance_rating: ref_performance,
+      eligible_for_rehire: ref_rehire,
+      comments: ref_comments,
+      submitted_at: new Date().toISOString()
+    };
+
+    const recipientInfoStr = JSON.stringify(recipientInfo);
+
+    // Create a mock PDF report in public/uploads/ref-checks/
+    const uploadDir = path.join(__dirname, '../public/uploads/ref-checks');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    const pdfPath = `/uploads/ref-checks/ref-${id}.pdf`;
+    const absolutePdfPath = path.join(__dirname, '../public', pdfPath);
+
+    // Generate a simple, styled text file labeled as PDF representing the reference check document
+    const reportText = `================================================================
+          HIRE7 LOGISTICS - EMPLOYMENT REFERENCE CHECK REPORT
+================================================================
+Driver Name:       ${driver.first_name} ${driver.last_name}
+Reference Contact:  ${recipientInfo.name || 'N/A'} (${recipientInfo.email || 'N/A'})
+Submitted Date:    ${new Date().toLocaleString()}
+Status:            COMPLETED
+----------------------------------------------------------------
+VERIFICATION QUESTIONS & ANSWERS:
+1. Professional Relationship / Job Role:
+   ${ref_relation || 'No response'}
+
+2. Overall Performance Rating (1-5 Stars):
+   ${ref_performance || 'N/A'} Stars
+
+3. Would you recommend rehiring this driver?
+   ${ref_rehire || 'N/A'}
+
+4. Additional Comments / Professional Feedback:
+   ${ref_comments || 'No comments provided'}
+----------------------------------------------------------------
+Report Generated Automatically by Hire7 Shield AI™ System.
+================================================================
+`;
+    fs.writeFileSync(absolutePdfPath, reportText);
+
+    // Update driver state
+    await db.dbRun(`
+      UPDATE drivers SET
+        ref_check_recipient_info = ?,
+        ref_check_status = 'Completed',
+        ref_check_pdf_path = ?
+      WHERE id = ?
+    `, [recipientInfoStr, pdfPath, id]);
+
+    res.redirect(`/public/ref-check/${id}?success=true`);
+  } catch (err) {
+    console.error('Failed to submit reference check response:', err);
+    res.redirect(`/public/ref-check/${id}?error=${encodeURIComponent(err.message)}`);
+  }
+});
+
 module.exports = router;

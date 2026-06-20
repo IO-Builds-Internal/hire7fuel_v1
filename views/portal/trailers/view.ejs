@@ -22,6 +22,9 @@
         <a href="/portal/trailers/<%= trailer.id %>/edit" class="portal-btn portal-btn-primary" style="padding: 0.5rem 1rem;">
           <i class="fas fa-edit"></i> Edit Trailer Info
         </a>
+        <a href="/portal/trailers/<%= trailer.id %>/maintenance" class="portal-btn portal-btn-secondary" style="padding: 0.5rem 1rem; border-color: var(--color-accent); color: var(--color-accent);">
+          <i class="fas fa-wrench"></i> View Maintenance Log
+        </a>
       </div>
 
       <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: flex-start;">
@@ -35,7 +38,7 @@
               <table class="portal-table" style="border: none;">
                 <tbody>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 140px;">Unit #</td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 150px;">Unit #</td>
                     <td style="padding: 0.5rem 0; border: none; font-weight: 700; color: var(--color-white);">#<%= trailer.unit_number %></td>
                   </tr>
                   <tr>
@@ -43,12 +46,12 @@
                     <td style="padding: 0.5rem 0; border: none; font-family: monospace;"><%= trailer.vin %></td>
                   </tr>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Make</td>
-                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.make %></td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Make / Model / Year</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.make %> <%= trailer.model %> (<%= trailer.year %>)</td>
                   </tr>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Model</td>
-                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.model %></td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Registration State</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.registration_state %></td>
                   </tr>
                 </tbody>
               </table>
@@ -56,19 +59,73 @@
               <table class="portal-table" style="border: none;">
                 <tbody>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 160px;">Year</td>
-                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.year %></td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none; width: 160px;">Trailer Type</td>
+                    <td style="padding: 0.5rem 0; border: none;"><span class="expiry-badge badge-green"><%= trailer.trailer_type || 'N/A' %></span></td>
                   </tr>
                   <tr>
-                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Registration State</td>
-                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.registration_state %></td>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Axle Configuration</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.axle_config || 'N/A' %></td>
                   </tr>
                   <tr>
                     <td style="font-weight: 600; padding: 0.5rem 0; border: none;">GPS Tracker Device</td>
-                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.gps_tracker || '—' %></td>
+                    <td style="padding: 0.5rem 0; border: none; font-family: monospace;"><%= trailer.gps_tracker || '—' %></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; padding: 0.5rem 0; border: none;">Status</td>
+                    <td style="padding: 0.5rem 0; border: none;"><%= trailer.status %></td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <!-- Structural Details (Dry Van/Reefer Only) -->
+            <% if (trailer.trailer_type === 'Dry Van' || trailer.trailer_type === 'Reefer') { %>
+              <div style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
+                <h3 style="font-size: 0.95rem; color: var(--color-white); margin-bottom: 0.75rem;">Structural Features</h3>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                  <% if (trailer.vented_status === 'Vented') { %><span class="expiry-badge badge-green">Vented</span><% } %>
+                  <% if (trailer.high_cube === 1) { %><span class="expiry-badge badge-green">High Cube</span><% } %>
+                  <% if (trailer.plated_status === 'Plated') { %><span class="expiry-badge badge-green">Plated</span><% } %>
+                  <% if (trailer.horizontal_e_tracks === 1) { %><span class="expiry-badge badge-green">Horizontal E-Tracks</span><% } %>
+                  <% if (trailer.vertical_e_track_2ft === 1) { %><span class="expiry-badge badge-green">Vertical E-Track (2 ft)</span><% } %>
+                  <% if (trailer.vertical_e_track_4ft === 1) { %><span class="expiry-badge badge-green">Vertical E-Track (4 ft)</span><% } %>
+                </div>
+              </div>
+            <% } %>
+
+            <!-- Financing Sub-Card -->
+            <div style="margin-top: 1.5rem; background: rgba(0, 0, 0, 0.15); padding: 1.25rem; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.03);">
+              <h3 style="font-size: 1rem; color: var(--color-accent); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-coins"></i> Asset Financing Details (<%= trailer.finance_type || 'Owned' %>)
+              </h3>
+              
+              <% if (trailer.finance_type === 'Leased') { %>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                  <div><strong>Purchase/Lease Date:</strong> <%= trailer.purchase_date || '—' %></div>
+                  <div><strong>Lease Value:</strong> $<%= trailer.valuation ? trailer.valuation.toLocaleString() : '0.00' %></div>
+                  <div><strong>HST Tax:</strong> $<%= trailer.hst_amount ? trailer.hst_amount.toLocaleString() : '0.00' %></div>
+                  <div><strong>Total Capital Cost:</strong> $<%= trailer.total_amount ? trailer.total_amount.toLocaleString() : '0.00' %></div>
+                  <div><strong>Lease Term:</strong> <%= trailer.lease_term || '—' %></div>
+                  <div><strong>Lease Payment:</strong> $<%= trailer.lease_payment ? trailer.lease_payment.toLocaleString() : '0.00' %> (<%= trailer.lease_frequency %>)</div>
+                </div>
+              <% } else if (trailer.finance_type === 'Rented') { %>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                  <div><strong>Rent Payment Rate:</strong> $<%= trailer.rent_payment ? trailer.rent_payment.toLocaleString() : '0.00' %> (<%= trailer.rent_frequency %>)</div>
+                  <div><strong>Rent Base Amount (Excl. HST):</strong> $<%= trailer.rent_amount_exc_hst ? trailer.rent_amount_exc_hst.toLocaleString() : '0.00' %></div>
+                  <div><strong>Rent HST Tax:</strong> $<%= trailer.rent_hst ? trailer.rent_hst.toLocaleString() : '0.00' %></div>
+                  <div><strong>Total Rent Invoice:</strong> $<%= trailer.rent_total ? trailer.rent_total.toLocaleString() : '0.00' %></div>
+                </div>
+              <% } else { %>
+                <!-- Owned -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                  <div><strong>Purchase Date:</strong> <%= trailer.purchase_date || '—' %></div>
+                  <div><strong>Purchase Price:</strong> $<%= trailer.purchase_price ? trailer.purchase_price.toLocaleString() : '0.00' %></div>
+                  <div><strong>Asset Valuation:</strong> $<%= trailer.valuation ? trailer.valuation.toLocaleString() : '0.00' %></div>
+                  <div><strong>HST Tax:</strong> $<%= trailer.hst_amount ? trailer.hst_amount.toLocaleString() : '0.00' %></div>
+                  <div><strong>Total Paid:</strong> $<%= trailer.total_amount ? trailer.total_amount.toLocaleString() : '0.00' %></div>
+                  <div><strong>ACH Settled Value:</strong> $<%= trailer.ach_value ? trailer.ach_value.toLocaleString() : '0.00' %></div>
+                </div>
+              <% } %>
             </div>
           </div>
 

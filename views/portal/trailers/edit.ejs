@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="/css/styles.css?v=2.0">
   <link rel="stylesheet" href="/css/portal.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .finance-subform {
+      transition: all 0.3s ease;
+    }
+  </style>
 </head>
 <body class="admin-body">
 
@@ -23,14 +28,14 @@
 
       <div class="portal-card">
         <h2>Edit Fleet Trailer Details</h2>
-        <p style="color: var(--color-muted); margin-bottom: 2rem; font-size: 0.9rem;">
-          Update unit details, active plate registrations, and compliance schedules.
+        <p style="color: var(--color-muted); margin-bottom: 2rem; font-size: 0.95rem;">
+          Update trailer specifications, licensing details, compliance scheduling, and financing options.
         </p>
 
-        <form action="/portal/trailers/<%= trailer.id %>/edit" method="POST">
+        <form action="/portal/trailers/<%= trailer.id %>/edit" method="POST" id="trailerForm">
           
           <!-- Section 1: Basic Specifications -->
-          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-bottom: 1.25rem;">Basic Information</h3>
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-bottom: 1.25rem; color: var(--color-accent);">Basic Specifications</h3>
           <div class="portal-form-grid">
             <div class="portal-form-group">
               <label class="portal-label">Unit Number</label>
@@ -60,19 +65,93 @@
               <label class="portal-label">GPS Tracker Device ID</label>
               <input type="text" name="gps_tracker" class="portal-input" value="<%= trailer.gps_tracker || '' %>">
             </div>
-          </div>
-
-          <!-- Section 2: License Plate -->
-          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">License Plate</h3>
-          <div class="portal-form-grid">
             <div class="portal-form-group">
-              <label class="portal-label">Plate Number</label>
-              <input type="text" name="plate_number" class="portal-input" value="<%= activePlate.plate_number || '' %>">
+              <label class="portal-label">Status</label>
+              <select name="status" class="portal-select">
+                <option value="active" <%= trailer.status === 'active' ? 'selected' : '' %>>Active</option>
+                <option value="inactive" <%= trailer.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+                <option value="hold" <%= trailer.status === 'hold' ? 'selected' : '' %>>Hold</option>
+              </select>
             </div>
           </div>
 
-          <!-- Section 3: Maintenance Schedule -->
-          <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem;">Compliance Inspections & Preventive Maintenance</h3>
+          <!-- Section 2: Equipment & Axles -->
+          <% 
+            const standardTypes = ['Dry Van', 'Reefer', 'Flatbed', 'Step Deck', 'Double Drop', 'Conestoga', 'Tanker', 'Dump Trailer', 'Container Chassis', 'Walking Floor', 'Lowboy / RGN'];
+            const standardAxles = ['Single Axle', 'Tandem', 'Tr-Axle', 'Quad-Axle'];
+            
+            const isCustomType = trailer.trailer_type && !standardTypes.includes(trailer.trailer_type);
+            const isCustomAxle = trailer.axle_config && !standardAxles.includes(trailer.axle_config);
+          %>
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">Equipment & Axles</h3>
+          <div class="portal-form-grid">
+            <div class="portal-form-group">
+              <label class="portal-label">Trailer Type</label>
+              <select name="trailer_type" id="trailerType" class="portal-select" onchange="handleTypeChange(this.value)">
+                <% standardTypes.forEach(function(t) { %>
+                  <option value="<%= t %>" <%= trailer.trailer_type === t ? 'selected' : '' %>><%= t %></option>
+                <% }) %>
+                <option value="Other" <%= isCustomType ? 'selected' : '' %>>Other (Custom)</option>
+              </select>
+            </div>
+
+            <div class="portal-form-group" id="customTypeGroup" style="display: <%= isCustomType ? 'block' : 'none' %>;">
+              <label class="portal-label">Custom Trailer Type</label>
+              <input type="text" name="custom_trailer_type" id="customTrailerType" class="portal-input" value="<%= isCustomType ? trailer.trailer_type : '' %>" placeholder="Enter type">
+            </div>
+
+            <div class="portal-form-group">
+              <label class="portal-label">Axle Configuration</label>
+              <select name="axle_config" id="axleConfig" class="portal-select" onchange="handleAxleChange(this.value)">
+                <% standardAxles.forEach(function(a) { %>
+                  <option value="<%= a %>" <%= trailer.axle_config === a ? 'selected' : '' %>><%= a %></option>
+                <% }) %>
+                <option value="Other" <%= isCustomAxle ? 'selected' : '' %>>Other (Custom)</option>
+              </select>
+            </div>
+
+            <div class="portal-form-group" id="customAxleGroup" style="display: <%= isCustomAxle ? 'block' : 'none' %>;">
+              <label class="portal-label">Custom Axle Configuration</label>
+              <input type="text" name="custom_axle_config" id="customAxleConfig" class="portal-input" value="<%= isCustomAxle ? trailer.axle_config : '' %>" placeholder="e.g. 5 Axles">
+            </div>
+          </div>
+
+          <!-- Section 2a: Structural Features (Dry Van & Reefer Only) -->
+          <div id="structuralFeaturesSection" style="display: <%= (trailer.trailer_type === 'Dry Van' || trailer.trailer_type === 'Reefer') ? 'block' : 'none' %>; margin-top: 2rem;">
+            <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-bottom: 1.25rem; color: var(--color-accent);">Structural Features (Dry Van & Reefer)</h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--color-white); font-size: 0.95rem; cursor: pointer;">
+                <input type="checkbox" name="vented_status" value="Vented" <%= trailer.vented_status === 'Vented' ? 'checked' : '' %>> Vented
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--color-white); font-size: 0.95rem; cursor: pointer;">
+                <input type="checkbox" name="high_cube" value="1" <%= trailer.high_cube === 1 ? 'checked' : '' %>> High Cube
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--color-white); font-size: 0.95rem; cursor: pointer;">
+                <input type="checkbox" name="plated_status" value="Plated" <%= trailer.plated_status === 'Plated' ? 'checked' : '' %>> Plated
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--color-white); font-size: 0.95rem; cursor: pointer;">
+                <input type="checkbox" name="horizontal_e_tracks" value="1" <%= trailer.horizontal_e_tracks === 1 ? 'checked' : '' %>> Horizontal E-Tracks
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--color-white); font-size: 0.95rem; cursor: pointer;">
+                <input type="checkbox" name="vertical_e_track_2ft" value="1" <%= trailer.vertical_e_track_2ft === 1 ? 'checked' : '' %>> Vertical E-Track (2 ft)
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--color-white); font-size: 0.95rem; cursor: pointer;">
+                <input type="checkbox" name="vertical_e_track_4ft" value="1" <%= trailer.vertical_e_track_4ft === 1 ? 'checked' : '' %>> Vertical E-Track (4 ft)
+              </label>
+            </div>
+          </div>
+
+          <!-- Section 3: License Plate -->
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">License Plate Details</h3>
+          <div class="portal-form-grid">
+            <div class="portal-form-group">
+              <label class="portal-label">Plate Number</label>
+              <input type="text" name="plate_number" class="portal-input" value="<%= activePlate.plate_number || '' %>" placeholder="e.g. P12098">
+            </div>
+          </div>
+
+          <!-- Section 4: Maintenance Schedule -->
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">Compliance Inspections</h3>
           <div class="portal-form-grid">
             <div class="portal-form-group">
               <label class="portal-label">PMVI: Last Inspection Date</label>
@@ -81,9 +160,9 @@
             <div class="portal-form-group">
               <label class="portal-label">PMVI Inspection Frequency</label>
               <select name="pmvi_frequency" class="portal-select">
-                <option value="monthly" <%= trailer.pmvi_frequency === 'monthly' ? 'selected' : '' %>>Monthly (1 Month Interval)</option>
-                <option value="quarterly" <%= trailer.pmvi_frequency === 'quarterly' ? 'selected' : '' %>>Quarterly (3 Months Interval)</option>
-                <option value="annually" <%= trailer.pmvi_frequency === 'annually' ? 'selected' : '' %>>Annually (12 Months Interval)</option>
+                <option value="monthly" <%= trailer.pmvi_frequency === 'monthly' ? 'selected' : '' %>>Monthly (1 Month)</option>
+                <option value="quarterly" <%= trailer.pmvi_frequency === 'quarterly' ? 'selected' : '' %>>Quarterly (3 Months)</option>
+                <option value="annually" <%= trailer.pmvi_frequency === 'annually' ? 'selected' : '' %>>Annually (12 Months)</option>
               </select>
             </div>
             <div class="portal-form-group">
@@ -92,8 +171,117 @@
             </div>
           </div>
 
+          <!-- Section 5: Asset Finance -->
+          <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1.25rem; color: var(--color-accent);">Asset Financing Details</h3>
+          <div style="margin-bottom: 1.5rem;">
+            <label class="portal-label" style="margin-bottom: 0.75rem; display: block;">Finance Model</label>
+            <select name="finance_type" id="financeType" class="portal-select" style="width: 250px;" onchange="handleFinanceChange(this.value)">
+              <option value="Owned" <%= trailer.finance_type === 'Owned' ? 'selected' : '' %>>Owned Asset</option>
+              <option value="Leased" <%= trailer.finance_type === 'Leased' ? 'selected' : '' %>>Leased Asset</option>
+              <option value="Rented" <%= trailer.finance_type === 'Rented' ? 'selected' : '' %>>Rented Asset</option>
+            </select>
+          </div>
+
+          <!-- Owned Asset Details -->
+          <div id="ownedFinanceForm" class="finance-subform" style="display: <%= trailer.finance_type === 'Owned' ? 'block' : 'none' %>;">
+            <div class="portal-form-grid">
+              <div class="portal-form-group">
+                <label class="portal-label">Purchase Date</label>
+                <input type="date" name="purchase_date" class="portal-input" value="<%= trailer.finance_type === 'Owned' ? trailer.purchase_date : '' %>">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Purchase Price ($)</label>
+                <input type="number" step="0.01" name="purchase_price" class="portal-input" value="<%= trailer.finance_type === 'Owned' ? trailer.purchase_price : '' %>" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Asset Valuation ($)</label>
+                <input type="number" step="0.01" name="valuation" class="portal-input" value="<%= trailer.finance_type === 'Owned' ? trailer.valuation : '' %>" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">HST Tax Amount ($)</label>
+                <input type="number" step="0.01" name="hst_amount" class="portal-input" value="<%= trailer.finance_type === 'Owned' ? trailer.hst_amount : '' %>" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Total Amount Paid ($)</label>
+                <input type="number" step="0.01" name="total_amount" class="portal-input" value="<%= trailer.finance_type === 'Owned' ? trailer.total_amount : '' %>" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">ACH Settled Value ($)</label>
+                <input type="number" step="0.01" name="ach_value" class="portal-input" value="<%= trailer.finance_type === 'Owned' ? trailer.ach_value : '' %>" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+
+          <!-- Leased Asset Details -->
+          <div id="leasedFinanceForm" class="finance-subform" style="display: <%= trailer.finance_type === 'Leased' ? 'block' : 'none' %>;">
+            <div class="portal-form-grid">
+              <div class="portal-form-group">
+                <label class="portal-label">Lease Purchase Date</label>
+                <input type="date" name="purchase_date" class="portal-input" value="<%= trailer.finance_type === 'Leased' ? trailer.purchase_date : '' %>">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Lease Value ($)</label>
+                <input type="number" step="0.01" name="valuation" class="portal-input" value="<%= trailer.finance_type === 'Leased' ? trailer.valuation : '' %>" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">HST Tax Amount ($)</label>
+                <input type="number" step="0.01" name="hst_amount" class="portal-input" value="<%= trailer.finance_type === 'Leased' ? trailer.hst_amount : '' %>" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Total Capital cost ($)</label>
+                <input type="number" step="0.01" name="total_amount" class="portal-input" value="<%= trailer.finance_type === 'Leased' ? trailer.total_amount : '' %>" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Lease Term (e.g., 36 Months)</label>
+                <input type="text" name="lease_term" class="portal-input" value="<%= trailer.finance_type === 'Leased' ? trailer.lease_term : '' %>" placeholder="e.g. 48 Months">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Lease Payment Rate ($)</label>
+                <input type="number" step="0.01" name="lease_payment" class="portal-input" value="<%= trailer.finance_type === 'Leased' ? trailer.lease_payment : '' %>" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Lease Payment Interval</label>
+                <select name="lease_frequency" class="portal-select">
+                  <option value="Weekly" <%= trailer.lease_frequency === 'Weekly' ? 'selected' : '' %>>Weekly payments</option>
+                  <option value="Bi-Monthly" <%= trailer.lease_frequency === 'Bi-Monthly' ? 'selected' : '' %>>Bi-Monthly payments</option>
+                  <option value="Monthly" <%= trailer.lease_frequency === 'Monthly' ? 'selected' : '' %>>Monthly payments</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rented Asset Details -->
+          <div id="rentedFinanceForm" class="finance-subform" style="display: <%= trailer.finance_type === 'Rented' ? 'block' : 'none' %>;">
+            <div class="portal-form-grid">
+              <div class="portal-form-group">
+                <label class="portal-label">Rental Payment Rate ($)</label>
+                <input type="number" step="0.01" name="rent_payment" class="portal-input" value="<%= trailer.finance_type === 'Rented' ? trailer.rent_payment : '' %>" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Rent Base Amount (Excl. HST) ($)</label>
+                <input type="number" step="0.01" name="rent_amount_exc_hst" class="portal-input" value="<%= trailer.finance_type === 'Rented' ? trailer.rent_amount_exc_hst : '' %>" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Rent HST Tax Amount ($)</label>
+                <input type="number" step="0.01" name="rent_hst" class="portal-input" value="<%= trailer.finance_type === 'Rented' ? trailer.rent_hst : '' %>" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Total Rent Invoice ($)</label>
+                <input type="number" step="0.01" name="rent_total" class="portal-input" value="<%= trailer.finance_type === 'Rented' ? trailer.rent_total : '' %>" placeholder="0.00">
+              </div>
+              <div class="portal-form-group">
+                <label class="portal-label">Rent Invoice Interval</label>
+                <select name="rent_frequency" class="portal-select">
+                  <option value="Weekly" <%= trailer.rent_frequency === 'Weekly' ? 'selected' : '' %>>Weekly</option>
+                  <option value="Bi-Monthly" <%= trailer.rent_frequency === 'Bi-Monthly' ? 'selected' : '' %>>Bi-Monthly</option>
+                  <option value="Monthly" <%= trailer.rent_frequency === 'Monthly' ? 'selected' : '' %>>Monthly</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           <!-- Submit Panel -->
-          <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1.5rem; margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+          <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem; margin-top: 2.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
             <a href="/portal/trailers/<%= trailer.id %>" class="portal-btn portal-btn-secondary">Cancel</a>
             <button type="submit" class="portal-btn portal-btn-primary"><i class="fas fa-save"></i> Save Trailer Changes</button>
           </div>
@@ -104,5 +292,54 @@
     </div>
   </div>
 
+  <script>
+    function handleTypeChange(val) {
+      const customType = document.getElementById('customTypeGroup');
+      const structural = document.getElementById('structuralFeaturesSection');
+      
+      if (val === 'Other') {
+        customType.style.display = 'block';
+      } else {
+        customType.style.display = 'none';
+      }
+
+      if (val === 'Dry Van' || val === 'Reefer') {
+        structural.style.display = 'block';
+      } else {
+        structural.style.display = 'none';
+      }
+    }
+
+    function handleAxleChange(val) {
+      const customAxle = document.getElementById('customAxleGroup');
+      if (val === 'Other') {
+        customAxle.style.display = 'block';
+      } else {
+        customAxle.style.display = 'none';
+      }
+    }
+
+    function handleFinanceChange(val) {
+      document.querySelectorAll('.finance-subform').forEach(form => {
+        form.style.display = 'none';
+        form.querySelectorAll('input').forEach(i => i.disabled = true);
+      });
+
+      let activeFormId = 'ownedFinanceForm';
+      if (val === 'Leased') activeFormId = 'leasedFinanceForm';
+      else if (val === 'Rented') activeFormId = 'rentedFinanceForm';
+
+      const activeForm = document.getElementById(activeFormId);
+      activeForm.style.display = 'block';
+      activeForm.querySelectorAll('input').forEach(i => i.disabled = false);
+    }
+
+    // Set initial form states
+    window.onload = function() {
+      handleTypeChange('<%= isCustomType ? "Other" : trailer.trailer_type %>');
+      handleAxleChange('<%= isCustomAxle ? "Other" : trailer.axle_config %>');
+      handleFinanceChange('<%= trailer.finance_type || "Owned" %>');
+    }
+  </script>
 </body>
 </html>

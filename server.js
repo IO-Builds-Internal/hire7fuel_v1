@@ -56,13 +56,13 @@ app.use(session({
  * Session Gatekeeper Middleware for Carrier Portal
  */
 function requireAuth(req, res, next) {
-  if (req.path === '/register' || req.path === '/register/') {
+  if (req.path === '/register' || req.path === '/register/' || req.path === '/login' || req.path === '/login/') {
     return next();
   }
   if (req.session && (req.session.isAdmin || req.session.isAuthenticated)) {
     return next();
   }
-  res.redirect('/admin/login');
+  res.redirect('/portal/login');
 }
 
 /**
@@ -71,10 +71,12 @@ function requireAuth(req, res, next) {
 const publicRoutes = require('./routes/public');
 const adminRoutes = require('./routes/admin');
 const portalRoutes = require('./routes/portal');
+const apiRoutes = require('./routes/api');
 
 app.use('/', publicRoutes);
 app.use('/admin', adminRoutes);
 app.use('/portal', requireAuth, portalRoutes);
+app.use('/api/v1', apiRoutes);
 
 /**
  * Daily Safety & Compliance Expiry Reminder Cron Task

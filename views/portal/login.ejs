@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO METADATA -->
+  <title>Carrier Portal Sign-In | <%= config.brand.name %></title>
+  <meta name="description" content="Access the safety and compliance control room. Manage fleet drivers, CVOR licensing, PMVI safety intervals, and automated IFTA bookkeeping.">
+  
+  <!-- Style links -->
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  
+  <%- include('../partials/header') %>
+
+  <!-- Page Header -->
+  <section class="hero-mesh" style="padding: 5rem 0 4rem 0;">
+    <div class="container text-center">
+      <h1 class="hero-title" style="font-size: 2.75rem; margin-bottom: 1rem;">Carrier Dashboard Sign-In</h1>
+      <p class="hero-subtitle" style="margin: 0 auto; max-width: 650px;">
+        Access your carrier safety control room or test the UAT authorization protocol in real-time.
+      </p>
+    </div>
+  </section>
+
+  <!-- Login & Test Section -->
+  <section class="section" id="login-section" style="padding: 3rem 0 6rem 0;">
+    <div class="container">
+      
+      <div class="apply-layout" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start;">
+        
+        <!-- Left Column: Standard Secure Portal Login -->
+        <div class="form-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); backdrop-filter: blur(16px); padding: 2.5rem; border-radius: 12px; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);">
+          <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; color: var(--color-white); border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-lock" style="color: var(--color-accent);"></i> Carrier Sign-In
+          </h3>
+
+          <% if (error) { %>
+            <div class="alert alert-error" style="background: rgba(248, 81, 73, 0.1); border: 1px solid rgba(248, 81, 73, 0.3); color: #ff7b72; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; font-size: 0.9rem;">
+              <i class="fas fa-triangle-exclamation" style="margin-right: 0.5rem;"></i>
+              <strong>Sign-In Failed:</strong> <%= error %>
+            </div>
+          <% } %>
+
+          <form action="/portal/login" method="POST">
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+              <label for="login_username" style="display: block; margin-bottom: 0.5rem; color: var(--color-muted); font-size: 0.9rem; font-weight: 500;">Username</label>
+              <input type="text" id="login_username" name="username" class="form-control" placeholder="E.g., clientuser126" required style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 0.75rem; color: #fff;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem; position: relative;">
+              <label for="login_password" style="display: block; margin-bottom: 0.5rem; color: var(--color-muted); font-size: 0.9rem; font-weight: 500;">Password</label>
+              <input type="password" id="login_password" name="password" class="form-control" placeholder="Enter password" required style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 0.75rem; color: #fff;">
+              <i class="fas fa-eye" id="togglePassword" style="position: absolute; right: 12px; bottom: 12px; color: rgba(255,255,255,0.4); cursor: pointer;"></i>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; cursor: pointer; border-radius: 6px;">
+              <i class="fas fa-right-to-bracket"></i> Sign In to Dashboard
+            </button>
+          </form>
+
+          <div style="margin-top: 1.5rem; text-align: center; font-size: 0.9rem; color: var(--color-muted);">
+            Don't have a carrier account? <a href="/portal/register" style="color: var(--color-accent); font-weight: 600; text-decoration: none;">Register here</a>.
+          </div>
+        </div>
+
+        <!-- Right Column: Live UAT API Gateway Tester -->
+        <div class="form-card" style="background: rgba(20, 160, 119, 0.02); border: 1px solid rgba(20, 160, 119, 0.15); backdrop-filter: blur(16px); padding: 2.5rem; border-radius: 12px; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; gap: 1.5rem;">
+          
+          <div>
+            <h3 style="font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--color-white); display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-plug-circle-bolt" style="color: var(--color-accent);"></i> API Gateway Console
+            </h3>
+            <p style="color: var(--color-muted); font-size: 0.9rem; margin: 0;">
+              Execute live requests against <code>/api/v1/authorize</code> to inspect payload models, header responses, and error parameters.
+            </p>
+          </div>
+
+          <!-- Shortcuts & Presets -->
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button type="button" id="loadUatValid" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; border-color: rgba(34, 201, 138, 0.4); color: var(--color-accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem;">
+              <i class="fas fa-wand-magic-sparkles"></i> Preset: UAT Success
+            </button>
+            <button type="button" id="loadUatSuspended" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; border-color: rgba(245, 166, 35, 0.4); color: var(--color-highlight); cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem;">
+              <i class="fas fa-user-slash"></i> Preset: Suspended Account
+            </button>
+            <button type="button" id="loadUatError" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; border-color: rgba(248, 81, 73, 0.4); color: #ff7b72; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem;">
+              <i class="fas fa-bug"></i> Preset: Recaptcha Fail
+            </button>
+          </div>
+
+          <!-- Input Fields for API Tester -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label style="display: block; margin-bottom: 0.25rem; color: #a3c2c2; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Username</label>
+              <input type="text" id="api_username" class="form-control" placeholder="username" style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 0.5rem; color: #fff; font-size: 0.9rem;">
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: 0.25rem; color: #a3c2c2; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Password</label>
+              <input type="text" id="api_password" class="form-control" placeholder="password" style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 0.5rem; color: #fff; font-size: 0.9rem;">
+            </div>
+          </div>
+
+          <div>
+            <label style="display: block; margin-bottom: 0.25rem; color: #a3c2c2; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">reCAPTCHA Token</label>
+            <input type="text" id="api_token" class="form-control" placeholder="recaptchaToken" style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 0.5rem; color: #fff; font-family: monospace; font-size: 0.8rem;">
+          </div>
+
+          <!-- API Test Submit Button -->
+          <button type="button" id="btnTestApi" class="btn btn-primary" style="background: var(--color-accent); font-weight: 700; width: 100%; padding: 0.75rem; font-size: 0.95rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; border-radius: 6px;">
+            <i class="fas fa-play"></i> Send UAT API Request
+          </button>
+
+          <!-- Response Viewer -->
+          <div style="flex-grow: 1; min-height: 200px; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <label style="color: #a3c2c2; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">UAT Response Header</label>
+              <span id="responseStatus" style="font-size: 0.85rem; font-weight: 700; font-family: monospace; padding: 0.1rem 0.5rem; border-radius: 4px;">--</span>
+            </div>
+            <pre style="margin: 0; background: #071212; border: 1px solid rgba(20, 160, 119, 0.2); border-radius: 6px; padding: 1rem; color: #87e0c4; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; overflow-x: auto; flex-grow: 1; max-height: 250px; white-space: pre-wrap;" id="responseViewer">// Click UAT presets or send request to view API payload...</pre>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Script logic for API testing client-side -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginPass = document.getElementById('login_password');
+      const togglePass = document.getElementById('togglePassword');
+
+      // 1. Password visibility toggler
+      if (togglePass && loginPass) {
+        togglePass.addEventListener('click', () => {
+          const type = loginPass.getAttribute('type') === 'password' ? 'text' : 'password';
+          loginPass.setAttribute('type', type);
+          togglePass.classList.toggle('fa-eye-slash');
+        });
+      }
+
+      // 2. Load API Presets
+      const apiUser = document.getElementById('api_username');
+      const apiPass = document.getElementById('api_password');
+      const apiToken = document.getElementById('api_token');
+
+      const setPreset = (u, p, t) => {
+        apiUser.value = u;
+        apiPass.value = p;
+        apiToken.value = t;
+      };
+
+      document.getElementById('loadUatValid').addEventListener('click', () => {
+        setPreset('clientuser126', 'Abcd@1234', 'xxxxxxxx_recapchaToken-----');
+      });
+
+      document.getElementById('loadUatSuspended').addEventListener('click', () => {
+        // We will mock check this or send incorrect token/user to UAT
+        setPreset('clientuser126', 'Abcd@1234', 'xxxxxxxx_recapchaToken-----');
+        // Let's notify that to test suspended, they can run the test script or suspend it in DB
+        alert("Tip: Inactive state checks trigger when either userStatus or clientActive are set to false in the database.");
+      });
+
+      document.getElementById('loadUatError').addEventListener('click', () => {
+        setPreset('clientuser126', 'Abcd@1234', 'invalid_siteverify_token_here');
+      });
+
+      // Initialize with UAT success preset
+      setPreset('clientuser126', 'Abcd@1234', 'xxxxxxxx_recapchaToken-----');
+
+      // 3. API Test Submission via Fetch
+      const btnTest = document.getElementById('btnTestApi');
+      const responseViewer = document.getElementById('responseViewer');
+      const responseStatus = document.getElementById('responseStatus');
+
+      btnTest.addEventListener('click', async () => {
+        const payload = {
+          username: apiUser.value.trim(),
+          password: apiPass.value.trim(),
+          recaptchaToken: apiToken.value.trim()
+        };
+
+        btnTest.disabled = true;
+        btnTest.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Processing Request...';
+        responseStatus.textContent = 'PENDING';
+        responseStatus.style.background = 'rgba(255, 255, 255, 0.15)';
+        responseStatus.style.color = '#fff';
+        responseViewer.textContent = '// Dispatching POST /api/v1/authorize...';
+
+        try {
+          const res = await fetch('/api/v1/authorize', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          // Set status label colors based on code
+          responseStatus.textContent = `HTTP ${res.status} ${res.statusText || ''}`;
+          if (res.ok) {
+            responseStatus.style.background = 'rgba(34, 201, 138, 0.2)';
+            responseStatus.style.color = 'var(--color-accent)';
+          } else if (res.status === 400 || res.status === 401 || res.status === 403) {
+            responseStatus.style.background = 'rgba(245, 166, 35, 0.2)';
+            responseStatus.style.color = 'var(--color-highlight)';
+          } else {
+            responseStatus.style.background = 'rgba(248, 81, 73, 0.2)';
+            responseStatus.style.color = '#ff7b72';
+          }
+
+          const responseText = await res.text();
+          try {
+            // Try formatting as JSON
+            const json = JSON.parse(responseText);
+            responseViewer.textContent = JSON.stringify(json, null, 2);
+          } catch {
+            responseViewer.textContent = responseText;
+          }
+
+        } catch (err) {
+          responseStatus.textContent = 'NETWORK_ERROR';
+          responseStatus.style.background = 'rgba(248, 81, 73, 0.2)';
+          responseStatus.style.color = '#ff7b72';
+          responseViewer.textContent = `Client network exception: ${err.message}`;
+        } finally {
+          btnTest.disabled = false;
+          btnTest.innerHTML = '<i class="fas fa-play"></i> Send UAT API Request';
+        }
+      });
+
+    });
+  </script>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>
