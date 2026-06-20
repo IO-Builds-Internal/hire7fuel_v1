@@ -513,6 +513,31 @@
                   </tbody>
                 </table>
               </div>
+          <!-- SECTION K - ELD & Fuel APIs -->
+          <div class="portal-accordion-item">
+            <div class="portal-accordion-header" onclick="toggleAccordion(this)">
+              <span><i class="fas fa-plug text-accent" style="margin-right: 0.5rem;"></i> Section K — ELD & Fuel API Integrations</span>
+              <i class="fas fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="portal-accordion-content">
+              <div class="portal-form-grid" style="margin-bottom: 1.5rem;">
+                <div class="portal-form-group">
+                  <label class="portal-label">ELD Provider Company</label>
+                  <input type="text" name="eld_company_name" class="portal-input" value="<%= profile.eld_company_name || '' %>" placeholder="e.g. Samsara, KeepTruckin">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">ELD API Key / Token</label>
+                  <input type="password" name="eld_api_key" class="portal-input" value="<%= profile.eld_api_key || '' %>" placeholder="Paste ELD API credentials">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">Fuel Card Integration Provider</label>
+                  <input type="text" name="fuel_company_name" class="portal-input" value="<%= profile.fuel_company_name || '' %>" placeholder="e.g. Comdata, WEX">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">Fuel API Key / Client ID</label>
+                  <input type="password" name="fuel_api_key" class="portal-input" value="<%= profile.fuel_api_key || '' %>" placeholder="Paste Fuel API credentials">
+                </div>
+              </div>
             </div>
           </div>
 

@@ -6,7 +6,7 @@
  */
 module.exports = {
   brand: {
-    name: 'Hire7 Fuel',
+    name: 'Hire7 Fleet',
     tagline: 'Powering Success with Every Drop',
     logo: '/assets/logo.png',
     favicon: '/assets/favicon.ico'

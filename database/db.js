@@ -280,6 +280,10 @@ function initSqliteTables() {
         border_bluewater_account TEXT,
         border_other TEXT,           -- JSON array {name, account}
         dtops_account TEXT,
+        eld_company_name TEXT,
+        eld_api_key TEXT,
+        fuel_company_name TEXT,
+        fuel_api_key TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )

@@ -157,6 +157,9 @@
         <button class="tab-btn" onclick="switchTab(event, 'tolls')">
           <i class="fas fa-ticket-alt"></i> Tolls & Transponders
         </button>
+        <button class="tab-btn" onclick="switchTab(event, 'integrations')">
+          <i class="fas fa-plug"></i> ELD & Fuel APIs
+        </button>
       </div>
 
       <!-- TAB 1: Company Profile -->
@@ -576,6 +579,41 @@
           </div>
         </div>
       </div>
+
+      <!-- TAB 6: ELD & Fuel APIs -->
+      <div id="integrations" class="tab-content">
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-label">ELD Provider Company</div>
+            <div class="info-value"><%= profile.eld_company_name || 'N/A' %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">ELD API Key / Token</div>
+            <div class="info-value">
+              <% if (profile.eld_api_key) { %>
+                <code>••••••••••••••••</code>
+              <% } else { %>
+                <span>N/A</span>
+              <% } %>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Fuel Card Integration Provider</div>
+            <div class="info-value"><%= profile.fuel_company_name || 'N/A' %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Fuel API Key / Client ID</div>
+            <div class="info-value">
+              <% if (profile.fuel_api_key) { %>
+                <code>••••••••••••••••</code>
+              <% } else { %>
+                <span>N/A</span>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </div>

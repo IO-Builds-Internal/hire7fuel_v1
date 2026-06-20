@@ -1129,7 +1129,9 @@ router.post('/carriers/:id/edit', async (req, res) => {
         irp_account = ?, irp_fleet_number = ?, irp_weight_groups = ?,
         tolls_ezpass = ?, tolls_apass = ?, tolls_hwy407 = ?, tolls_other = ?,
         border_ambassador_account = ?, border_bluewater_account = ?, border_other = ?,
-        dtops_account = ?, updated_at = CURRENT_TIMESTAMP
+        dtops_account = ?, 
+        eld_company_name = ?, eld_api_key = ?, fuel_company_name = ?, fuel_api_key = ?,
+        updated_at = CURRENT_TIMESTAMP
       WHERE carrier_id = ?
     `, [
       data.legal_name, data.dba_name, data.main_address, yard_addresses,
@@ -1147,6 +1149,7 @@ router.post('/carriers/:id/edit', async (req, res) => {
       data.tolls_ezpass, data.tolls_apass, data.tolls_hwy407, tolls_other,
       data.border_ambassador_account, data.border_bluewater_account, border_other,
       data.dtops_account,
+      data.eld_company_name || '', data.eld_api_key || '', data.fuel_company_name || '', data.fuel_api_key || '',
       id
     ]);
 
