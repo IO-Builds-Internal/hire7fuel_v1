@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Tab System Styling */
+    .tabs-nav {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      padding-bottom: 1px;
+    }
+    .tab-btn {
+      padding: 0.75rem 1.25rem;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--color-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .tab-btn:hover {
+      color: var(--color-white);
+    }
+    .tab-btn.active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+    }
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Info grid/cards for read-only fields */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .info-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+    }
+    .info-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.05em;
+    }
+    .info-value {
+      font-size: 0.95rem;
+      color: var(--color-white);
+      font-weight: 500;
+      word-break: break-all;
+    }
+    .info-value code {
+      font-family: monospace;
+      background: rgba(255,255,255,0.05);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+    .full-width-card {
+      grid-column: 1 / -1;
+    }
+    
+    /* Badges */
+    .cert-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .cert-badge.approved {
+      background: rgba(34, 201, 138, 0.1);
+      color: var(--color-accent);
+      border: 1px solid rgba(34, 201, 138, 0.2);
+    }
+    .cert-badge.pending {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--color-muted);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/admin_nav') %>
+    
+    <div style="margin-top: 1.5rem;"></div>
+
+    <div class="admin-card" style="padding: 1.5rem 2rem;">
+      <!-- Header Area -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <h2 style="margin: 0; font-size: 1.65rem;"><%= carrier.company_name %></h2>
+            <span class="badge-pill badge-fuelcard" style="background: rgba(34, 201, 138, 0.1); color: var(--color-accent); border: 1px solid rgba(34, 201, 138, 0.2);">Active</span>
+          </div>
+          <p style="color: var(--color-muted); margin-top: 0.35rem; font-size: 0.9rem;">
+            USDOT: <strong style="color: var(--color-white); font-family: monospace;"><%= carrier.usdot || 'N/A' %></strong>
+            <% if (carrier.mc_number) { %> | MC: <strong style="color: var(--color-white); font-family: monospace;"><%= carrier.mc_number %></strong><% } %>
+          </p>
+        </div>
+        
+        <div style="display: flex; gap: 0.75rem;">
+          <a href="/admin/carriers" class="portal-btn portal-btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-arrow-left"></i> Back to Roster</a>
+          <a href="/admin/carriers/<%= carrier.id %>/edit" class="portal-btn portal-btn-primary" style="padding: 0.5rem 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-edit"></i> Edit Profile Details
+          </a>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab(event, 'company')">
+          <i class="fas fa-building"></i> Company Profile
+        </button>
+        <button class="tab-btn" onclick="switchTab(event, 'regulatory')">
+          <i class="fas fa-fingerprint"></i> Regulatory IDs & Bonds
+        </button>
+        <button class="tab-btn" onclick="switchTab(event, 'safety')">
+          <i class="fas fa-shield-halved"></i> Certifications
+        </button>
+        <button class="tab-btn" onclick="switchTab(event, 'filings')">
+          <i class="fas fa-file-invoice"></i> Filings & Permits
+        </button>
+        <button class="tab-btn" onclick="switchTab(event, 'tolls')">
+          <i class="fas fa-ticket-alt"></i> Tolls & Transponders
+        </button>
+      </div>
+
+      <!-- TAB 1: Company Profile -->
+      <div id="company" class="tab-content active">
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-label">Legal Company Name</div>
+            <div class="info-value"><%= profile.legal_name || carrier.company_name %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">DBA Name</div>
+            <div class="info-value"><%= profile.dba_name || 'N/A' %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Federal Business Number</div>
+            <div class="info-value">
+              <%= profile.federal_business_number ? maskNumber(profile.federal_business_number) : 'N/A' %>
+              <% if (profile.federal_business_number) { %>
+                <i class="fas fa-eye-slash text-accent" style="margin-left: 0.35rem; font-size: 0.8rem;" title="Masked for security"></i>
+              <% } %>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">EIN / FEIN</div>
+            <div class="info-value"><%= profile.ein_fein || 'N/A' %></div>
+          </div>
+          
+          <div class="info-card full-width-card">
+            <div class="info-label">Main Registered Head Office Address</div>
+            <div class="info-value"><%= profile.main_address || 'N/A' %></div>
+          </div>
+
+          <div class="info-card full-width-card">
+            <div class="info-label">Additional Yard Addresses</div>
+            <div class="info-value">
+              <% 
+                let yards = [];
+                try {
+                  if (profile.yard_addresses) yards = JSON.parse(profile.yard_addresses);
+                } catch(e) {}
+                if (yards.length > 0 && yards.filter(y => y.trim()).length > 0) {
+              %>
+                <ul style="margin: 0; padding-left: 1.2rem; line-height: 1.6;">
+                  <% yards.forEach(function(y) { if(y.trim()){ %>
+                    <li><%= y %></li>
+                  <% } }) %>
+                </ul>
+              <% } else { %>
+                <span style="color: var(--color-muted); font-style: italic;">No additional yard addresses configured.</span>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-label">Primary Email</div>
+            <div class="info-value"><%= profile.primary_email || carrier.email || 'N/A' %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Secondary Email</div>
+            <div class="info-value"><%= profile.secondary_email || 'N/A' %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Billing Email</div>
+            <div class="info-value"><%= profile.billing_email || 'N/A' %></div>
+          </div>
+          
+          <div class="info-card">
+            <div class="info-label">Primary Phone</div>
+            <div class="info-value"><%= profile.primary_phone || carrier.phone || 'N/A' %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Secondary Phone</div>
+            <div class="info-value"><%= profile.secondary_phone || 'N/A' %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Primary Contact Person</div>
+            <div class="info-value"><%= profile.primary_contact_name || 'N/A' %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Billing Contact Person</div>
+            <div class="info-value"><%= profile.billing_contact_name || 'N/A' %></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Regulatory IDs -->
+      <div id="regulatory" class="tab-content">
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-label">USDOT Number</div>
+            <div class="info-value"><code><%= profile.usdot || carrier.usdot || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">MC Number</div>
+            <div class="info-value"><code><%= profile.mc_number || carrier.mc_number || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">CVOR Number</div>
+            <div class="info-value"><code><%= profile.cvor || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">CVOR Expiry</div>
+            <div class="info-value"><%= profile.cvor_expiry || 'N/A' %></div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-label">Carrier Code</div>
+            <div class="info-value"><code><%= profile.carrier_code || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Carrier Code Expiry</div>
+            <div class="info-value"><%= profile.carrier_code_expiry || 'N/A' %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">SCAC Code</div>
+            <div class="info-value"><code><%= profile.scac || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">SCAC Expiry</div>
+            <div class="info-value"><%= profile.scac_expiry || 'N/A' %></div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-label">Canadian Bond #</div>
+            <div class="info-value"><code><%= profile.cdn_bond || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Canadian Bond Expiry</div>
+            <div class="info-value"><%= profile.cdn_bond_expiry || 'N/A' %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">US Bond #</div>
+            <div class="info-value"><code><%= profile.usd_bond || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">US Bond Expiry</div>
+            <div class="info-value"><%= profile.usd_bond_expiry || 'N/A' %></div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-label">UCR Year</div>
+            <div class="info-value"><%= profile.ucr_year || 'N/A' %></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: Certifications -->
+      <div id="safety" class="tab-content">
+        <div class="info-grid">
+          <div class="info-card" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+            <div>
+              <div class="info-label">C-TPAT Certification</div>
+              <div class="info-value" style="font-weight: 600; margin-top: 0.25rem;">
+                <% if (profile.ctpat_approved) { %>
+                  <span class="cert-badge approved"><i class="fas fa-check-circle"></i> Approved</span>
+                <% } else { %>
+                  <span class="cert-badge pending"><i class="fas fa-times-circle"></i> No/Pending</span>
+                <% } %>
+              </div>
+            </div>
+            <% if (profile.ctpat_approved && profile.ctpat_number) { %>
+              <div>
+                <div class="info-label">C-TPAT Number</div>
+                <div class="info-value"><code><%= profile.ctpat_number %></code></div>
+              </div>
+            <% } %>
+          </div>
+
+          <div class="info-card">
+            <div class="info-label">FAST Certification</div>
+            <div class="info-value" style="font-weight: 600; margin-top: 0.25rem;">
+              <% if (profile.fast_approved) { %>
+                <span class="cert-badge approved"><i class="fas fa-check-circle"></i> Approved</span>
+              <% } else { %>
+                <span class="cert-badge pending"><i class="fas fa-times-circle"></i> No/Pending</span>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="info-card" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+            <div>
+              <div class="info-label">CSA Certification</div>
+              <div class="info-value" style="font-weight: 600; margin-top: 0.25rem;">
+                <% if (profile.csa_approved) { %>
+                  <span class="cert-badge approved"><i class="fas fa-check-circle"></i> Approved</span>
+                <% } else { %>
+                  <span class="cert-badge pending"><i class="fas fa-times-circle"></i> No/Pending</span>
+                <% } %>
+              </div>
+            </div>
+            <% if (profile.csa_approved && profile.csa_number) { %>
+              <div>
+                <div class="info-label">CSA Number</div>
+                <div class="info-value"><code><%= profile.csa_number %></code></div>
+              </div>
+            <% } %>
+          </div>
+
+          <div class="info-card">
+            <div class="info-label">Partners in Protection (PIP)</div>
+            <div class="info-value" style="font-weight: 600; margin-top: 0.25rem;">
+              <% if (profile.pip_approved) { %>
+                <span class="cert-badge approved"><i class="fas fa-check-circle"></i> Approved</span>
+              <% } else { %>
+                <span class="cert-badge pending"><i class="fas fa-times-circle"></i> No/Pending</span>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-label">SmartWay Certification</div>
+            <div class="info-value" style="font-weight: 600; margin-top: 0.25rem;">
+              <% if (profile.smartway_approved) { %>
+                <span class="cert-badge approved"><i class="fas fa-check-circle"></i> Approved</span>
+              <% } else { %>
+                <span class="cert-badge pending"><i class="fas fa-times-circle"></i> No/Pending</span>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: Filings & Permits -->
+      <div id="filings" class="tab-content">
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-label">IFTA License Number</div>
+            <div class="info-value"><code><%= profile.ifta_number || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">IFTA License Expiry</div>
+            <div class="info-value"><%= profile.ifta_expiry || 'N/A' %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">KYU Account Number</div>
+            <div class="info-value"><code><%= profile.kyu_number || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">NY-HUT Account Number</div>
+            <div class="info-value"><code><%= profile.ny_hut_account || 'N/A' %></code></div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-label">New Mexico (NM) Permit #</div>
+            <div class="info-value"><code><%= profile.nm_permit || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Oregon Permit Number</div>
+            <div class="info-value"><code><%= profile.oregon_permit || 'N/A' %></code></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: Tolls & Transponders -->
+      <div id="tolls" class="tab-content">
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-label">Plating Account Type</div>
+            <div class="info-value"><%= profile.irp_account || 'IRP' %></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">IRP Fleet Account #</div>
+            <div class="info-value"><code><%= profile.irp_fleet_number || 'N/A' %></code></div>
+          </div>
+          
+          <div class="info-card full-width-card">
+            <div class="info-label">IRP Weight Groups & Expiries</div>
+            <div class="info-value">
+              <% 
+                let weights = [];
+                try {
+                  if (profile.irp_weight_groups) weights = JSON.parse(profile.irp_weight_groups);
+                } catch(e) {}
+                if (weights.length > 0 && weights.filter(w => w.trim()).length > 0) {
+              %>
+                <ul style="margin: 0; padding-left: 1.2rem; line-height: 1.6;">
+                  <% weights.forEach(function(w) { if(w.trim()){ %>
+                    <li><%= w %></li>
+                  <% } }) %>
+                </ul>
+              <% } else { %>
+                <span style="color: var(--color-muted); font-style: italic;">No weight groups configured.</span>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-label">EZ-PASS Account #</div>
+            <div class="info-value"><code><%= profile.tolls_ezpass || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">A-Pass Account #</div>
+            <div class="info-value"><code><%= profile.tolls_apass || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">HWY 407 Account #</div>
+            <div class="info-value"><code><%= profile.tolls_hwy407 || 'N/A' %></code></div>
+          </div>
+          
+          <div class="info-card full-width-card">
+            <div class="info-label">Other Toll Networks</div>
+            <div class="info-value">
+              <% 
+                let otherTolls = [];
+                try {
+                  if (profile.tolls_other) otherTolls = JSON.parse(profile.tolls_other);
+                } catch(e) {}
+                if (otherTolls.length > 0 && otherTolls.filter(t => t.name).length > 0) {
+              %>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem; text-align: left;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--color-muted); font-size: 0.8rem; text-transform: uppercase;">
+                      <th style="padding: 0.5rem;">Toll Network</th>
+                      <th style="padding: 0.5rem;">Account Number</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% otherTolls.forEach(function(t) { if(t.name){ %>
+                      <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <td style="padding: 0.5rem; font-weight: 500;"><%= t.name %></td>
+                        <td style="padding: 0.5rem;"><code><%= t.account %></code></td>
+                      </tr>
+                    <% } }) %>
+                  </tbody>
+                </table>
+              <% } else { %>
+                <span style="color: var(--color-muted); font-style: italic;">No custom toll accounts configured.</span>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-label">Ambassador Bridge Account #</div>
+            <div class="info-value"><code><%= profile.border_ambassador_account || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Blue Water Bridge Account #</div>
+            <div class="info-value"><code><%= profile.border_bluewater_account || 'N/A' %></code></div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">D-TOPS Decal Account #</div>
+            <div class="info-value"><code><%= profile.dtops_account || 'N/A' %></code></div>
+          </div>
+          
+          <div class="info-card full-width-card">
+            <div class="info-label">Other Border Bridges</div>
+            <div class="info-value">
+              <% 
+                let otherBridges = [];
+                try {
+                  if (profile.border_other) otherBridges = JSON.parse(profile.border_other);
+                } catch(e) {}
+                if (otherBridges.length > 0 && otherBridges.filter(b => b.name).length > 0) {
+              %>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem; text-align: left;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--color-muted); font-size: 0.8rem; text-transform: uppercase;">
+                      <th style="padding: 0.5rem;">Bridge / Crossing</th>
+                      <th style="padding: 0.5rem;">Account Number</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% otherBridges.forEach(function(b) { if(b.name){ %>
+                      <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                        <td style="padding: 0.5rem; font-weight: 500;"><%= b.name %></td>
+                        <td style="padding: 0.5rem;"><code><%= b.account %></code></td>
+                      </tr>
+                    <% } }) %>
+                  </tbody>
+                </table>
+              <% } else { %>
+                <span style="color: var(--color-muted); font-style: italic;">No custom bridge accounts configured.</span>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- D-TOPS Transponder list joined from active truck profiles -->
+          <div class="info-card full-width-card">
+            <div class="info-label">Active Transponders (Configured in Truck Profiles)</div>
+            
+            <div class="portal-table-wrap" style="margin-top: 0.75rem;">
+              <table class="portal-table">
+                <thead>
+                  <tr>
+                    <th>Truck Unit #</th>
+                    <th>Bridge/Network</th>
+                    <th>Transponder #</th>
+                    <th>Expiration</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (dtopsTransponders && dtopsTransponders.length > 0) { %>
+                    <% dtopsTransponders.forEach(function(t) { %>
+                      <tr>
+                        <td style="font-weight: 600; color: var(--color-white);">#<%= t.truck_unit %></td>
+                        <td><%= t.bridge_name %></td>
+                        <td><%= t.transponder_number %></td>
+                        <td><%= t.expiry || 'N/A' %></td>
+                        <td>
+                          <span class="expiry-badge <%= t.status === 'active' ? 'badge-green' : 'badge-red' %>">
+                            <%= t.status %>
+                          </span>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="5" style="text-align: center; color: var(--color-muted); font-size: 0.9rem; padding: 1.5rem;">
+                        No border bridge transponders registered under active fleet trucks.
+                      </td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function switchTab(evt, tabId) {
+      // Hide all tab contents
+      const tabcontents = document.getElementsByClassName("tab-content");
+      for (let i = 0; i < tabcontents.length; i++) {
+        tabcontents[i].classList.remove("active");
+      }
+
+      // Remove the active class from all tab buttons
+      const tablinks = document.getElementsByClassName("tab-btn");
+      for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].classList.remove("active");
+      }
+
+      // Show the current tab and add active class to clicked button
+      document.getElementById(tabId).classList.add("active");
+      evt.currentTarget.classList.add("active");
+    }
+  </script>
+</body>
+</html>

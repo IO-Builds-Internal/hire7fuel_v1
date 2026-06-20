@@ -900,4 +900,288 @@ router.get('/fleet', async (req, res) => {
   }
 });
 
+/**
+ * GET /admin/carriers - List all carriers
+ */
+router.get('/carriers', async (req, res) => {
+  try {
+    const config = await db.getSettings();
+    const carriers = await db.dbAll("SELECT * FROM carriers ORDER BY company_name ASC");
+    res.render('admin/carriers/index', {
+      config,
+      carriers,
+      page: 'admin-carriers',
+      pageTitle: 'Carrier Profiles',
+      pageDescription: 'Direct oversight, viewing, editing, and onboarding of commercial carriers.',
+      success: req.query.success === 'true',
+      error: req.query.error || null
+    });
+  } catch (err) {
+    console.error('Failed to load carriers list:', err);
+    res.status(500).send('Fatal server error loading carriers roster.');
+  }
+});
+
+/**
+ * GET /admin/carriers/new - Render onboarding form
+ */
+router.get('/carriers/new', async (req, res) => {
+  try {
+    const config = await db.getSettings();
+    res.render('admin/carriers/new', {
+      config,
+      page: 'admin-carriers',
+      pageTitle: 'Onboard New Carrier',
+      pageDescription: 'Initialize a new carrier profile and filings schedules.',
+      error: req.query.error || null
+    });
+  } catch (err) {
+    console.error('Failed to render onboarding form:', err);
+    res.status(500).send('Fatal server error.');
+  }
+});
+
+/**
+ * POST /admin/carriers/new - Process onboarding form
+ */
+router.post('/carriers/new', async (req, res) => {
+  const { company_name, email, phone, usdot, mc_number, main_address } = req.body;
+  if (!company_name) {
+    return res.redirect('/admin/carriers/new?error=Company+Name+is+required.');
+  }
+
+  try {
+    // Check for duplicates
+    let existing = null;
+    if (usdot) {
+      existing = await db.dbGet("SELECT id FROM carriers WHERE usdot = ?", [usdot]);
+    }
+    if (!existing && mc_number) {
+      existing = await db.dbGet("SELECT id FROM carriers WHERE mc_number = ?", [mc_number]);
+    }
+    if (!existing && company_name && email) {
+      existing = await db.dbGet("SELECT id FROM carriers WHERE company_name = ? AND email = ?", [company_name, email]);
+    }
+
+    if (existing) {
+      return res.redirect(`/admin/carriers/new?error=A+carrier+matching+these+details+already+exists.`);
+    }
+
+    const result = await db.dbRun(
+      "INSERT INTO carriers (company_name, email, phone, usdot, mc_number, status) VALUES (?, ?, ?, ?, ?, 'active')",
+      [company_name, email, phone, usdot, mc_number]
+    );
+    const carrierId = result.lastID;
+
+    // Create profile
+    await db.dbRun(
+      "INSERT INTO carrier_profiles (carrier_id, legal_name, dba_name, primary_email, primary_phone, usdot, mc_number, main_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [carrierId, company_name, company_name, email, phone, usdot, mc_number, main_address || '']
+    );
+
+    // Create filings
+    const currentYear = new Date().getFullYear();
+    const quarters = [
+      { q: 'Q1', due: `${currentYear}-04-30` },
+      { q: 'Q2', due: `${currentYear}-07-31` },
+      { q: 'Q3', due: `${currentYear}-10-31` },
+      { q: 'Q4', due: `${currentYear + 1}-01-31` }
+    ];
+
+    for (const q of quarters) {
+      await db.dbRun("INSERT INTO ifta_filings (carrier_id, year, quarter, due_date, status) VALUES (?, ?, ?, ?, 'PENDING')", [carrierId, currentYear, q.q, q.due]);
+      await db.dbRun("INSERT INTO kyu_filings (carrier_id, year, quarter, due_date, status) VALUES (?, ?, ?, ?, 'PENDING')", [carrierId, currentYear, q.q, q.due]);
+      await db.dbRun("INSERT INTO nyhut_filings (carrier_id, year, period, due_date, status) VALUES (?, ?, ?, ?, 'PENDING')", [carrierId, currentYear, q.q, q.due]);
+    }
+
+    res.redirect('/admin/carriers?success=true');
+  } catch (err) {
+    console.error('Failed to onboard carrier:', err);
+    res.redirect(`/admin/carriers/new?error=${encodeURIComponent(err.message)}`);
+  }
+});
+
+/**
+ * GET /admin/carriers/:id - View profile read-only
+ */
+router.get('/carriers/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const config = await db.getSettings();
+    const carrier = await db.dbGet("SELECT * FROM carriers WHERE id = ?", [id]);
+    if (!carrier) {
+      return res.redirect('/admin/carriers?error=Carrier+not+found.');
+    }
+    
+    let profile = await db.dbGet("SELECT * FROM carrier_profiles WHERE carrier_id = ?", [id]);
+    if (!profile) {
+      await db.dbRun("INSERT INTO carrier_profiles (carrier_id) VALUES (?)", [id]);
+      profile = await db.dbGet("SELECT * FROM carrier_profiles WHERE carrier_id = ?", [id]);
+    }
+
+    const dtopsTransponders = await db.dbAll(`
+      SELECT t.unit_number as truck_unit, bt.*
+      FROM border_transponders bt
+      JOIN trucks t ON bt.truck_id = t.id
+      WHERE t.carrier_id = ?
+    `, [id]);
+
+    res.render('admin/carriers/view', {
+      config,
+      carrier,
+      profile,
+      dtopsTransponders,
+      page: 'admin-carriers',
+      pageTitle: `Carrier Profile: ${carrier.company_name}`,
+      pageDescription: `Read-only parameters overview for carrier ID #${id}.`
+    });
+  } catch (err) {
+    console.error('Failed to view carrier profile:', err);
+    res.status(500).send('Fatal server error.');
+  }
+});
+
+/**
+ * GET /admin/carriers/:id/edit - Render edit profile form
+ */
+router.get('/carriers/:id/edit', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const config = await db.getSettings();
+    const carrier = await db.dbGet("SELECT * FROM carriers WHERE id = ?", [id]);
+    if (!carrier) {
+      return res.redirect('/admin/carriers?error=Carrier+not+found.');
+    }
+
+    let profile = await db.dbGet("SELECT * FROM carrier_profiles WHERE carrier_id = ?", [id]);
+    if (!profile) {
+      await db.dbRun("INSERT INTO carrier_profiles (carrier_id) VALUES (?)", [id]);
+      profile = await db.dbGet("SELECT * FROM carrier_profiles WHERE carrier_id = ?", [id]);
+    }
+
+    const dtopsTransponders = await db.dbAll(`
+      SELECT t.unit_number as truck_unit, bt.*
+      FROM border_transponders bt
+      JOIN trucks t ON bt.truck_id = t.id
+      WHERE t.carrier_id = ?
+    `, [id]);
+
+    res.render('admin/carriers/edit', {
+      config,
+      carrier,
+      profile,
+      dtopsTransponders,
+      page: 'admin-carriers',
+      pageTitle: `Edit Carrier Profile: ${carrier.company_name}`,
+      pageDescription: 'Modify corporate profile settings and credentials.',
+      success: req.query.success === 'true',
+      error: req.query.error || null
+    });
+  } catch (err) {
+    console.error('Failed to render carrier edit form:', err);
+    res.status(500).send('Fatal server error.');
+  }
+});
+
+/**
+ * POST /admin/carriers/:id/edit - Process carrier profile edits (supports AJAX autosave)
+ */
+router.post('/carriers/:id/edit', async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+
+  try {
+    const carrier = await db.dbGet("SELECT id FROM carriers WHERE id = ?", [id]);
+    if (!carrier) {
+      if (req.query.ajax === 'true') {
+        return res.status(404).json({ success: false, message: 'Carrier not found.' });
+      }
+      return res.redirect(`/admin/carriers?error=Carrier+not+found.`);
+    }
+
+    // Process JSON array inputs
+    const yard_addresses = JSON.stringify(Array.isArray(data.yard_addresses) ? data.yard_addresses : (data.yard_addresses ? [data.yard_addresses] : []));
+    const tolls_other = JSON.stringify(Array.isArray(data.tolls_other_name) ? data.tolls_other_name.map((name, i) => ({
+      name: name,
+      account: Array.isArray(data.tolls_other_account) ? data.tolls_other_account[i] : data.tolls_other_account
+    })).filter(item => item.name) : []);
+
+    const border_other = JSON.stringify(Array.isArray(data.border_other_name) ? data.border_other_name.map((name, i) => ({
+      name: name,
+      account: Array.isArray(data.border_other_account) ? data.border_other_account[i] : data.border_other_account
+    })).filter(item => item.name) : []);
+
+    const irp_weight_groups = JSON.stringify(Array.isArray(data.irp_weight_groups) ? data.irp_weight_groups : (data.irp_weight_groups ? [data.irp_weight_groups] : []));
+
+    await db.dbRun(`
+      UPDATE carrier_profiles SET
+        legal_name = ?, dba_name = ?, main_address = ?, yard_addresses = ?,
+        primary_email = ?, secondary_email = ?, billing_email = ?,
+        primary_phone = ?, secondary_phone = ?, primary_contact_name = ?, billing_contact_name = ?,
+        federal_business_number = ?, ein_fein = ?, usdot = ?, mc_number = ?,
+        carrier_code = ?, carrier_code_expiry = ?, scac = ?, scac_expiry = ?,
+        cvor = ?, cvor_expiry = ?, cdn_bond = ?, cdn_bond_expiry = ?, usd_bond = ?, usd_bond_expiry = ?,
+        ucr_year = ?,
+        ctpat_approved = ?, ctpat_number = ?, fast_approved = ?,
+        csa_approved = ?, csa_number = ?, pip_approved = ?, smartway_approved = ?,
+        ifta_number = ?, ifta_expiry = ?, kyu_number = ?,
+        ny_hut_account = ?, nm_permit = ?, oregon_permit = ?,
+        irp_account = ?, irp_fleet_number = ?, irp_weight_groups = ?,
+        tolls_ezpass = ?, tolls_apass = ?, tolls_hwy407 = ?, tolls_other = ?,
+        border_ambassador_account = ?, border_bluewater_account = ?, border_other = ?,
+        dtops_account = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE carrier_id = ?
+    `, [
+      data.legal_name, data.dba_name, data.main_address, yard_addresses,
+      data.primary_email, data.secondary_email, data.billing_email,
+      data.primary_phone, data.secondary_phone, data.primary_contact_name, data.billing_contact_name,
+      data.federal_business_number, data.ein_fein, data.usdot, data.mc_number,
+      data.carrier_code, data.carrier_code_expiry, data.scac, data.scac_expiry,
+      data.cvor, data.cvor_expiry, data.cdn_bond, data.cdn_bond_expiry, data.usd_bond, data.usd_bond_expiry,
+      data.ucr_year,
+      data.ctpat_approved === '1' ? 1 : 0, data.ctpat_number, data.fast_approved === '1' ? 1 : 0,
+      data.csa_approved === '1' ? 1 : 0, data.csa_number, data.pip_approved === '1' ? 1 : 0, data.smartway_approved === '1' ? 1 : 0,
+      data.ifta_number, data.ifta_expiry, data.kyu_number,
+      data.ny_hut_account, data.nm_permit, data.oregon_permit,
+      data.irp_account, data.irp_fleet_number, irp_weight_groups,
+      data.tolls_ezpass, data.tolls_apass, data.tolls_hwy407, tolls_other,
+      data.border_ambassador_account, data.border_bluewater_account, border_other,
+      data.dtops_account,
+      id
+    ]);
+
+    // Also update core carriers table baseline fields
+    await db.dbRun("UPDATE carriers SET company_name = ?, email = ?, phone = ?, usdot = ?, mc_number = ? WHERE id = ?", [
+      data.legal_name || data.dba_name, data.primary_email, data.primary_phone, data.usdot, data.mc_number, id
+    ]);
+
+    if (req.query.ajax === 'true') {
+      return res.json({ success: true, message: 'Carrier profile autosaved successfully.' });
+    }
+
+    res.redirect(`/admin/carriers/${id}/edit?success=true`);
+  } catch (err) {
+    console.error('Failed to update carrier profile:', err);
+    if (req.query.ajax === 'true') {
+      return res.status(500).json({ success: false, message: 'Failed to autosave: ' + err.message });
+    }
+    res.redirect(`/admin/carriers/${id}/edit?error=${encodeURIComponent(err.message)}`);
+  }
+});
+
+/**
+ * POST /admin/carriers/:id/delete - Delete carrier
+ */
+router.post('/carriers/:id/delete', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.dbRun("DELETE FROM carriers WHERE id = ?", [id]);
+    res.redirect('/admin/carriers?success=true');
+  } catch (err) {
+    console.error('Failed to delete carrier:', err);
+    res.redirect(`/admin/carriers?error=${encodeURIComponent(err.message)}`);
+  }
+});
+
 module.exports = router;
+

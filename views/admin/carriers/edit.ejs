@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> | <%= config.brand.name %></title>
+  <link rel="stylesheet" href="/css/styles.css?v=2.0">
+  <link rel="stylesheet" href="/css/portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+
+  <div class="portal-layout">
+    <%- include('../../partials/admin_nav') %>
+
+    <div class="portal-dashboard">
+      
+      <% if (success) { %>
+        <div style="background-color: #E6FDF4; border: 1px solid rgba(34,201,138,0.2); color: #03543F; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-weight: 600;">
+          <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i> Carrier profile parameters synchronized successfully.
+        </div>
+      <% } %>
+      
+      <% if (error) { %>
+        <div style="background-color: #FEF2F2; border: 1px solid rgba(239,68,68,0.2); color: #9B1C1C; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-weight: 600;">
+          <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i> <%= error %>
+        </div>
+      <% } %>
+
+      <form action="/admin/carriers/<%= carrier.id %>/edit" method="POST" id="profileForm">
+        
+        <div class="portal-accordion">
+          
+          <!-- SECTION A - Company Information -->
+          <div class="portal-accordion-item open">
+            <div class="portal-accordion-header" onclick="toggleAccordion(this)">
+              <span><i class="fas fa-building text-accent" style="margin-right: 0.5rem;"></i> Section A — Company Information</span>
+              <i class="fas fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="portal-accordion-content">
+              <div class="portal-form-grid">
+                <div class="portal-form-group">
+                  <label class="portal-label">Legal Company Name</label>
+                  <input type="text" name="legal_name" class="portal-input" value="<%= profile.legal_name || carrier.company_name %>" required>
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">DBA Name</label>
+                  <input type="text" name="dba_name" class="portal-input" value="<%= profile.dba_name || '' %>">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">Federal Business Number</label>
+                  <input type="text" name="federal_business_number" class="portal-input" value="<%= profile.federal_business_number || '' %>" placeholder="Store full, displayed masked in overview">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">EIN / FEIN</label>
+                  <input type="text" name="ein_fein" class="portal-input" value="<%= profile.ein_fein || '' %>">
+                </div>
+                
+                <div class="portal-form-group full-width">
+                  <label class="portal-label">Main Registered Address</label>
+                  <input type="text" name="main_address" class="portal-input" value="<%= profile.main_address || '' %>">
+                </div>
+                
+                <!-- Yard Addresses Dynamic Fields -->
+                <div class="portal-form-group full-width">
+                  <label class="portal-label">Additional Yard Addresses</label>
+                  <div class="dynamic-rows-container" id="yardsContainer">
+                    <% 
+                      let yards = [];
+                      try {
+                        if (profile.yard_addresses) yards = JSON.parse(profile.yard_addresses);
+                      } catch(e) {}
+                      if (yards.length === 0) yards = [''];
+                      yards.forEach(function(y) {
+                    %>
+                      <div class="dynamic-row">
+                        <div class="dynamic-row-inputs">
+                          <input type="text" name="yard_addresses" class="portal-input" value="<%= y %>" placeholder="Yard Address String">
+                        </div>
+                        <button type="button" class="portal-btn portal-btn-danger remove-row-btn" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
+                      </div>
+                    <% }) %>
+                    <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="yardsContainer"><i class="fas fa-plus"></i> Add Yard Address</button>
+                  </div>
+                </div>
+
+                <div class="portal-form-grid full-width" style="grid-template-columns: repeat(3, 1fr);">
+                  <div class="portal-form-group">
+                    <label class="portal-label">Primary Email</label>
+                    <input type="email" name="primary_email" class="portal-input" value="<%= profile.primary_email || carrier.email || '' %>">
+                  </div>
+                  <div class="portal-form-group">
+                    <label class="portal-label">Secondary Email</label>
+                    <input type="email" name="secondary_email" class="portal-input" value="<%= profile.secondary_email || '' %>">
+                  </div>
+                  <div class="portal-form-group">
+                    <label class="portal-label">Billing Email</label>
+                    <input type="email" name="billing_email" class="portal-input" value="<%= profile.billing_email || '' %>">
+                  </div>
+                  <div class="portal-form-group">
+                    <label class="portal-label">Primary Phone</label>
+                    <input type="text" name="primary_phone" class="portal-input" value="<%= profile.primary_phone || carrier.phone || '' %>">
+                  </div>
+                  <div class="portal-form-group">
+                    <label class="portal-label">Secondary Phone</label>
+                    <input type="text" name="secondary_phone" class="portal-input" value="<%= profile.secondary_phone || '' %>">
+                  </div>
+                  <div class="portal-form-group">
+                    <label class="portal-label">Primary Contact Person</label>
+                    <input type="text" name="primary_contact_name" class="portal-input" value="<%= profile.primary_contact_name || '' %>">
+                  </div>
+                  <div class="portal-form-group">
+                    <label class="portal-label">Billing Contact Person</label>
+                    <input type="text" name="billing_contact_name" class="portal-input" value="<%= profile.billing_contact_name || '' %>">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION B - Regulatory IDs -->
+          <div class="portal-accordion-item">
+            <div class="portal-accordion-header" onclick="toggleAccordion(this)">
+              <span><i class="fas fa-fingerprint text-accent" style="margin-right: 0.5rem;"></i> Section B — Regulatory IDs</span>
+              <i class="fas fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="portal-accordion-content">
+              <div class="portal-form-grid">
+                <div class="portal-form-group">
+                  <label class="portal-label">USDOT Number</label>
+                  <input type="text" name="usdot" class="portal-input" value="<%= profile.usdot || carrier.usdot || '' %>">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">MC Number</label>
+                  <input type="text" name="mc_number" class="portal-input" value="<%= profile.mc_number || carrier.mc_number || '' %>">
+                </div>
+                
+                <div class="portal-form-group">
+                  <label class="portal-label">CVOR Number</label>
+                  <input type="text" name="cvor" class="portal-input" value="<%= profile.cvor || '' %>" placeholder="e.g. CVOR123456">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">CVOR Expiry <span style="font-size: 0.75rem; color: var(--color-muted); font-weight: normal;">(Must be June 30 of renewal year)</span></label>
+                  <input type="date" name="cvor_expiry" class="portal-input" value="<%= profile.cvor_expiry || '' %>">
+                </div>
+
+                <div class="portal-form-group">
+                  <label class="portal-label">Carrier Code</label>
+                  <input type="text" name="carrier_code" class="portal-input" value="<%= profile.carrier_code || '' %>">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">Carrier Code Expiry</label>
+                  <input type="date" name="carrier_code_expiry" class="portal-input" value="<%= profile.carrier_code_expiry || '' %>">
+                </div>
+
+                <div class="portal-form-group">
+                  <label class="portal-label">SCAC Code</label>
+                  <input type="text" name="scac" class="portal-input" value="<%= profile.scac || '' %>">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">SCAC Expiry</label>
+                  <input type="date" name="scac_expiry" class="portal-input" value="<%= profile.scac_expiry || '' %>">
+                </div>
+
+                <div class="portal-form-group">
+                  <label class="portal-label">Canadian Bond #</label>
+                  <input type="text" name="cdn_bond" class="portal-input" value="<%= profile.cdn_bond || '' %>">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">Canadian Bond Expiry</label>
+                  <input type="date" name="cdn_bond_expiry" class="portal-input" value="<%= profile.cdn_bond_expiry || '' %>">
+                </div>
+
+                <div class="portal-form-group">
+                  <label class="portal-label">US Bond #</label>
+                  <input type="text" name="usd_bond" class="portal-input" value="<%= profile.usd_bond || '' %>">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">US Bond Expiry</label>
+                  <input type="date" name="usd_bond_expiry" class="portal-input" value="<%= profile.usd_bond_expiry || '' %>">
+                </div>
+
+                <div class="portal-form-group">
+                  <label class="portal-label">UCR Year</label>
+                  <input type="text" name="ucr_year" class="portal-input" value="<%= profile.ucr_year || '' %>" placeholder="e.g. 2026">
+                </div>
+              </div>
+              <div style="font-size: 0.85rem; color: var(--color-muted); background: var(--color-bg-darker); padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid rgba(0,0,0,0.05);">
+                <strong>Note:</strong> Enter <strong>N/A</strong> for any field your company does not currently hold.
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION C - Certifications -->
+          <div class="portal-accordion-item">
+            <div class="portal-accordion-header" onclick="toggleAccordion(this)">
+              <span><i class="fas fa-ribbon text-accent" style="margin-right: 0.5rem;"></i> Section C — Certifications</span>
+              <i class="fas fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="portal-accordion-content">
+              <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                
+                <!-- C-TPAT -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 1rem;">
+                  <div class="toggle-switch-wrapper">
+                    <label class="toggle-switch">
+                      <input type="checkbox" name="ctpat_approved" value="1" <%= profile.ctpat_approved ? 'checked' : '' %> onchange="toggleCertificationFields(this, 'ctpatNumField')">
+                      <span class="toggle-slider"></span>
+                    </label>
+                    <span class="portal-label">C-TPAT Approved</span>
+                  </div>
+                  <div class="portal-form-group" id="ctpatNumField" style="display: <%= profile.ctpat_approved ? 'block' : 'none' %>;">
+                    <label class="portal-label">C-TPAT Number</label>
+                    <input type="text" name="ctpat_number" class="portal-input" value="<%= profile.ctpat_number || '' %>">
+                  </div>
+                </div>
+
+                <!-- FAST -->
+                <div class="toggle-switch-wrapper" style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 1rem;">
+                  <label class="toggle-switch">
+                    <input type="checkbox" name="fast_approved" value="1" <%= profile.fast_approved ? 'checked' : '' %>>
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="portal-label">FAST Approved</span>
+                </div>
+
+                <!-- CSA -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 1rem;">
+                  <div class="toggle-switch-wrapper">
+                    <label class="toggle-switch">
+                      <input type="checkbox" name="csa_approved" value="1" <%= profile.csa_approved ? 'checked' : '' %> onchange="toggleCertificationFields(this, 'csaNumField')">
+                      <span class="toggle-slider"></span>
+                    </label>
+                    <span class="portal-label">CSA Approved</span>
+                  </div>
+                  <div class="portal-form-group" id="csaNumField" style="display: <%= profile.csa_approved ? 'block' : 'none' %>;">
+                    <label class="portal-label">CSA Number</label>
+                    <input type="text" name="csa_number" class="portal-input" value="<%= profile.csa_number || '' %>">
+                  </div>
+                </div>
+
+                <!-- PIP -->
+                <div class="toggle-switch-wrapper" style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 1rem;">
+                  <label class="toggle-switch">
+                    <input type="checkbox" name="pip_approved" value="1" <%= profile.pip_approved ? 'checked' : '' %>>
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="portal-label">PIP (Partners in Protection) Approved</span>
+                </div>
+
+                <!-- SmartWay -->
+                <div class="toggle-switch-wrapper">
+                  <label class="toggle-switch">
+                    <input type="checkbox" name="smartway_approved" value="1" <%= profile.smartway_approved ? 'checked' : '' %>>
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="portal-label">SmartWay Approved</span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION D - IFTA -->
+          <div class="portal-accordion-item">
+            <div class="portal-accordion-header" onclick="toggleAccordion(this)">
+              <span><i class="fas fa-gas-pump text-accent" style="margin-right: 0.5rem;"></i> Section D — IFTA License</span>
+              <i class="fas fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="portal-accordion-content">
+              <div class="portal-form-grid" style="margin-bottom: 1.5rem;">
+                <div class="portal-form-group">
+                  <label class="portal-label">IFTA License Number</label>
+                  <input type="text" name="ifta_number" class="portal-input" value="<%= profile.ifta_number || '' %>">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">IFTA Expiry</label>
+                  <input type="date" name="ifta_expiry" class="portal-input" value="<%= profile.ifta_expiry || '' %>">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION E - KYU -->
+          <div class="portal-accordion-item">
+            <div class="portal-accordion-header" onclick="toggleAccordion(this)">
+              <span><i class="fas fa-road text-accent" style="margin-right: 0.5rem;"></i> Section E — KYU Account</span>
+              <i class="fas fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="portal-accordion-content">
+              <div class="portal-form-group" style="margin-bottom: 1.5rem; max-width: 300px;">
+                <label class="portal-label">KYU Account Number</label>
+                <input type="text" name="kyu_number" class="portal-input" value="<%= profile.kyu_number || '' %>">
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION F - NY-HUT -->
+          <div class="portal-accordion-item">
+            <div class="portal-accordion-header" onclick="toggleAccordion(this)">
+              <span><i class="fas fa-truck-moving text-accent" style="margin-right: 0.5rem;"></i> Section F — NY-HUT (New York Highway Use Tax)</span>
+              <i class="fas fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="portal-accordion-content">
+              <div class="portal-form-grid" style="margin-bottom: 1.5rem;">
+                <div class="portal-form-group">
+                  <label class="portal-label">NY-HUT Account Number</label>
+                  <input type="text" name="ny_hut_account" class="portal-input" value="<%= profile.ny_hut_account || '' %>">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION G - Plating Accounts -->
+          <div class="portal-accordion-item">
+            <div class="portal-accordion-header" onclick="toggleAccordion(this)">
+              <span><i class="fas fa-id-badge text-accent" style="margin-right: 0.5rem;"></i> Section G — Plating Accounts</span>
+              <i class="fas fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="portal-accordion-content">
+              <div class="portal-form-grid">
+                <div class="portal-form-group">
+                  <label class="portal-label">Account Type</label>
+                  <select name="irp_account" class="portal-select">
+                    <option value="IRP" <%= profile.irp_account === 'IRP' ? 'selected' : '' %>>IRP (International Registration Plan)</option>
+                    <option value="Non-IRP" <%= profile.irp_account === 'Non-IRP' ? 'selected' : '' %>>Non-IRP Standard</option>
+                  </select>
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">Fleet Account #</label>
+                  <input type="text" name="irp_fleet_number" class="portal-input" value="<%= profile.irp_fleet_number || '' %>">
+                </div>
+                
+                <!-- Weight Groups Dynamic Input -->
+                <div class="portal-form-group full-width">
+                  <label class="portal-label">IRP Weight Groups & Expiries</label>
+                  <div class="dynamic-rows-container" id="weightContainer">
+                    <% 
+                      let weights = [];
+                      try {
+                        if (profile.irp_weight_groups) weights = JSON.parse(profile.irp_weight_groups);
+                      } catch(e) {}
+                      if (weights.length === 0) weights = [''];
+                      weights.forEach(function(w) {
+                    %>
+                      <div class="dynamic-row">
+                        <div class="dynamic-row-inputs">
+                          <input type="text" name="irp_weight_groups" class="portal-input" value="<%= w %>" placeholder="e.g. Group A: 80,000 lbs - Expiry 2026-12-31">
+                        </div>
+                        <button type="button" class="portal-btn portal-btn-danger remove-row-btn" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
+                      </div>
+                    <% }) %>
+                    <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="weightContainer"><i class="fas fa-plus"></i> Add Weight Group</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION H - State Permits -->
+          <div class="portal-accordion-item">
+            <div class="portal-accordion-header" onclick="toggleAccordion(this)">
+              <span><i class="fas fa-sticky-note text-accent" style="margin-right: 0.5rem;"></i> Section H — State Permits</span>
+              <i class="fas fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="portal-accordion-content">
+              <div class="portal-form-grid">
+                <div class="portal-form-group">
+                  <label class="portal-label">New Mexico (NM) Permit #</label>
+                  <input type="text" name="nm_permit" class="portal-input" value="<%= profile.nm_permit || '' %>">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">Oregon Permit #</label>
+                  <input type="text" name="oregon_permit" class="portal-input" value="<%= profile.oregon_permit || '' %>">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION I - Tolls Accounts -->
+          <div class="portal-accordion-item">
+            <div class="portal-accordion-header" onclick="toggleAccordion(this)">
+              <span><i class="fas fa-ticket-alt text-accent" style="margin-right: 0.5rem;"></i> Section I — Toll Accounts</span>
+              <i class="fas fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="portal-accordion-content">
+              <div class="portal-form-grid">
+                <div class="portal-form-group">
+                  <label class="portal-label">EZ-PASS Account #</label>
+                  <input type="text" name="tolls_ezpass" class="portal-input" value="<%= profile.tolls_ezpass || '' %>">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">A-Pass Account #</label>
+                  <input type="text" name="tolls_apass" class="portal-input" value="<%= profile.tolls_apass || '' %>">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">HWY 407 Account #</label>
+                  <input type="text" name="tolls_hwy407" class="portal-input" value="<%= profile.tolls_hwy407 || '' %>">
+                </div>
+
+                <!-- Custom Tolls Accounts -->
+                <div class="portal-form-group full-width">
+                  <label class="portal-label">Other Toll Networks</label>
+                  <div class="dynamic-rows-container" id="tollsContainer">
+                    <% 
+                      let otherTolls = [];
+                      try {
+                        if (profile.tolls_other) otherTolls = JSON.parse(profile.tolls_other);
+                      } catch(e) {}
+                      if (otherTolls.length === 0) otherTolls = [{ name: '', account: '' }];
+                      otherTolls.forEach(function(t) {
+                    %>
+                      <div class="dynamic-row">
+                        <div class="dynamic-row-inputs" style="grid-template-columns: 1fr 1fr;">
+                          <input type="text" name="tolls_other_name" class="portal-input" value="<%= t.name %>" placeholder="Toll Network Name (e.g. SunPass)">
+                          <input type="text" name="tolls_other_account" class="portal-input" value="<%= t.account %>" placeholder="Account Number">
+                        </div>
+                        <button type="button" class="portal-btn portal-btn-danger remove-row-btn" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
+                      </div>
+                    <% }) %>
+                    <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="tollsContainer"><i class="fas fa-plus"></i> Add Toll Network</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION J - Border Accounts -->
+          <div class="portal-accordion-item">
+            <div class="portal-accordion-header" onclick="toggleAccordion(this)">
+              <span><i class="fas fa-passport text-accent" style="margin-right: 0.5rem;"></i> Section J — Border Crossing Accounts & D-TOPS</span>
+              <i class="fas fa-chevron-down accordion-arrow"></i>
+            </div>
+            <div class="portal-accordion-content">
+              <div class="portal-form-grid" style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+                <div class="portal-form-group">
+                  <label class="portal-label">Ambassador Bridge Account #</label>
+                  <input type="text" name="border_ambassador_account" class="portal-input" value="<%= profile.border_ambassador_account || '' %>">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">Blue Water Bridge Account #</label>
+                  <input type="text" name="border_bluewater_account" class="portal-input" value="<%= profile.border_bluewater_account || '' %>">
+                </div>
+                <div class="portal-form-group">
+                  <label class="portal-label">D-TOPS Decal Account #</label>
+                  <input type="text" name="dtops_account" class="portal-input" value="<%= profile.dtops_account || '' %>">
+                </div>
+
+                <!-- Custom Bridges Accounts -->
+                <div class="portal-form-group full-width">
+                  <label class="portal-label">Other Border Bridges</label>
+                  <div class="dynamic-rows-container" id="bridgesContainer">
+                    <% 
+                      let otherBridges = [];
+                      try {
+                        if (profile.border_other) otherBridges = JSON.parse(profile.border_other);
+                      } catch(e) {}
+                      if (otherBridges.length === 0) otherBridges = [{ name: '', account: '' }];
+                      otherBridges.forEach(function(b) {
+                    %>
+                      <div class="dynamic-row">
+                        <div class="dynamic-row-inputs" style="grid-template-columns: 1fr 1fr;">
+                          <input type="text" name="border_other_name" class="portal-input" value="<%= b.name %>" placeholder="Bridge Name (e.g. Peace Bridge)">
+                          <input type="text" name="border_other_account" class="portal-input" value="<%= b.account %>" placeholder="Account Number">
+                        </div>
+                        <button type="button" class="portal-btn portal-btn-danger remove-row-btn" onclick="removeRow(this)"><i class="fas fa-trash"></i></button>
+                      </div>
+                    <% }) %>
+                    <button type="button" class="portal-btn portal-btn-secondary add-row-btn" data-container="bridgesContainer"><i class="fas fa-plus"></i> Add Bridge Account</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- D-TOPS & Border Transponder Table (Read-only joined from truck profiles) -->
+              <h3>Active Fleet Transponders (Linked from Truck Profiles)</h3>
+              <p style="color: var(--color-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+                The table below aggregates transponders configured in individual truck profiles.
+              </p>
+              
+              <div class="portal-table-wrap">
+                <table class="portal-table">
+                  <thead>
+                    <tr>
+                      <th>Truck Unit #</th>
+                      <th>Bridge/Network</th>
+                      <th>Transponder #</th>
+                      <th>Expiration</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if (dtopsTransponders && dtopsTransponders.length > 0) { %>
+                      <% dtopsTransponders.forEach(function(t) { %>
+                        <tr>
+                          <td style="font-weight: 600; color: var(--color-white);">#<%= t.truck_unit %></td>
+                          <td><%= t.bridge_name %></td>
+                          <td><%= t.transponder_number %></td>
+                          <td><%= t.expiry || 'N/A' %></td>
+                          <td>
+                            <span class="expiry-badge <%= t.status === 'active' ? 'badge-green' : 'badge-red' %>">
+                              <%= t.status %>
+                            </span>
+                          </td>
+                        </tr>
+                      <% }) %>
+                    <% } else { %>
+                      <tr>
+                        <td colspan="5" style="text-align: center; color: var(--color-muted); font-size: 0.9rem;">
+                          No border bridge transponders registered under active fleet trucks.
+                        </td>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Submit Button Panel Sticky -->
+        <div style="background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); padding: 1.25rem 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-md); display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 2rem; position: sticky; bottom: 1rem; z-index: 100;">
+          <div id="autosave-status" style="font-size: 0.9rem; color: var(--color-muted); display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease;">
+            <i class="fas fa-cloud-upload-alt" style="color: var(--color-accent);"></i>
+            <span>All changes are automatically saved as you type.</span>
+          </div>
+          <div style="display: flex; gap: 1rem;">
+            <a href="/admin/carriers" class="portal-btn portal-btn-secondary">Cancel</a>
+            <button type="submit" class="portal-btn portal-btn-primary"><i class="fas fa-save"></i> Save Profile Parameters</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <script>
+    // Toggle accordion item state
+    function toggleAccordion(header) {
+      const item = header.parentElement;
+      const isOpen = item.classList.contains('open');
+      
+      // Close all other items
+      document.querySelectorAll('.portal-accordion-item').forEach(i => {
+        i.classList.remove('open');
+      });
+      
+      if (!isOpen) {
+        item.classList.add('open');
+      }
+    }
+
+    // Toggle cert inputs on switch checkbox changes
+    function toggleCertificationFields(checkbox, targetId) {
+      const field = document.getElementById(targetId);
+      if (checkbox.checked) {
+        field.style.display = 'block';
+      } else {
+        field.style.display = 'none';
+      }
+    }
+
+    // Dynamic row addition & deletion
+    document.querySelectorAll('.add-row-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const containerId = btn.getAttribute('data-container');
+        const container = document.getElementById(containerId);
+        
+        // Find the template (first dynamic-row)
+        const row = container.querySelector('.dynamic-row');
+        if (row) {
+          const clone = row.cloneNode(true);
+          clone.querySelectorAll('input').forEach(input => {
+            input.value = '';
+          });
+          // Insert clone before the add button
+          container.insertBefore(clone, btn);
+        }
+      });
+    });
+
+    function removeRow(btn) {
+      const row = btn.closest('.dynamic-row');
+      const container = row.parentElement;
+      // Keep at least one row template
+      const allRows = container.querySelectorAll('.dynamic-row');
+      if (allRows.length > 1) {
+        row.remove();
+      } else {
+        // Just clear inputs
+        row.querySelectorAll('input').forEach(input => {
+          input.value = '';
+        });
+      }
+      // Trigger autosave when a row is removed
+      clearTimeout(autosaveTimeout);
+      triggerAutosave();
+    }
+
+    // Autosave functionality
+    const form = document.getElementById('profileForm');
+    const statusDiv = document.getElementById('autosave-status');
+    let autosaveTimeout = null;
+
+    function triggerAutosave() {
+      if (!statusDiv) return;
+      statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: var(--color-accent);"></i> Autosaving changes...';
+      
+      const formData = new URLSearchParams(new FormData(form));
+      
+      fetch('/admin/carriers/<%= carrier.id %>/edit?ajax=true', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          statusDiv.innerHTML = `<i class="fas fa-check-circle" style="color: var(--color-success);"></i> Auto-saved at ${now}`;
+        } else {
+          statusDiv.innerHTML = `<i class="fas fa-exclamation-circle" style="color: var(--color-error);"></i> Error autosaving: ${data.message || 'Server error'}`;
+        }
+      })
+      .catch(err => {
+        console.error('Autosave error:', err);
+        statusDiv.innerHTML = '<i class="fas fa-exclamation-circle" style="color: var(--color-error);"></i> Connection lost. Will retry...';
+      });
+    }
+
+    // Attach listeners to all inputs
+    form.addEventListener('input', () => {
+      clearTimeout(autosaveTimeout);
+      statusDiv.innerHTML = '<i class="fas fa-sync fa-spin" style="color: var(--color-accent);"></i> Typing...';
+      autosaveTimeout = setTimeout(triggerAutosave, 1500); // 1.5 seconds debounce
+    });
+
+    // Save immediately on select or checkbox changes
+    form.addEventListener('change', (e) => {
+      if (e.target.tagName === 'SELECT' || e.target.type === 'checkbox' || e.target.type === 'radio') {
+        clearTimeout(autosaveTimeout);
+        triggerAutosave();
+      }
+    });
+
+    // Also trigger autosave when dynamic rows are added
+    document.querySelectorAll('.add-row-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Delay slightly so clone occurs first
+        setTimeout(() => {
+          clearTimeout(autosaveTimeout);
+          triggerAutosave();
+        }, 100);
+      });
+    });
+  </script>
+</body>
+</html>

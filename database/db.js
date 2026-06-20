@@ -43,6 +43,9 @@ const sqliteDb = new sqlite3.Database(localDbFile, (err) => {
  */
 function initSqliteTables() {
   sqliteDb.serialize(() => {
+    // Enable Foreign Keys support
+    sqliteDb.run("PRAGMA foreign_keys = ON;");
+
     // 1. Settings Table
     sqliteDb.run(`
       CREATE TABLE IF NOT EXISTS settings (
