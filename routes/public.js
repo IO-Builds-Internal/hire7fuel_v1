@@ -111,9 +111,17 @@ router.post('/submit-inquiry', async (req, res) => {
 
   try {
     await db.saveSubmission('contact', { name, company, phone, email, message });
-    // Redirect back to referring page or contact page with success parameter
-    const redirectTo = req.headers.referer ? `${req.headers.referer.split('?')[0]}?success=true#contact-form` : '/contact?success=true#contact-form';
-    res.redirect(redirectTo);
+    // Security: only redirect to same-origin referer paths (no open redirect)
+    const referer = req.headers.referer || '';
+    let redirectBase = '/contact';
+    try {
+      const refUrl = new URL(referer);
+      // Only use referer if it points to the same host
+      if (refUrl.hostname === req.hostname) {
+        redirectBase = refUrl.pathname;
+      }
+    } catch (e) { /* invalid URL, use default */ }
+    res.redirect(`${redirectBase}?success=true#contact-form`);
   } catch (err) {
     console.error('Error saving contact inquiry:', err);
     res.status(500).send('Server Error: Failed to process inquiry. Please try again.');
@@ -199,7 +207,7 @@ router.get('/public/ref-check/:id', async (req, res) => {
     });
   } catch (err) {
     console.error('Error loading public reference check form:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('An error occurred loading this page. Please try again.');
   }
 });
 

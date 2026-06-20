@@ -54,33 +54,43 @@ function calculateOilChangeNext(lastDateStr) {
 /**
  * Configure Multer for Compliance Document Uploads
  */
+// Whitelist of allowed entity types to prevent path traversal via entity type
+const ALLOWED_ENTITY_TYPES = new Set(['company', 'truck', 'trailer', 'driver']);
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const carrierId = req.session.carrierId || 1;
-    const entityType = req.body.entityType || req.params.entityType || 'company';
-    const entityId = req.body.entityId || req.params.entityId || 0;
-    const dir = path.join(__dirname, `../public/uploads/compliance/${carrierId}/${entityType}/${entityId}/`);
+    // Sanitize entity type against whitelist to prevent path traversal
+    const rawType = req.body.entityType || req.params.entityType || 'company';
+    const entityType = ALLOWED_ENTITY_TYPES.has(rawType) ? rawType : 'company';
+    const entityId = parseInt(req.body.entityId || req.params.entityId || 0, 10) || 0;
+    const dir = path.join(__dirname, '../public/uploads/compliance', String(carrierId), entityType, String(entityId));
     
     fs.mkdirSync(dir, { recursive: true });
     cb(null, dir);
   },
   filename: (req, file, cb) => {
-    // Clean spaces and prepend timestamp
-    cb(null, Date.now() + '-' + file.originalname.replace(/\s+/g, '_'));
+    // Sanitize filename: strip path separators and special chars, keep only safe chars
+    const ext = path.extname(file.originalname).toLowerCase().replace(/[^.a-z0-9]/g, '');
+    const basename = path.basename(file.originalname, path.extname(file.originalname))
+      .replace(/[^a-zA-Z0-9_\-]/g, '_')
+      .substring(0, 80); // cap length
+    cb(null, Date.now() + '-' + basename + ext);
   }
 });
 
 const upload = multer({ 
   storage: storage,
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20 MB max per compliance document
   fileFilter: (req, file, cb) => {
-    const allowedExts = /pdf|doc|docx|jpeg|jpg|png|gif/;
-    const extname = allowedExts.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedExts.test(file.mimetype) || 
-                     file.mimetype === 'application/pdf' || 
-                     file.mimetype.includes('word') ||
-                     file.mimetype.startsWith('image/');
+    const allowedExts = /^\.(pdf|doc|docx|jpeg|jpg|png|gif)$/;
+    const ext = path.extname(file.originalname).toLowerCase();
+    const mimetypeOk = 
+      file.mimetype === 'application/pdf' || 
+      file.mimetype.includes('word') ||
+      file.mimetype.startsWith('image/');
 
-    if (extname && mimetype) {
+    if (allowedExts.test(ext) && mimetypeOk) {
       return cb(null, true);
     }
     cb(new Error('Only standard documents (PDF, Word docs, images) are allowed.'));
@@ -122,11 +132,32 @@ router.use(async (req, res, next) => {
 
 /**
  * GET /portal/switch-carrier/:id - Administrative context switcher
+ * Security: validate the requested carrier actually exists before switching.
+ * Non-admin portal users are scoped to their assigned carrier_id only.
  */
-router.get('/switch-carrier/:id', (req, res) => {
+router.get('/switch-carrier/:id', async (req, res) => {
   const { id } = req.params;
-  req.session.carrierId = parseInt(id, 10);
-  res.redirect(req.headers.referer || '/portal/compliance');
+  const numericId = parseInt(id, 10);
+  if (!numericId || isNaN(numericId)) {
+    return res.redirect('/portal/compliance');
+  }
+
+  // Only allow admins (isAdmin flag) to freely switch carriers.
+  // Regular portal users are locked to their assigned carrier.
+  if (!req.session.isAdmin) {
+    // Non-admin: silently ignore the switch and send them back
+    return res.redirect('/portal/compliance');
+  }
+
+  try {
+    const carrier = await dbGet("SELECT id FROM carriers WHERE id = ?", [numericId]);
+    if (!carrier) {
+      return res.redirect(req.headers.referer && isSafeRedirect(req.headers.referer) ? req.headers.referer : '/portal/compliance');
+    }
+    req.session.carrierId = numericId;
+  } catch (e) { /* swallow, redirect below */ }
+
+  res.redirect('/portal/compliance');
 });
 
 /**
@@ -141,10 +172,43 @@ router.get('/login', (req, res) => {
   });
 });
 
+// In-memory rate limiter for portal login (mirrors admin login protection)
+const portalLoginAttempts = {};
+const PORTAL_MAX_ATTEMPTS = 5;
+const PORTAL_LOCKOUT_MS = 60 * 1000; // 60 seconds
+
+/**
+ * Safe redirect helper — only allow same-origin referer redirects.
+ */
+function isSafeRedirect(url) {
+  try {
+    // Allow relative paths or paths starting with /
+    if (url.startsWith('/') && !url.startsWith('//')) return true;
+    // Reject absolute URLs pointing to external hosts
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
+
 /**
  * POST /portal/login - Authenticate carrier and establish dashboard session
  */
 router.post('/login', async (req, res) => {
+  const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  const now = Date.now();
+
+  // Rate limiting check
+  if (portalLoginAttempts[ip] && portalLoginAttempts[ip].lockUntil > now) {
+    const remaining = Math.ceil((portalLoginAttempts[ip].lockUntil - now) / 1000);
+    return res.render('portal/login', {
+      page: 'portal-login',
+      success: false,
+      error: `Too many failed attempts. Please wait ${remaining} seconds before trying again.`,
+      layout: false
+    });
+  }
+
   const { username, password } = req.body;
   if (!username || !password) {
     return res.render('portal/login', {
@@ -159,6 +223,13 @@ router.post('/login', async (req, res) => {
     const user = await dbGet("SELECT * FROM api_users WHERE username = ?", [username]);
 
     if (!user || !db.verifyPassword(password, user.password)) {
+      // Track failed attempt
+      if (!portalLoginAttempts[ip]) portalLoginAttempts[ip] = { count: 0, lockUntil: 0 };
+      portalLoginAttempts[ip].count += 1;
+      if (portalLoginAttempts[ip].count >= PORTAL_MAX_ATTEMPTS) {
+        portalLoginAttempts[ip].lockUntil = now + PORTAL_LOCKOUT_MS;
+        portalLoginAttempts[ip].count = 0;
+      }
       return res.render('portal/login', {
         page: 'portal-login',
         success: false,
@@ -176,14 +247,32 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Set portal session state
-    req.session.carrierId = user.carrier_id || 1; // Load carrier context from database
-    req.session.isAuthenticated = true;
+    // Reset failed attempts on successful login
+    if (portalLoginAttempts[ip]) delete portalLoginAttempts[ip];
 
-    res.redirect('/portal/compliance?success=true');
+    // Security: regenerate session to prevent session fixation
+    req.session.regenerate((err) => {
+      if (err) {
+        console.error('Session regeneration failed on portal login:', err);
+        return res.status(500).render('portal/login', {
+          page: 'portal-login',
+          success: false,
+          error: 'Internal server error. Please try again.',
+          layout: false
+        });
+      }
+      req.session.carrierId = user.carrier_id || 1;
+      req.session.isAuthenticated = true;
+      res.redirect('/portal/compliance?success=true');
+    });
   } catch (err) {
     console.error('Portal login failed:', err);
-    res.status(500).send('Login Error: ' + err.message);
+    res.status(500).render('portal/login', {
+      page: 'portal-login',
+      success: false,
+      error: 'Internal server error during login. Please try again.',
+      layout: false
+    });
   }
 });
 
@@ -413,7 +502,7 @@ router.get('/profile', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching profile:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -515,7 +604,7 @@ router.get('/compliance/ifta', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching IFTA filings:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -534,7 +623,7 @@ router.post('/compliance/ifta/update', async (req, res) => {
     res.redirect('/portal/compliance/ifta?success=true');
   } catch (err) {
     console.error('Failed to update IFTA filing:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -555,7 +644,7 @@ router.get('/compliance/kyu', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching KYU filings:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -574,7 +663,7 @@ router.post('/compliance/kyu/update', async (req, res) => {
     res.redirect('/portal/compliance/kyu?success=true');
   } catch (err) {
     console.error('Failed to update KYU filing:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -595,7 +684,7 @@ router.get('/compliance/nyhut', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching NYHUT filings:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -614,7 +703,7 @@ router.post('/compliance/nyhut/update', async (req, res) => {
     res.redirect('/portal/compliance/nyhut?success=true');
   } catch (err) {
     console.error('Failed to update NYHUT filing:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -634,7 +723,7 @@ router.get('/drivers', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching drivers:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -653,7 +742,7 @@ router.get('/drivers/new', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching trucks for driver assignment:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -730,7 +819,7 @@ router.get('/drivers/:id', async (req, res) => {
     });
   } catch (err) {
     console.error('Error viewing driver:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -765,7 +854,7 @@ router.get('/drivers/:id/edit', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching driver edit form:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -831,7 +920,7 @@ router.post('/drivers/:id/delete', async (req, res) => {
     res.redirect('/portal/drivers');
   } catch (err) {
     console.error('Error soft deleting driver:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -858,7 +947,7 @@ router.get('/trucks', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching trucks:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1074,7 +1163,7 @@ router.get('/trucks/:id', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching truck details:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1122,7 +1211,7 @@ router.get('/trucks/:id/edit', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching edit truck form:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1314,7 +1403,7 @@ router.get('/trucks/:id/maintenance', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching maintenance records:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1387,7 +1476,7 @@ router.post('/trucks/:id/plates/add', async (req, res) => {
     res.redirect(`/portal/trucks/${id}?success=true`);
   } catch (err) {
     console.error('Failed to add plate:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1414,7 +1503,7 @@ router.get('/trailers', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching trailers:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1520,7 +1609,7 @@ router.get('/trailers/:id', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching trailer details:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1548,7 +1637,7 @@ router.get('/trailers/:id/edit', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching trailer edit form:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1651,7 +1740,7 @@ router.get('/trailers/:id/maintenance', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching trailer maintenance:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1737,7 +1826,7 @@ router.get('/documents', async (req, res) => {
     });
   } catch (err) {
     console.error('Error loading documents:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1780,6 +1869,14 @@ router.get('/documents/download/:id', async (req, res) => {
     }
 
     const absolutePath = path.join(__dirname, '../public', doc.file_path);
+
+    // Security: ensure resolved path stays inside the allowed uploads directory
+    const allowedBase = path.resolve(path.join(__dirname, '../public/uploads'));
+    if (!path.resolve(absolutePath).startsWith(allowedBase + path.sep)) {
+      console.warn('[SECURITY] Path traversal attempt blocked on document download. Carrier:', carrierId, 'Doc ID:', id);
+      return res.status(403).send('Access denied.');
+    }
+
     if (!fs.existsSync(absolutePath)) {
       return res.status(404).send('Document file does not exist on server.');
     }
@@ -1787,7 +1884,7 @@ router.get('/documents/download/:id', async (req, res) => {
     res.download(absolutePath, doc.doc_label || path.basename(doc.file_path));
   } catch (err) {
     console.error('Error downloading document:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1805,6 +1902,14 @@ router.post('/documents/delete/:id', async (req, res) => {
 
     // Delete file from disk
     const absolutePath = path.join(__dirname, '../public', doc.file_path);
+
+    // Security: ensure resolved path stays inside the allowed uploads directory
+    const allowedBase = path.resolve(path.join(__dirname, '../public/uploads'));
+    if (doc.file_path && !path.resolve(absolutePath).startsWith(allowedBase + path.sep)) {
+      console.warn('[SECURITY] Path traversal attempt blocked on document delete. Carrier:', carrierId, 'Doc ID:', id);
+      return res.status(403).send('Access denied.');
+    }
+
     if (fs.existsSync(absolutePath)) {
       fs.unlinkSync(absolutePath);
     }
@@ -1814,7 +1919,7 @@ router.post('/documents/delete/:id', async (req, res) => {
     res.redirect('/portal/documents?success=true');
   } catch (err) {
     console.error('Error deleting document:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1838,7 +1943,7 @@ router.get('/trucks/:id/plates-history', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching plates history:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -1904,7 +2009,7 @@ router.get('/transponders', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching transponders inventory:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -2093,7 +2198,7 @@ router.get('/tasks', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching tasks:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -2170,7 +2275,7 @@ router.get('/tasks/:id', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching task details:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -2375,7 +2480,7 @@ router.get('/billing', async (req, res) => {
     });
   } catch (err) {
     console.error('Error loading billing dashboard:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -2394,7 +2499,7 @@ router.get('/billing/rates', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching billing rates:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 
@@ -2453,7 +2558,7 @@ router.get('/billing/invoices/:id', async (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching invoice details:', err);
-    res.status(500).send(err.message);
+    res.status(500).send('Internal server error. Please try again.');
   }
 });
 

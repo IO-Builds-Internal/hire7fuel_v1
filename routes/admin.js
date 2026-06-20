@@ -29,6 +29,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max logo size
   fileFilter: (req, file, cb) => {
     // Validate image format
     const filetypes = /jpeg|jpg|png|gif|svg|ico/;
@@ -89,8 +90,18 @@ router.post('/login', (req, res) => {
     if (loginAttempts[ip]) {
       delete loginAttempts[ip];
     }
-    req.session.isAdmin = true;
-    res.redirect('/admin');
+    // Security: regenerate session ID on login to prevent session fixation
+    req.session.regenerate((err) => {
+      if (err) {
+        console.error('Session regeneration failed on admin login:', err);
+        return res.status(500).render('admin/login', {
+          error: 'Internal server error during authentication. Please try again.',
+          layout: false
+        });
+      }
+      req.session.isAdmin = true;
+      res.redirect('/admin');
+    });
   } else {
     // Track and increment failed attempt
     if (!loginAttempts[ip]) {

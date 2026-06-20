@@ -14,6 +14,42 @@ const app = express();
 
 // Trust reverse proxy headers (required for HTTPS sessions on hosted platforms)
 app.set('trust proxy', 1);
+
+// ─── Security: remove X-Powered-By fingerprint ───
+app.disable('x-powered-by');
+
+// ─── Security: HTTP hardening headers ───
+app.use((req, res, next) => {
+  // Prevent clickjacking
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  // Block MIME-type sniffing
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  // Enable XSS filter in older browsers
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  // Restrict referrer info to same-origin only
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  // Enforce HTTPS in production (1 year)
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
+  // Content Security Policy — tightened to allow only same-origin + trusted CDNs
+  res.setHeader(
+    'Content-Security-Policy',
+    [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.google.com https://www.gstatic.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
+      "img-src 'self' data: blob:",
+      "connect-src 'self'",
+      "frame-src 'self' https://www.google.com",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'"
+    ].join('; ')
+  );
+  next();
+});
 const PORT = process.env.PORT || 3000;
 
 // Ensure public upload directories exist out-of-the-box
@@ -28,8 +64,9 @@ const assetsDir = path.join(__dirname, 'public/assets');
 /**
  * Express Middleware Setup
  */
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Enforce request body size limits (prevents large-payload DoS)
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
 // Serving static assets from /public
 app.use(express.static(path.join(__dirname, 'public')));

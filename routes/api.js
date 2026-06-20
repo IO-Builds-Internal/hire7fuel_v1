@@ -20,10 +20,13 @@ router.post('/authorize', async (req, res) => {
 
   // 2. Google reCAPTCHA Verification
   let recaptchaValid = false;
-  const isUatTestToken = recaptchaToken === 'xxxxxxxx_recapchaToken-----';
 
-  if (isUatTestToken) {
-    // Automatic bypass for specified UAT test token to simplify integration testing
+  // Security: Allow a configurable test bypass token, but ONLY outside of production.
+  // Set RECAPTCHA_TEST_TOKEN in your .env for UAT/integration testing.
+  // This code path is completely blocked when NODE_ENV === 'production'.
+  const isProduction = process.env.NODE_ENV === 'production';
+  const testBypassToken = process.env.RECAPTCHA_TEST_TOKEN;
+  if (!isProduction && testBypassToken && recaptchaToken === testBypassToken) {
     recaptchaValid = true;
   } else {
     try {
